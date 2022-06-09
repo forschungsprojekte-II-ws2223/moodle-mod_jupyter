@@ -1,6 +1,6 @@
 ## Merge Request Template
 
-####Things to check before merging branches:
+#### Things to check before merging branches:
 
 - [ ] The code was reviewed.
 - [ ] The code conventions were complied with.
