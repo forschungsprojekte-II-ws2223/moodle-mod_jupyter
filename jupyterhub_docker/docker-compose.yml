@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  hub-db:
+    image: postgres:alpine3.16
+    container_name: jupyterhub-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: ${DB_VOLUME_CONTAINER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - "db:${DB_VOLUME_CONTAINER}"
+    
+  hub:
+    depends_on: 
+      - hub-db
+    links:
+      - hub-db
+    build: jupyterhub
+    restart: always
+    container_name: jupyterhub
+    volumes: 
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "data:${DATA_VOLUME_CONTAINER}"
+
+    environment:
+      DOCKER_JUPYTER_IMAGE: jupyter/base-notebook:139254225ea1
+      DOCKER_NETWORK_NAME: ${DOCKER_NETWORK_NAME}
+      HUB_IP: 127.0.0.1
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: hub-db
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "8000:8000"
+      - "8081:8081"
+
+volumes:
+  data:
+    external:
+      name: ${DATA_VOLUME_HOST}
+  db:
+    external:
+      name: ${DB_VOLUME_HOST}
+
+networks:
+  default:
+    external:
+      name: ${DOCKER_NETWORK_NAME}
