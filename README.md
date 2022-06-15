@@ -1,36 +1,58 @@
-# Moodle *hello world* block plugin
+# KIB3 StuPro SS 22
 
-## Project background
+# Jupyter Hub #
 
-## Description 
-This repo is a basic *hello world* block plugin for [Moodle](https://moodle.com/) LMS. This can be used as a template for Moodle block plugin development.
+TODO Describe the plugin shortly here.
 
-## Installation
-### By using the Web-UI
-* download the .zip-archive of this repository
-* In the Web-UI log in as administrator and go to the page "/admin/tool/installaddon/index.php"
-* Choose the just downloaded zip file and follow the instructions
-### By copying the files to the right place
-* download and unzip or clone this repo and rename it to *helloworld*
-* move the *helloworld* folder to the *blocks* folder of your moodle installation
-* go to the admin page to enable the plugin, e.g. *http://localhost/admin/index.php*
+TODO Provide more detailed description here.
 
-That was it ! You can now add a hello world block.
-### Uninstall
-To uninstall the plugin go to the plugins overview and click uninstall 
+## Installing via uploaded ZIP file ##
 
-## Usage
-### Basic usage
-Connect as an admin and add a "hello world" block. Once added, you can configure your block settings. 
+1. Pack the directory containing the plugin code (/jupyter) into a .zip (If you download the directory from GitLab, the plugin folder is in an additional folder and will cause problems if you attempt to install directly from that archive! The most upper folder in the archive should be the jupyter/plugin folder!)
 
-### Global configuration 
+2. Log in to your Moodle site as an admin and go to _Site administration >
+   Plugins > Install plugins_.
+3. Upload the ZIP file with the plugin code. You should only be prompted to add
+   extra details if your plugin type (activity module) is not automatically detected, which shouldn't be the case usually.
+4. Check the plugin validation report that shows up right after for the validation result (ideally _Validation successful, installation can continue_) and finish the installation.
+
+## Installing manually ##
+
+The plugin can be also installed by putting the contents of this directory to
+
+    {your/moodle/dirroot}/mod/jupyter
+
+Afterwards, log in to your Moodle site as an admin and go to _Site administration >
+Notifications_ to complete the installation.
+
+Alternatively, you can run
+
+    $ php admin/cli/upgrade.php
+
+to complete the installation from the command line.
+
+## License ##
+
+2022 Your Name <you@example.com>
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program.  If not, see <https://www.gnu.org/licenses/>.
+
+### Global configuration
 * The global configuration of the block is available at : *http://localhost/admin/settings.php?section=blocksettinghelloworld*
 
 ## The Architecture of *hello world*
 
 ## Contributing
-
-## License
 
 ## Sponsors
 
