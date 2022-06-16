@@ -35,7 +35,7 @@ test:
     - umask u+x
     - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
     # Install Moodle (ommit the --moodle argument if not needed)
-    - moodle-plugin-ci install --moodle=$MOODLE_DIR --db-host=mariadb --no-init -vvv
+    - moodle-plugin-ci install --moodle=$MOODLE_DIR --db-host=mariadb --no-init --plugin=$CI_PROJECT_DIR/jupyter/ -vvv
     - cd $MOODLE_DIR
     - php -S $IPADDRESS:8000 -t $MOODLE_DIR > /dev/null 2>&1 &
     #- php admin/tool/behat/cli/init.php --add-core-features-to-theme --parallel=1 
