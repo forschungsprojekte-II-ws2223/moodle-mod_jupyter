@@ -34,4 +34,4 @@ $string['jupytername'] = 'Jupyter Name'; //Name of the activity module instance
 $string['jupytersettings'] = 'Jupyter Settings';
 $string['jupyterfieldset'] = '';
 
-
+$string['jupyter:addinstance'] = 'Add a new Jupyter Activity';
