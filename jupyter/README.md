@@ -8,7 +8,7 @@ TODO Provide more detailed description here.
 
 1. Log in to your Moodle site as an admin and go to _Site administration >
    Plugins > Install plugins_.
-2. Upload the ZIP file with the plugin code. You should only be prompted to add
+2. Upload the ZIP file (only jupyter.zip) with the plugin code. You should only be prompted to add
    extra details if your plugin type is not automatically detected.
 3. Check the plugin validation report and finish the installation.
 
