@@ -35,7 +35,7 @@ $jwt = JWT::encode($data, $key, 'HS256');
 
 
 $testJWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Im1pY2hhZWwgam9uam9uIiwiaWF0IjoxNTE2MjM5MDIyfQ.vgbBQixT0H_LOhFqARyqSPGDjkNoBDTEfDRQ8LhH8Tc';
-print_r("Authorization: ".$testJWT);
+print_r("Authorization: ".$jwt);
 
 $url = 'host.docker.internal:8000';
 
@@ -54,8 +54,8 @@ $curl = curl_init();
 
 // set the URL and other options
 curl_setopt($curl, CURLOPT_URL, $url);
-if(curl_error($ch)) {
-  print_r(curl_error($ch));
+if(curl_error($curl)) {
+  print_r(curl_error($curl));
 }
 // execute and pass the result to browser
 curl_exec($curl);
