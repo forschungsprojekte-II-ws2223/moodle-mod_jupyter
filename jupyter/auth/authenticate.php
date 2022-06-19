@@ -54,6 +54,7 @@ $curl = curl_init();
 
 // set the URL and other options
 curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: '.$jwt));
 if(curl_error($curl)) {
   print_r(curl_error($curl));
 }
