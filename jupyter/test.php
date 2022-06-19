@@ -15,7 +15,7 @@ curl_setopt($ch, CURLOPT_URL, 'host.docker.internal:8000');
 
 
 $jwt ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6ImFiZXIgYnJhZGVyIiwiaWF0IjoxNTE2MjM5MDIyfQ.kJI2elbu9AKjHxpe867CVDKKcctFmyNJssTNqSWaKH8';
-curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorize: '.$jwt));
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: '.$jwt));
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); 
 $result = curl_exec($ch);
 if(curl_error($ch)) {
