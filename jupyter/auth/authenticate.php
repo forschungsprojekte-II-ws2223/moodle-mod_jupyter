@@ -1,7 +1,7 @@
 <?php
 
-require(__DIR__.'/../../config.php');
-require_once(__DIR__.'/lib.php');
+require(__DIR__.'/../../../config.php');
+require_once(__DIR__.'/../lib.php');
 
 //$id = required_param('id', PARAM_INT);
 // $PAGE->set_url('/mod/jupyter/index.php', array('id' => $id));
@@ -37,7 +37,7 @@ $jwt = JWT::encode($data, $key, 'HS256');
 $testJWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Im1pY2hhZWwgam9uam9uIiwiaWF0IjoxNTE2MjM5MDIyfQ.vgbBQixT0H_LOhFqARyqSPGDjkNoBDTEfDRQ8LhH8Tc';
 print_r("Authorization: ".$testJWT);
 
-$url = 'http://127.0.0.1:8000';
+$url = 'host.docker.internal:8000';
 
 ///////////////////////////
 
@@ -53,8 +53,10 @@ if(!extension_loaded("curl")) {
 $curl = curl_init();
 
 // set the URL and other options
-curl_setopt($curl, CURLOPT_URL, "http://www.google.com");
-
+curl_setopt($curl, CURLOPT_URL, $url);
+if(curl_error($ch)) {
+  print_r(curl_error($ch));
+}
 // execute and pass the result to browser
 curl_exec($curl);
 

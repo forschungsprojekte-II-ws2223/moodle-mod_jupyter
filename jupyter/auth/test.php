@@ -1,7 +1,7 @@
 <?php
 
-require(__DIR__.'/../../config.php');
-require_once(__DIR__.'/lib.php');
+require(__DIR__.'/../../../config.php');
+require_once(__DIR__.'/../lib.php');
 
 
 // a little script check is the cURL extension loaded or not
