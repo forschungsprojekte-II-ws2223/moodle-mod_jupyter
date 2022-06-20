@@ -6,7 +6,7 @@ require_once(__DIR__.'/../lib.php');
 //$id = required_param('id', PARAM_INT);
 // $PAGE->set_url('/mod/jupyter/index.php', array('id' => $id));
 
-require (__DIR__ . '/vendor/autoload.php');
+require (__DIR__ . '/../vendor/autoload.php');
 $id = $_GET['id'];
 
 use Firebase\JWT\JWT;

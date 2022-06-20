@@ -1,5 +1,5 @@
 <?php
-   require (__DIR__ . '/vendor/autoload.php');
+   require (__DIR__ . '/../vendor/autoload.php');
 
     $jwt ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlBldGVyIFBldGVyc29uIiwiaWF0IjoxNTE2MjM5MDIyfQ.4xDK-elVZcyxUJ_n7mucr8n8ytYCvPzXD9DoD07Xk50';
     $headers = [
