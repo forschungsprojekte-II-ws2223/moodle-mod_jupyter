@@ -2,7 +2,7 @@
 require(__DIR__.'/../../../config.php');
 require_once(__DIR__.'/../lib.php');
 
-require (__DIR__ . '/vendor/autoload.php');
+require (__DIR__ . '/../vendor/autoload.php');
 
 $headers = [
     "Authorization"=> "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ikpva28gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.2c547-cL6FWDfjLCmLp3aQBc7ysdkX7g3lvVL0vZiTc"
