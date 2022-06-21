@@ -14,7 +14,7 @@ $client = new \GuzzleHttp\Client(
     ]
 );
 
-$response = $client->request('GET', 'host.docker.internal:8000/hub/login?next=%2Fhub%2F');
+$response = $client->request('GET', 'host.docker.internal:8000');
 
 echo $response->getBody()
 ?>
