@@ -12,13 +12,6 @@ $id = $_GET['id'];
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-// $payload = [
-//     'iss' => 'http://example.org',
-//     'aud' => 'http://example.com',
-//     'iat' => 1356999524,
-//     'nbf' => 1357000000
-// ];
-
 $key = 'your-256-bit-secret';
 
 $data = [

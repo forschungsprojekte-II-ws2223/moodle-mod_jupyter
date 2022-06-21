@@ -4,9 +4,8 @@ require_once(__DIR__.'/../lib.php');
 
 require __DIR__ . '/../vendor/autoload.php';
 
-
-$url="https://docs.guzzlephp.org/en/stable/request-options.html#http-errors";
-echo '<iframe src={{$url}} width="70%" height="500" id="iframe" style="border:none;"></iframe>';
+$PAGE->set_url(new moodle_url('/mod/jupyter/auth/debug.php'));
+$PAGE->set_context(\context_system::instance());
 
 
 
