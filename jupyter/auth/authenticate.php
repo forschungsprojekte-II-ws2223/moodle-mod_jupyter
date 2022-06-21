@@ -14,7 +14,9 @@ $name = required_param('name', PARAM_INT);
 //custom key must equal key in /../../jupyterhub_docker/jupyterhub/jupyterhub_config.py !!!
 $key = 'your-256-bit-secret';
 $data = [
-  'name' =>$name
+    "sub"=> "1234567890",
+    "name"=> $name,
+    "iat"=> 1516239022
 ];
 
 
