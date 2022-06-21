@@ -9,7 +9,7 @@ variables:
   DB: "mariadb"
   MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "true"
   TRAVIS_BUILD_DIR: "$CI_PROJECT_DIR"
-  MOODLE_BRANCH: "MOODLE_400_STABLE"
+  MOODLE_BRANCH: "MOODLE_311_STABLE"
   # Only needed, when your project is within a group/subgroup of "moodle".
   MOODLE_DIR: "/var/www/html/moodle"
   MOODLE_BEHAT_WDHOST: "http://selenium-standalone-chrome:4444/wd/hub"
