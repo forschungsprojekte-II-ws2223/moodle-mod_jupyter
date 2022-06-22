@@ -31,6 +31,10 @@ Alternatively, you can run
 
 to complete the installation from the command line.
 
+## Authentication ##
+
+navigate to /jupyter/auth/README.md for instruction how to authenticate moodle with jupyterhub
+
 ## License ##
 
 2022 Your Name <you@example.com>
