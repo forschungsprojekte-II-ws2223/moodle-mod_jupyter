@@ -10,7 +10,8 @@ $client = new \GuzzleHttp\Client(
     [
         'cookies' => $jar,
         'allow_redirects' => ['max' => 10],
-        'headers' => ['Authorization' => $jwt]
+        'headers' => ['Authorization' => $jwt],
+        'debug' => false
     ]
 );
 
