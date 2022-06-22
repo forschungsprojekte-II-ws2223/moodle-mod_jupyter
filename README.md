@@ -31,6 +31,11 @@ Alternatively, you can run
 
 to complete the installation from the command line.
 
+## Access UI Prototype ##
+
+1. make sure you have an a running moodle environment and installed the jupyter plugin as described above
+2. open `http://127.0.0.1/mod/jupyter/ui/manage.php` in your browser
+
 ## License ##
 
 2022 Your Name <you@example.com>
