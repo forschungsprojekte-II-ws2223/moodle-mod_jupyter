@@ -39,6 +39,29 @@ Alternatively, you can run
 
 to complete the installation from the command line.
 
+## Installing new dependencies ##
+
+To get started, you first have to install Composer locally (see https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos
+https://getcomposer.org/doc/00-intro.md#installation-windows).
+
+New dependencies can be added in the _composer.json_ file via the __require__ key (package names are mapped to version constraints; see _composer.json_ for an example). Afterwards, you have to run
+
+    $ composer update
+
+to resolve and install the newly added dependencies.
+
+Alternatively, you can run
+
+    $ composer require [dependency you want to add]
+
+which makes running the update command obsolete.
+
+To automatically load all dependencies when executing a php file, you need to include the line
+
+    require 'vendor/autoload.php';
+
+at the start of your file.
+
 ## License ##
 
 2022 Your Name <you@example.com>
