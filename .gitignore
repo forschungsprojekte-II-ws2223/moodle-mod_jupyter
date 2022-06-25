@@ -3,5 +3,5 @@
 jupyter_config_default.py
 /.vs/slnx.sqlite
 /.vs/*
-/jupyter/vendor
+jupyter/vendor/
 /.vscode/

@@ -1,9 +1,20 @@
-# Jupyter Hub #
+# Jupyter Moodle Plugin #
 
 TODO Describe the plugin shortly here.
 
 TODO Provide more detailed description here.
 
+## Installing with install.sh script ##
+
+If you are using the [moodle docker setup](../moodle_docker/README.md) you can use the [install.sh](install.sh) script to install/update the plugin into the running container.
+
+1. execute the script: `./install.sh`  
+(if you are on windows you can just execute the commands in the script manually (or write a windows version of the script))
+2. log into your moodle site as admin and go to _Site administration >
+Notifications_ to complete the installation.
+
+updating:  
+To update the plugin, just run `./install.sh` again. After a couple of seconds the updated version should be on your moodle server.
 ## Installing via uploaded ZIP file ##
 
 1. Log in to your Moodle site as an admin and go to _Site administration >
@@ -11,6 +22,7 @@ TODO Provide more detailed description here.
 2. Upload the ZIP file (only jupyter.zip) with the plugin code. You should only be prompted to add
    extra details if your plugin type is not automatically detected.
 3. Check the plugin validation report and finish the installation.
+
 
 ## Installing manually ##
 
