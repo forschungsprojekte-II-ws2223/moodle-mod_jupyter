@@ -16,6 +16,9 @@ variables:
   MOODLE_START_BEHAT_SERVERS: "NO"
 
 test:
+  only:
+    changes:
+      - jupyter/*
   before_script:
     # Update packages and install mysql-client.
     - apt update && apt install -y default-mysql-client
