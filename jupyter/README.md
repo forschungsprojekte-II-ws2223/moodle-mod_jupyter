@@ -6,7 +6,7 @@ TODO Provide more detailed description here.
 
 ## Installing with install.sh script ##
 
-If you are using the bitnami moodle docker image you can use the [install.sh](install.sh) script to install/update the plugin.
+If you are using the [moodle docker setup](../moodle_docker/README.md) you can use the [install.sh](install.sh) script to install/update the plugin into the running container.
 
 1. execute the script: `./install.sh`  
 (if you are on windows you can just execute the commands in the script manually (or write a windows version of the script))
