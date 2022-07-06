@@ -1,5 +1,9 @@
 # KIB3 StuPro SS 22
 
+# While working #
+
+There's an .editorconfig in this repo, please use it while working on it
+
 # Jupyter Hub #
 
 TODO Describe the plugin shortly here.
