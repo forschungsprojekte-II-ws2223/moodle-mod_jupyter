@@ -1,49 +1,60 @@
-image: moodlehq/moodle-php-apache:7.4
-
-services:
-  - mariadb:10.7.4
-  #- name: selenium/standalone-chrome:4
-  #  alias: selenium-standalone-chrome
+# image is hosted hosted on https://hub.docker.com/r/maxsch1/moodle-ci/tags, since the container registry on our gitlab didnt work for me:
+# https://sopra.informatik.uni-stuttgart.de/kib3-student-projects/kib3-stupro-ss-22/container_registry
+image: maxsch1/moodle-ci:4
 
 variables:
-  DB: "mariadb"
-  MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "true"
-  TRAVIS_BUILD_DIR: "$CI_PROJECT_DIR"
-  MOODLE_BRANCH: "MOODLE_400_STABLE"
-  # Only needed, when your project is within a group/subgroup of "moodle".
-  MOODLE_DIR: "/var/www/html/moodle"
-  MOODLE_BEHAT_WDHOST: "http://selenium-standalone-chrome:4444/wd/hub"
-  MOODLE_START_BEHAT_SERVERS: "NO"
+    DB: "mariadb"
+    MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "true"
+    TRAVIS_BUILD_DIR: "$CI_PROJECT_DIR"
+    MOODLE_BRANCH: "MOODLE_311_STABLE"
+    MOODLE_DIR: "/var/www/html/moodle"
+    MOODLE_BEHAT_WDHOST: "http://selenium-standalone-chrome:4444/wd/hub"
+    MOODLE_START_BEHAT_SERVERS: "NO"
 
-test:
+.install_moodle: 
+  only:
+    changes:
+      - jupyter/*
   before_script:
-    # Update packages and install mysql-client.
-    - apt update && apt install -y default-mysql-client
-    # Install nvm and NodeJS.
-    - curl -fsSL https://deb.nodesource.com/setup_lts.x | bash
-    - apt install -y nodejs
-    # Install composer.
-    - curl -sS https://getcomposer.org/installer | php
-    - mv composer.phar /usr/local/bin/composer
-    # Setup Behat.
-    - export IPADDRESS=`grep "$HOSTNAME$" /etc/hosts | awk '{print $1}'`
-    - export MOODLE_BEHAT_WWWROOT="http://$IPADDRESS:8000"
-    # Install Moodle CI plugin.
-    - cd $CI_PROJECT_DIR/.. && rm -rf ci
-    - composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^3
-    - chmod u+x ci/bin/*
-    - umask u+x
-    - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
-    # Install Moodle (ommit the --moodle argument if not needed)
+    - export PATH="/var/www/html/ci/bin:/var/www/html/ci/vendor/bin:$PATH"
     - moodle-plugin-ci install --moodle=$MOODLE_DIR --db-host=mariadb --no-init --plugin=$CI_PROJECT_DIR/jupyter/ -vvv
     - cd $MOODLE_DIR
+    - export IPADDRESS=`grep "$HOSTNAME$" /etc/hosts | awk '{print $1}'`
     - php -S $IPADDRESS:8000 -t $MOODLE_DIR > /dev/null 2>&1 &
-    #- php admin/tool/behat/cli/init.php --add-core-features-to-theme --parallel=1 
+
+lint:
+  only:
+    changes:
+      - jupyter/*
   script:
-    - moodle-plugin-ci phplint
-    - moodle-plugin-ci phpcpd
+    - export PATH="/var/www/html/ci/bin:/var/www/html/ci/vendor/bin:$PATH"
+    # these checks can be run without the moodle install: 
+    - moodle-plugin-ci phplint $CI_PROJECT_DIR/jupyter
+    - moodle-plugin-ci phpcpd $CI_PROJECT_DIR/jupyter
+    - moodle-plugin-ci savepoints $CI_PROJECT_DIR/jupyter
+
+test:
+  extends: .install_moodle
+  services:
+    - mariadb:10.7.4
+  script:
     - moodle-plugin-ci phpmd
-    # use if moodle coding guidelines should be followed
-    # - moodle-plugin-ci codechecker
     - moodle-plugin-ci validate
-    - moodle-plugin-ci savepoints
+    - moodle-plugin-ci phpunit
+    #- moodle-plugin-ci codechecker
+    #- moodle-plugin-ci grunt
+    #- moodle-plugin-ci mustache
+    #- moodle-plugin-ci phpdoc
+    # TODO: disabled checks dont work (yet) or fail on violation --> fix these issues in the codebase
+
+# Disabled for now since we dont have any behat tests yet and setup takes a long time
+# test_behat:
+#   extends: .install_moodle
+#   services:
+#     - mariadb:10.7.4
+#     - name: selenium/standalone-chrome:4
+#       alias: selenium-standalone-chrome
+#   script:
+#     - export MOODLE_BEHAT_WWWROOT="http://$IPADDRESS:8000"
+#     - php $MOODLE_DIR/admin/tool/behat/cli/init.php --add-core-features-to-theme --parallel=1
+#     - moodle-plugin-ci behat --profile chrome

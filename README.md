@@ -1,5 +1,9 @@
 # KIB3 StuPro SS 22
 
+# While working #
+
+There's an .editorconfig in this repo, please use it while working on it  
+[VS Code Extension](vscode:extension/EditorConfig.EditorConfig)
 # Jupyter Hub #
 
 TODO Describe the plugin shortly here.
@@ -30,6 +34,15 @@ Alternatively, you can run
     $ php admin/cli/upgrade.php
 
 to complete the installation from the command line.
+
+## Authentication ##
+
+navigate to /jupyter/auth/README.md for instruction how to authenticate moodle with jupyterhub
+
+## Access UI Prototype ##
+
+1. make sure you have an a running moodle environment and installed the jupyter plugin as described above
+2. open `http://127.0.0.1/mod/jupyter/ui/manage.php` in your browser
 
 ## License ##
 
