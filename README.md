@@ -2,8 +2,8 @@
 
 # While working #
 
-There's an .editorconfig in this repo, please use it while working on it
-
+There's an .editorconfig in this repo, please use it while working on it  
+[VS Code Extension](vscode:extension/EditorConfig.EditorConfig)
 # Jupyter Hub #
 
 TODO Describe the plugin shortly here.
