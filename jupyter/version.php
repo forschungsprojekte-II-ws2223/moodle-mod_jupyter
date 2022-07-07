@@ -28,4 +28,3 @@ $plugin->component = 'mod_jupyter';
 $plugin->release = '0.1.0';
 $plugin->version = 2022052800;
 $plugin->requires = 2021051700;
-
