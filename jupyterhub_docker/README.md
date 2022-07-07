@@ -37,4 +37,11 @@ The jupyterhub uses a json web token [authenticator](https://github.com/izihawa/
 In the 'verify signature' field the secret can stay 'your-256-bit-secret' as it is (the secret should match the one in the [environment file](.env) then).
 'secret base64 encoded' should NOT be checked. 
 - Use [this](https://chrome.google.com/webstore/detail/modheader/idgpnmonknjnojddfkpgkljpfnnfcklj?hl=en) chrome addon or something simmilar to set a request header called Authorization with the encoded token from the link above.
-- Visit [127.0.0.1:8000](127.0.0.1:8000). If you set the token correctly you should be redirected to a jupyterhub notebook with the username you specified.
+- Visit [127.0.0.1:8080](127.0.0.1:8080). If you set the token correctly you should be redirected to a jupyterhub notebook with the username you specified.
+
+## Update docker dependencies
+- Stop the running containers
+- Make the version changes in the [docker-compose](docker-compose.yml) file you want to make.
+- Run `docker-compose pull` then wait for the download of the new depencencies.
+- Run `docker-compose up -d` and wait for the containers to be recreated.
+- Then the cotainers can be used again.
