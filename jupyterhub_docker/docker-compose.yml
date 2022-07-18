@@ -1,6 +1,13 @@
 version: '3'
 
 services:
+  jupyterlab:
+    build: jupyterlab
+    image: jupyterlab_img
+    container_name: jupyterlab-throaway
+    network_mode: none
+    command: echo
+
   hub-db:
     image: postgres:alpine3.16
     container_name: jupyterhub-db
@@ -11,21 +18,21 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - "db:${DB_VOLUME_CONTAINER}"
-    
+
   hub:
-    depends_on: 
+    depends_on:
       - hub-db
     links:
       - hub-db
     build: jupyterhub
     restart: always
     container_name: jupyterhub
-    volumes: 
+    volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "data:${DATA_VOLUME_CONTAINER}"
 
     environment:
-      DOCKER_JUPYTER_IMAGE: jupyter/base-notebook:139254225ea1
+      DOCKER_JUPYTER_IMAGE: jupyterlab_img
       DOCKER_NETWORK_NAME: ${DOCKER_NETWORK_NAME}
       HUB_IP: 127.0.0.1
       POSTGRES_DB: ${POSTGRES_DB}

@@ -10,14 +10,23 @@ network_name = os.environ['DOCKER_NETWORK_NAME']
 c.DockerSpawner.use_internal_ip = True
 c.DockerSpawner.network_name = network_name
 c.DockerSpawner.extra_host_config = { 'network_mode': network_name }
+
 c.JupyterHub.hub_ip = 'jupyterhub'
+
+c.Spawner.args = [f'--NotebookApp.allow_origin=*']
+c.JupyterHub.tornado_settings = {
+    'cookie_options': {"SameSite": "None", "Secure": True},
+    'headers': {
+        'Content-Security-Policy': "frame-ancestors 'self' http://localhost:80 http://127.0.0.1:80 http://localhost:8000 http://127.0.0.1:8000 http://localhost:8082 http://127.0.0.1:8082"
+    }
+}
 
 # Persist hub data on volume mounted inside container
 data_dir = os.environ.get('DATA_VOLUME_CONTAINER', '/data')
 
 c.JupyterHub.cookie_secret_file = os.path.join(data_dir,
     'jupyterhub_cookie_secret')
-    
+
 
 # Redirect to JupyterLab, instead of the plain Jupyter notebook
 c.Spawner.default_url = '/lab'
@@ -56,22 +65,20 @@ c.JupyterHub.db_url = 'postgresql://postgres:{password}@{host}/{db}'.format(
     db=os.environ['POSTGRES_DB'],
 )
 
-# JWT Authenticator Setup
+# Dummy authenticator
+#c.JupyterHub.authenticator_class = "dummy"
 
+# JWT Authenticator Setup
 # JSONWebTokenLocalAuthenticator provides local user creation
 c.LocalAuthenticator.create_system_users=True
 c.JupyterHub.authenticator_class = 'jwtauthenticator.jwtauthenticator.JSONWebTokenLocalAuthenticator'
-
 # The secrect key used to generate the given token
 c.JSONWebTokenAuthenticator.secret = os.environ['JWT_SECRET']
 # The claim field contianing the moodle user id
 c.JSONWebTokenAuthenticator.username_claim_field = 'name'
-# This config option should match the aud field of the JSONWebToken, empty string to disable the validation of this field.   
+# This config option should match the aud field of the JSONWebToken, empty string to disable the validation of this field.
 c.JSONWebTokenAuthenticator.expected_audience = ''
-# This will enable local user creation upon authentication, requires JSONWebTokenLocalAuthenticator     
+# This will enable local user creation upon authentication, requires JSONWebTokenLocalAuthenticator
 c.JSONWebLocalTokenAuthenticator.create_system_users = True
-# Header name to retrieve JWT token
-c.JSONWebTokenAuthenticator.header_name = 'Authorization'   
-
-
-
+# Query param to retrieve JWT token
+c.JSONWebTokenAuthenticator.param_name = 'auth_token'
