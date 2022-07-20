@@ -1,6 +1,7 @@
 # Authenticate #
 
 ## Description ##
+This is only needed for testing and explanation of the authentication. It is already working in the ui `manage.php`.
 
 Navigating to the authentication site encodes the id and lastname of the currently logged in user to a valid jwt token (it looks like this `jwt.io`).
 It has an expiration time of 15 seconds after that the token is not valid anymore and can't be used.

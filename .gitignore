@@ -5,3 +5,4 @@ jupyter_config_default.py
 /.vs/*
 jupyter/vendor/
 /.vscode/
+/composer.phar
