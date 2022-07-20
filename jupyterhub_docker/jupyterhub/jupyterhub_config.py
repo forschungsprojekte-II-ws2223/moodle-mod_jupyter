@@ -17,7 +17,7 @@ c.Spawner.args = [f'--NotebookApp.allow_origin=*']
 c.JupyterHub.tornado_settings = {
     'cookie_options': {"SameSite": "None", "Secure": True},
     'headers': {
-        'Content-Security-Policy': "frame-ancestors 'self' http://localhost:80 http://127.0.0.1:80 http://localhost:8000 http://127.0.0.1:8000 http://localhost:8082 http://127.0.0.1:8082"
+        'Content-Security-Policy': "frame-ancestors 'self' http://localhost:80 http://127.0.0.1:80 http://localhost:8000 http://127.0.0.1:8000"
     }
 }
 
@@ -26,7 +26,6 @@ data_dir = os.environ.get('DATA_VOLUME_CONTAINER', '/data')
 
 c.JupyterHub.cookie_secret_file = os.path.join(data_dir,
     'jupyterhub_cookie_secret')
-
 
 # Redirect to JupyterLab, instead of the plain Jupyter notebook
 c.Spawner.default_url = '/lab'
