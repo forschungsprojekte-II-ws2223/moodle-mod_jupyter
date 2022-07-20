@@ -60,7 +60,8 @@ test:
 #     - moodle-plugin-ci behat --profile chrome
 
 # Create jupyter.zip as artifact for download
-zip:
+zip-plugin:
+  stage: .post # Run after all other stages
   # Each job needs a script, even if not used https://gitlab.com/gitlab-org/gitlab/-/issues/19717
   script:
     echo
@@ -68,9 +69,9 @@ zip:
     name: jupyter # Name of the resulting .zip
     paths:
       - jupyter/* # Include whole directory
-  #only:
-  #  refs:
-  #    - main # Run only on main branch
-  #  changes:
-  #    - jupyter/* # Run only when jupyter plugin changes
-    
+  only:
+    refs:
+      - main # Run only on main branch
+    changes:
+     - jupyter/* # Run only when jupyter plugin/directory changes
+  
