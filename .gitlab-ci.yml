@@ -58,3 +58,14 @@ test:
 #     - export MOODLE_BEHAT_WWWROOT="http://$IPADDRESS:8000"
 #     - php $MOODLE_DIR/admin/tool/behat/cli/init.php --add-core-features-to-theme --parallel=1
 #     - moodle-plugin-ci behat --profile chrome
+
+zip:
+  # Each job needs a script even if not used https://gitlab.com/gitlab-org/gitlab/-/issues/19717
+  script:
+    echo
+  artifacts:
+    name: jupyter
+    paths:
+      - jupyter/*
+  only:
+    - main
