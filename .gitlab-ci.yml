@@ -69,7 +69,7 @@ zip:
     paths:
       - jupyter/* # Include whole directory
   only:
-    ref:
+    refs:
       - main # Run only on main branch
     changes:
       - jupyter/* # Run only when jupyter plugin changes
