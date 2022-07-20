@@ -59,13 +59,18 @@ test:
 #     - php $MOODLE_DIR/admin/tool/behat/cli/init.php --add-core-features-to-theme --parallel=1
 #     - moodle-plugin-ci behat --profile chrome
 
+# Create jupyter.zip as artifact for download
 zip:
-  # Each job needs a script even if not used https://gitlab.com/gitlab-org/gitlab/-/issues/19717
+  # Each job needs a script, even if not used https://gitlab.com/gitlab-org/gitlab/-/issues/19717
   script:
     echo
   artifacts:
-    name: jupyter
+    name: jupyter # Name of the resulting .zip
     paths:
-      - jupyter/*
+      - jupyter/* # Include whole directory
   only:
-    - main
+    ref:
+      - main # Run only on main branch
+    changes:
+      - jupyter/* # Run only when jupyter plugin changes
+    
