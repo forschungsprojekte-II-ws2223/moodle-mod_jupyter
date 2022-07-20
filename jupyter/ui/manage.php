@@ -15,10 +15,6 @@ require_once(__DIR__.'/../lib.php');
 require (__DIR__ . '/../vendor/autoload.php');
 
 use Firebase\JWT\JWT;
-<<<<<<< HEAD
-=======
-use Firebase\JWT\Key;
->>>>>>> c587a06 (Integrated JupyterNotebook in UI Prototype)
 
 
 $PAGE->set_url(new moodle_url('/mod/jupyter/ui/manage.php'));
@@ -27,11 +23,7 @@ $PAGE->set_context(\context_system::instance());
 $PAGE->set_title('UI skeleton');
 
 //username has to be lowercase and start with a letter. Since moodle allows names to start with a letter, we user "user-" prefix.
-<<<<<<< HEAD
 $uniqueId=mb_strtolower("user".$USER->id.$USER->lastname, "UTF-8");
-=======
-$uniqueId=strtolower("user".$USER->id.$USER->lastname);
->>>>>>> c587a06 (Integrated JupyterNotebook in UI Prototype)
 
 //custom key must equal key in jupyterhub_docker .env !
 $key = 'your-256-bit-secret';
