@@ -81,7 +81,7 @@ zip-plugin:
     refs:
       - main # Run only on specific branch
       - ci-improvement-regarding-artifact
-    - changes:
+    changes:
       - juypter/*
 
   
