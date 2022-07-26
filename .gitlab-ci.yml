@@ -73,12 +73,14 @@ zip-plugin:
     name: jupyter # Name of the resulting .zip
     paths:
       - jupyter/* # Include whole directory
-    exclude:
-      - jupyter/README.md
-      - jupyter/*.sh
+    #Does not work because our Gitlab runners version is 12.10 and feature is available at 13.8
+    #exclude:
+    #  - jupyter/README.md
+    #  - jupyter/*.sh
   only:
+    - changes:
+      - juypter/*
     - main # Run only on specific branch
     - ci-improvement-regarding-artifact
-  #rules:
 
   
