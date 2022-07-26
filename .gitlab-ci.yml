@@ -73,9 +73,6 @@ zip-plugin:
     name: jupyter # Name of the resulting .zip
     paths:
       - jupyter/* # Include whole directory
-    exclude:
-      - jupyter/*.md
-      - jupyter/*.sh
   only:
     - 56-artifact-from-pipeline-not-available # Run only on specific branch
   
