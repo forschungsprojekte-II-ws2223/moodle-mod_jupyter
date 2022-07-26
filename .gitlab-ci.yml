@@ -68,8 +68,7 @@ zip-plugin:
   stage: release
   # Each job needs a script, even if not used https://gitlab.com/gitlab-org/gitlab/-/issues/19717
   script:
-    #echo
-    - zip -r jupyter.zip 
+    echo
   artifacts:
     name: jupyter # Name of the resulting .zip
     paths:
