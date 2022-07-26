@@ -73,6 +73,9 @@ zip-plugin:
     name: jupyter # Name of the resulting .zip
     paths:
       - jupyter/* # Include whole directory
+    exclude:
+      - jupyter/README.md
+      - jupyter/*.sh
   only:
     - main # Run only on specific branch
   
