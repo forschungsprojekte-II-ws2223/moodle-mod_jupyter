@@ -78,9 +78,10 @@ zip-plugin:
     #  - jupyter/README.md
     #  - jupyter/*.sh
   only:
-    - changes:
-      - juypter/*
     - main # Run only on specific branch
     - ci-improvement-regarding-artifact
+  rules:
+    - changes:
+      - juypter/*
 
   
