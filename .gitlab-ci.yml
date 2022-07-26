@@ -1,3 +1,7 @@
+stages:
+  - test
+  - release
+
 # image is hosted hosted on https://hub.docker.com/r/maxsch1/moodle-ci/tags, since the container registry on our gitlab didnt work for me:
 # https://sopra.informatik.uni-stuttgart.de/kib3-student-projects/kib3-stupro-ss-22/container_registry
 image: maxsch1/moodle-ci:4
@@ -61,7 +65,7 @@ test:
 
 # Create jupyter.zip as artifact for download
 zip-plugin:
-  stage: .post # Run after all other stages
+  stage: release
   # Each job needs a script, even if not used https://gitlab.com/gitlab-org/gitlab/-/issues/19717
   script:
     echo
@@ -70,5 +74,5 @@ zip-plugin:
     paths:
       - jupyter/* # Include whole directory
   only:
-    - main # Run only on main branch
+    - main # Run only on specific branch
   
