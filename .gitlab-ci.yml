@@ -78,4 +78,7 @@ zip-plugin:
       - jupyter/*.sh
   only:
     - main # Run only on specific branch
+    - ci-improvement-regarding-artifact
+  #rules:
+
   
