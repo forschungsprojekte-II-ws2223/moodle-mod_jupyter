@@ -18,15 +18,25 @@ There are two directories including some docker-based setups to start a [Moodle]
  [JupyterHub-Instance](./jupyterhub_docker/README.md). If you got both of them running, you can install the Moodle-Plugin 
 as described in the dedicated [Readme.md](./jupyter/README.md)
 
-## Authentication ##
 
-navigate to the according [Readme](./jupyter/auth/README.md) for instruction how to authenticate moodle with jupyterhub
-
-## Access UI Prototype ##
+## Access Plugin UI in course ##
 
 0. perform a composer update `composer update` to update dependencies (you need to have composer installed: https://getcomposer.org/download/)
 1. make sure you have a running moodle environment and installed the jupyter plugin as described above
-2. open [http://127.0.0.1/mod/jupyter/ui/manage.php](http://127.0.0.1/mod/jupyter/ui/manage.php) in your browser
+2. click on one of your courses (if there is non you have to create a course first)
+3. make sure editing is turned on, at the top right
+4. now you can click on `Add an activity or resource` below on the right
+5. choose the `Jupyter Hub` activity plugin
+6. assign a name. The rest of the settings can be ignored.
+7. click on `Save and display`
+8. you should see your personal jupyterlab environment based on your moodle lastname and id inside an iframe
+
+## Authentication Description ##
+
+The site encodes the id and lastname of the currently logged in user to a valid jwt token (it looks like this `jwt.io`).
+It has an expiration time of 15 seconds, after that the token is not valid anymore and can't be used.
+Then this token is sent to jupyterhub and decoded.
+In an iframe the jupyterhub will load the users personal jupyter notebook.
 
 ## License ##
 
