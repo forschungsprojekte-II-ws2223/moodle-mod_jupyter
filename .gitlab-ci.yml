@@ -74,5 +74,5 @@ zip-plugin:
     paths:
       - jupyter/* # Include whole directory
   only:
-    - 56-artifact-from-pipeline-not-available # Run only on specific branch
+    - main # Run only on specific branch
   
