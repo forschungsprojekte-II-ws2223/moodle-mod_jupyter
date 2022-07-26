@@ -64,13 +64,19 @@ zip-plugin:
   #stage: .post # Run after all other stages
   # Each job needs a script, even if not used https://gitlab.com/gitlab-org/gitlab/-/issues/19717
   script:
-    echo
+    #echo
+    - zip -r jupyter.zip 
   artifacts:
     name: jupyter # Name of the resulting .zip
     paths:
       - jupyter/* # Include whole directory
+    exclude:
+      - jupyter/*.md
+      - jupyter/*.sh
   only:
     - 56-artifact-from-pipeline-not-available
   #rules:
     #- if: '$CI_COMMIT_BRANCH == "56-artifact-from-pipeline-not-available "' # Run only on main branch
+
+    
   
