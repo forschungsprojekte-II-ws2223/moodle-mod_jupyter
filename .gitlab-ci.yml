@@ -69,6 +69,8 @@ zip-plugin:
     name: jupyter # Name of the resulting .zip
     paths:
       - jupyter/* # Include whole directory
+    only:
+      - 56-artifact-from-pipeline-not-available
   #rules:
-  #  - if: '$CI_COMMIT_BRANCH == "56-artifact-from-pipeline-not-available "' # Run only on main branch
+    #- if: '$CI_COMMIT_BRANCH == "56-artifact-from-pipeline-not-available "' # Run only on main branch
   
