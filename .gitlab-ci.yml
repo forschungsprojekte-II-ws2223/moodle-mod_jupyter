@@ -61,7 +61,7 @@ test:
 
 # Create jupyter.zip as artifact for download
 zip-plugin:
-  stage: .post # Run after all other stages
+  #stage: .post # Run after all other stages
   # Each job needs a script, even if not used https://gitlab.com/gitlab-org/gitlab/-/issues/19717
   script:
     echo
