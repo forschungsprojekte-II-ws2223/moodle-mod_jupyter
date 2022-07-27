@@ -83,6 +83,6 @@ zip-plugin:
       - main # Run only on specific branch
       - ci-improvement-regarding-artifact
     changes:
-      - juypter/*
+      - jupyter/*
 
   
