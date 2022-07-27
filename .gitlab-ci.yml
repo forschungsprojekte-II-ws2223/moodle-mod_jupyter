@@ -1,5 +1,6 @@
 stages:
   - test
+  - build
   - release
 
 # image is hosted hosted on https://hub.docker.com/r/maxsch1/moodle-ci/tags, since the container registry on our gitlab didnt work for me:
@@ -63,19 +64,18 @@ test:
 #     - php $MOODLE_DIR/admin/tool/behat/cli/init.php --add-core-features-to-theme --parallel=1
 #     - moodle-plugin-ci behat --profile chrome
 
-#composer:
-#  stage: build
-#  script:
-#    - cd jupyter
-#    - composer update
+composer:
+  stage: build
+  script:
+    - cd jupyter
+    - composer update
 
 # Create jupyter.zip as artifact for download
 zip-plugin:
   stage: release
   # Each job needs a script, even if not used https://gitlab.com/gitlab-org/gitlab/-/issues/19717
   script:
-    - cd jupyter
-    - composer update
+    echo
   artifacts:
     name: jupyter # Name of the resulting .zip
     paths:
