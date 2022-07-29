@@ -35,3 +35,15 @@ $string['jupytersettings'] = 'Standard settings';
 $string['jupyterfieldset'] = '';
 
 $string['jupyter:addinstance'] = 'Add a new Jupyter Activity';
+
+//Admin plugin settings
+//URL
+$string['jupyter_url'] = 'Jupyter URL';
+$string['jupyter_url_desc'] = 'Add the URL to your jupyter hub. Http://localhost/ is not accepted but
+* http://localhost.localdomain/ is ok.';
+//IP
+$string['jupyter_ip'] = 'Jupyter IP';
+$string['jupyter_ip_desc'] = 'Add the ip to your jupyter hub. IPv4 dotted quad (IP address).';
+//Port
+$string['jupyter_port'] = 'Jupyter Port';
+$string['jupyter_port_desc'] = 'Add the port your jupyter runs on.';
