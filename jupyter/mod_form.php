@@ -66,11 +66,6 @@ class mod_jupyter_mod_form extends moodleform_mod {
             $this->add_intro_editor();
         }
 
-        // Adding the rest of mod_jupyter settings, spreading all them into this fieldset
-        // ... or adding more fieldsets ('header' elements) if needed for better logic.
-        $mform->addElement('static', 'label1', 'jupytersettings', get_string('jupytersettings', 'mod_jupyter'));
-        $mform->addElement('header', 'jupyterfieldset', get_string('jupyterfieldset', 'mod_jupyter'));
-
         // Add standard elements.
         $this->standard_coursemodule_elements();
 
