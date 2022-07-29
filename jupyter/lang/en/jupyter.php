@@ -31,7 +31,7 @@ $string['modulename'] = 'Jupyter Hub';
 $string['pluginadministration'] = 'pluginadministration';
 $string['jupytername_help, mod_jupyter'] = 'Help text';
 $string['jupytername'] = 'Jupyter Name'; //Name of the activity module instance
-$string['jupytersettings'] = 'Jupyter Settings';
+$string['jupytersettings'] = 'Standard settings';
 $string['jupyterfieldset'] = '';
 
 $string['jupyter:addinstance'] = 'Add a new Jupyter Activity';
