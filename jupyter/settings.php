@@ -31,16 +31,16 @@ if ($hassiteconfig) {
         // TODO: Define the plugin settings page - {@link https://docs.moodle.org/dev/Admin_settings}.
 
         //Jupyter url setting
-        $settings->add(new admin_setting_configtext('mod_jupyter/jupyter_url', get_string('jupyter_url', 'jupyter'),
-            get_string('jupyter_url_desc', 'jupyter'), 'http://localhost.localdomain/', PARAM_URL));
+        $settings->add(new admin_setting_configtext('mod_jupyter/jupyterurl', get_string('jupyterurl', 'jupyter'),
+            get_string('jupyterurl_desc', 'jupyter'), 'http://localhost.localdomain/', PARAM_URL));
 
         //Jupyter IP setting
-        $settings->add(new admin_setting_configtext('mod_jupyter/jupyter_ip', get_string('jupyter_ip', 'jupyter'),
-            get_string('jupyter_ip_desc', 'jupyter'), '255.255.255.255', PARAM_HOST));
+        $settings->add(new admin_setting_configtext('mod_jupyter/jupyterip', get_string('jupyterip', 'jupyter'),
+            get_string('jupyterip_desc', 'jupyter'), '255.255.255.255', PARAM_HOST));
 
         //Jupyter Port setting
-        $settings->add(new admin_setting_configtext('mod_jupyter/jupyter_port', get_string('jupyter_port', 'jupyter'),
-            get_string('jupyter_port_desc', 'jupyter'), 80, PARAM_INT));
+        $settings->add(new admin_setting_configtext('mod_jupyter/jupyterport', get_string('jupyterport', 'jupyter'),
+            get_string('jupyterport_desc', 'jupyter'), 80, PARAM_INT));
 
     }
 }

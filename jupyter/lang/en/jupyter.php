@@ -38,12 +38,12 @@ $string['jupyter:addinstance'] = 'Add a new Jupyter Activity';
 
 //Admin plugin settings
 //URL
-$string['jupyter_url'] = 'Jupyter URL';
-$string['jupyter_url_desc'] = 'Add the URL to your jupyter hub. Http://localhost/ is not accepted but
+$string['jupyterurl'] = 'Jupyter URL';
+$string['jupyterurl_desc'] = 'Add the URL to your JupyterHub. Http://localhost/ is not accepted but
 * http://localhost.localdomain/ is ok.';
 //IP
-$string['jupyter_ip'] = 'Jupyter IP';
-$string['jupyter_ip_desc'] = 'Add the ip to your jupyter hub. IPv4 dotted quad (IP address).';
+$string['jupyterip'] = 'Jupyter IP';
+$string['jupyterip_desc'] = 'Add the ip to your JupyterHub. IPv4 dotted quad (IP address).';
 //Port
-$string['jupyter_port'] = 'Jupyter Port';
-$string['jupyter_port_desc'] = 'Add the port your jupyter runs on.';
+$string['jupyterport'] = 'Jupyter Port';
+$string['jupyterport_desc'] = 'Add the port your JupyterHub runs on.';
