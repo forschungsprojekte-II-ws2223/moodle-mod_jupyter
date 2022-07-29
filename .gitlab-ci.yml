@@ -68,11 +68,21 @@ zip-plugin:
   stage: release
   # Each job needs a script, even if not used https://gitlab.com/gitlab-org/gitlab/-/issues/19717
   script:
-    echo
+    - cd jupyter
+    - composer update
   artifacts:
     name: jupyter # Name of the resulting .zip
     paths:
       - jupyter/* # Include whole directory
+    #Does not work because our Gitlab runners version is 12.10 and feature is available at 13.8
+    #exclude:
+    #  - jupyter/README.md
+    #  - jupyter/*.sh
   only:
-    - main # Run only on specific branch
+    refs:
+      - main # Run only on specific branch
+      - ci-improvement-regarding-artifact
+    changes:
+      - jupyter/*
+
   
