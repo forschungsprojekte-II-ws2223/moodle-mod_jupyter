@@ -22,7 +22,7 @@ as described in the dedicated [Readme.md](./jupyter/README.md)
 ## Access Plugin UI in course ##
 
 0. perform a composer update `composer update` to update dependencies (you need to have composer installed: https://getcomposer.org/download/)
-1. make sure you have a running moodle environment and installed the jupyter plugin as described above
+1. make sure you have a running JupyterHub moodle environment and installed the jupyter plugin as described above
 2. click on one of your courses (if there is non you have to create a course first)
 3. make sure editing is turned on, at the top right
 4. now you can click on `Add an activity or resource` below on the right
