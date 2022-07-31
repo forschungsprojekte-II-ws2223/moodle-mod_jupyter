@@ -18,12 +18,15 @@
  * Prints an instance of mod_jupyter.
  *
  * @package     mod_jupyter
- * @copyright   2022 Your Name <you@example.com>
+ * @copyright   2022 StuPro Uni Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
+require (__DIR__ . '/vendor/autoload.php');
+
+//MOODLE specific config
 
 // Course module id.
 $id = optional_param('id', 0, PARAM_INT);
@@ -50,7 +53,31 @@ $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
-echo $OUTPUT->header();
 
+//User interface
+use Firebase\JWT\JWT;
+
+$uniqueId=mb_strtolower("user".$USER->id.$USER->lastname, "UTF-8");
+
+//custom key must equal key in jupyterhub_docker .env !
+$key = 'your-256-bit-secret';
+$data = [
+    "name"=> $uniqueId,
+    "iat"=> time(),
+    "exp"=> time()+15
+];
+$jwt = JWT::encode($data, $key, 'HS256');
+$jupyterLogin="http://127.0.0.1:8000/?auth_token=".$jwt;
+
+$sections = ['Introduction', 'Learning', 'Institution', 'Another section', 'References'];
+$templatecontext=[
+    'sections'=>array_values($sections),
+    'login'=> $jupyterLogin
+    ];
+
+
+echo $OUTPUT->header();
+echo $OUTPUT->render_from_template('mod_jupyter/logo',[]);
+echo $OUTPUT->render_from_template('mod_jupyter/manage',$templatecontext);
 echo $OUTPUT->footer();
 
