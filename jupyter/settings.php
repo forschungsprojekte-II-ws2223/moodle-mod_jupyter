@@ -33,7 +33,7 @@ if ($hassiteconfig) {
         $settings->add(new admin_setting_heading('jupyter_settings_heading', get_string('generalconfig', 'jupyter'),
             get_string('generalconfig_desc', 'jupyter')));
 
-        //To get a settings value, use 'get_config('mod_jupyter', 'settingname');
+        //To use a settings value in code, use 'get_config('mod_jupyter', 'settingname');
         // e.g. $value = get_config('mod_jupyter', 'jupyterurl'); returns the url.
 
         //Jupyter url setting
@@ -42,7 +42,7 @@ if ($hassiteconfig) {
 
         //Jupyter IP setting
         $settings->add(new admin_setting_configtext('mod_jupyter/jupyterip', get_string('jupyterip', 'jupyter'),
-            get_string('jupyterip_desc', 'jupyter'), '255.255.255.255', PARAM_HOST));
+            get_string('jupyterip_desc', 'jupyter'), '254.254.254.254', PARAM_HOST));
 
         //Jupyter Port setting
         $settings->add(new admin_setting_configtext('mod_jupyter/jupyterport', get_string('jupyterport', 'jupyter'),
