@@ -28,7 +28,13 @@ defined('MOODLE_INTERNAL') || die();
 if ($hassiteconfig) {
     // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
     if ($ADMIN->fulltree) {
-        // TODO: Define the plugin settings page - {@link https://docs.moodle.org/dev/Admin_settings}.
+        //Defines the plugin settings page - {@link https://docs.moodle.org/dev/Admin_settings}.
+
+        $settings->add(new admin_setting_heading('jupyter_settings_heading', get_string('generalconfig', 'jupyter'),
+            get_string('generalconfig_desc', 'jupyter')));
+
+        //To get a settings value, use 'get_config('mod_jupyter', 'settingname');
+        // e.g. $value = get_config('mod_jupyter', 'jupyterurl'); returns the url.
 
         //Jupyter url setting
         $settings->add(new admin_setting_configtext('mod_jupyter/jupyterurl', get_string('jupyterurl', 'jupyter'),
