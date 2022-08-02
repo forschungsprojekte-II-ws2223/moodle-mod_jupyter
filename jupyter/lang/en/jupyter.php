@@ -42,7 +42,7 @@ $string['generalconfig'] = 'General settings';
 $string['generalconfig_desc'] = 'Settings required to reach the JupyterHub this plugin uses. Replace the default values with your own <strong>URL</strong>, <strong>Port</strong> and <strong>IP</strong> if necessary.';
 //URL
 $string['jupyterurl'] = 'Jupyter URL';
-$string['jupyterurl_desc'] = 'Add the URL to your JupyterHub.';
+$string['jupyterurl_desc'] = 'Add the URL to your JupyterHub. If <strong>no URL</strong> has been specified, the plugin will try to reach the JupyterHub via the provided IP and Port.';
 //IP
 $string['jupyterip'] = 'Jupyter IP';
 $string['jupyterip_desc'] = 'Add the ip to your JupyterHub. IPv4 dotted quad (IP address).';
