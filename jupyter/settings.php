@@ -28,7 +28,25 @@ defined('MOODLE_INTERNAL') || die();
 if ($hassiteconfig) {
     // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
     if ($ADMIN->fulltree) {
-        // TODO: Define the plugin settings page - {@link https://docs.moodle.org/dev/Admin_settings}.
+        //Defines the plugin settings page - {@link https://docs.moodle.org/dev/Admin_settings}.
+
+        $settings->add(new admin_setting_heading('jupyter_settings_heading', get_string('generalconfig', 'jupyter'),
+            get_string('generalconfig_desc', 'jupyter')));
+
+        //To use a settings value in code, use 'get_config('mod_jupyter', 'settingname');
+        // e.g. $value = get_config('mod_jupyter', 'jupyterurl'); returns the url.
+
+        //Jupyter url setting
+        $settings->add(new admin_setting_configtext('mod_jupyter/jupyterurl', get_string('jupyterurl', 'jupyter'),
+            get_string('jupyterurl_desc', 'jupyter'), '', PARAM_URL));
+
+        //Jupyter IP setting
+        $settings->add(new admin_setting_configtext('mod_jupyter/jupyterip', get_string('jupyterip', 'jupyter'),
+            get_string('jupyterip_desc', 'jupyter'), '127.0.01', PARAM_HOST));
+
+        //Jupyter Port setting
+        $settings->add(new admin_setting_configtext('mod_jupyter/jupyterport', get_string('jupyterport', 'jupyter'),
+            get_string('jupyterport_desc', 'jupyter'), 8000, PARAM_INT));
+
     }
 }
-

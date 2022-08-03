@@ -67,7 +67,18 @@ $data = [
     "exp"=> time()+15
 ];
 $jwt = JWT::encode($data, $key, 'HS256');
-$jupyterLogin="http://127.0.0.1:8000/?auth_token=".$jwt;
+
+//Get admin settings
+$url = get_config('mod_jupyter', 'jupyterurl');
+$ip = get_config('mod_jupyter', 'jupyterip');
+$port = get_config('mod_jupyter', 'jupyterport');
+
+//If url empty, use port and ip
+if(empty($url)){
+    $jupyterLogin="http://" . $ip . ":" . $port . "/?auth_token=".$jwt;
+}else{
+    $jupyterLogin= $url . "/?auth_token=".$jwt;
+}
 
 $sections = ['Introduction', 'Learning', 'Institution', 'Another section', 'References'];
 $templatecontext=[
