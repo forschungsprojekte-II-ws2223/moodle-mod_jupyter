@@ -32,16 +32,20 @@ In the 'verify signature' field the secret can stay 'your-256-bit-secret' as it 
 - You can now add the token as a query parameter to the address that your jupyterhub is running on.  
 For example: http://127.0.0.1:8000/?auth_token=**your token here**
 
-## Update docker dependencies
+## Manage dependencies
+### Update docker dependencies
 - Stop the running containers
 - Make the version changes in the [docker-compose](docker-compose.yml) file you want to make.
 - Run `docker-compose pull` then wait for the download of the new dependencies.
 - Run `docker-compose up -d` and wait for the containers to be recreated.
 - Then the containers can be used again.
 
+### Manage python dependencies
+The libraries are managed through the [requirements.txt](https://pip.pypa.io/en/stable/reference/requirements-file-format/). This way one can specify certain versions, upgrade versions or add additional libraries.
+
 ## Architecture
 
-This setup was derived from these two guides: [Opendreamkit](https://opendreamkit.org/2018/10/17/jupyterhub-docker/), [GitHub repo](https://github.com/jupyterhub/)
+This setup was derived from these two guides: [OpenDreamKit](https://opendreamkit.org/2018/10/17/jupyterhub-docker/), [GitHub repo](https://github.com/jupyterhub/)
 
 This is a quick explanation on how the deployment is built:
 - create new directory
@@ -50,10 +54,10 @@ This is a quick explanation on how the deployment is built:
     - add volumes
     - add environment variables
 - create a .env file with the given content
-- create jupyterlab directory
-    - create jupyter_notebook_config.py with the jupyterlab configuration
+- create JupyterLab directory
+    - create jupyter_notebook_config.py with the JupyterLab configuration
     - create a Dockerfile
-        - point to jupyterlab docker image
+        - point to JupyterLab docker image
         - copy jupyter_notebook_config.py into the image
         - install required dependencies
 - create jupyterhub directory
