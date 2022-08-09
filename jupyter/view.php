@@ -80,15 +80,12 @@ if(empty($url)){
     $jupyterLogin= $url . "/?auth_token=".$jwt;
 }
 
-$sections = ['Introduction', 'Learning', 'Institution', 'Another section', 'References'];
 $templatecontext=[
-    'sections'=>array_values($sections),
     'login'=> $jupyterLogin
     ];
 
 
 echo $OUTPUT->header();
-echo $OUTPUT->render_from_template('mod_jupyter/logo',[]);
 echo $OUTPUT->render_from_template('mod_jupyter/manage',$templatecontext);
 echo $OUTPUT->footer();
 
