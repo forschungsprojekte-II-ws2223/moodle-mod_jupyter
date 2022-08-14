@@ -35,7 +35,7 @@ $string['jupytersettings'] = 'Standard settings';
 $string['jupyterfieldset'] = '';
 $string['repourl'] = 'Git Repository URL';
 $string['branch'] = 'Branch';
-$string['file'] = 'File to open';
+$string['file'] = 'Notebook file to open';
 
 $string['jupyter:addinstance'] = 'Add a new Jupyter Activity';
 

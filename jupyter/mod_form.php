@@ -49,10 +49,10 @@ class mod_jupyter_mod_form extends moodleform_mod {
         // Adding the standard "name" field.
         $mform->addElement('text', 'name', get_string('jupytername', 'mod_jupyter'), array('size' => '64'));
 
+        // Adding fields for notebook git repository
         $mform->addElement('text', 'repourl', get_string('repourl', 'mod_jupyter'), array('size' => '64'));
         $mform->addElement('text', 'branch', get_string('branch', 'mod_jupyter'), array('size' => '64'));
         $mform->addElement('text', 'file', get_string('file', 'mod_jupyter'), array('size' => '64'));
-
 
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);

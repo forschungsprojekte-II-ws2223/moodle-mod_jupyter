@@ -73,9 +73,28 @@ $url = get_config('mod_jupyter', 'jupyterurl');
 $ip = get_config('mod_jupyter', 'jupyterip');
 $port = get_config('mod_jupyter', 'jupyterport');
 
-$repourl = $moduleinstance->repourl;
-$branch = $moduleinstance->branch;
-$file = $moduleinstance->file;
+$gitpath = genLink(
+    $moduleinstance->repourl,
+    $moduleinstance->branch,
+    $moduleinstance->file
+);
+
+//If url empty, use port and ip
+if(empty($url)){
+    $jupyterLogin="http://" . $ip . ":" . $port . $gitpath . "&auth_token=".$jwt;
+
+}else{
+    $jupyterLogin= $url . $gitpath . "&auth_token=".$jwt;
+}
+
+$templatecontext=[
+    'login'=> $jupyterLogin
+];
+
+echo $OUTPUT->header();
+echo $OUTPUT->heading($route);
+echo $OUTPUT->render_from_template('mod_jupyter/manage',$templatecontext);
+echo $OUTPUT->footer();
 
 function genLink(string $repo, string $branch, string $file) : string {
     return $jupyterhub .
@@ -88,24 +107,3 @@ function genLink(string $repo, string $branch, string $file) : string {
         '&branch=' .
         urlencode($branch);
 }
-
-$path = genLink($repourl, $branch, $file);
-
-//If url empty, use port and ip
-if(empty($url)){
-    $jupyterLogin="http://" . $ip . ":" . $port . $path . "&auth_token=".$jwt;
-
-}else{
-    $jupyterLogin= $url . $path . "&auth_token=".$jwt;
-}
-
-$templatecontext=[
-    'login'=> $jupyterLogin
-    ];
-
-
-echo $OUTPUT->header();
-echo $OUTPUT->heading($route);
-echo $OUTPUT->render_from_template('mod_jupyter/manage',$templatecontext);
-echo $OUTPUT->footer();
-
