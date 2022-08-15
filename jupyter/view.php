@@ -57,7 +57,7 @@ $PAGE->set_context($modulecontext);
 //User interface
 use Firebase\JWT\JWT;
 
-$uniqueId=mb_strtolower("user".$USER->id.$USER->lastname, "UTF-8");
+$uniqueId=mb_strtolower($USER->username, "UTF-8");
 
 //custom key must equal key in jupyterhub_docker .env !
 $key = 'your-256-bit-secret';
