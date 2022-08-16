@@ -33,6 +33,9 @@ $string['jupytername_help'] = 'Help text';
 $string['jupytername'] = 'Jupyter Name'; //Name of the activity module instance
 $string['jupytersettings'] = 'Standard settings';
 $string['jupyterfieldset'] = '';
+$string['repourl'] = 'Git Repository URL';
+$string['branch'] = 'Branch';
+$string['file'] = 'Notebook file to open';
 
 $string['jupyter:addinstance'] = 'Add a new Jupyter Activity';
 
