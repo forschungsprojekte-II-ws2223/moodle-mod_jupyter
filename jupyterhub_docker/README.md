@@ -3,6 +3,11 @@ This folder contains a simple jupyterhub docker deployment, that uses a postgres
 
 # Setup
 
+If you want to use this setup with a moodle other than the development setup, the url of the moodle instance needs to be
+added to the according settings files before executing the server. There add your URL to the list in 
+[jupyterhub_config.py](./jupyterhub/jupyterhub_config.py) in line 20 and to the list in 
+[jupyter_notebook_config.py](./jupyterlab/jupyter_notebook_config.py) in line 14.
+
 First make sure you are in the jupyterhub_docker folder.
 If you are on linux or macOS there is also a [makefile](Makefile) you can use for the setup process.
 (This makefiles deletes already existing jupyterhub volumes and creates new ones, so only use for testing or modify the makefile)  
