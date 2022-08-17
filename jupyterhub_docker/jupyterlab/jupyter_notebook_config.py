@@ -15,3 +15,4 @@ c.NotebookApp.tornado_settings = {
     }
 }
 c.NotebookApp.disable_check_xsrf = True
+c.NotebookApp.terminals_enabled = False
