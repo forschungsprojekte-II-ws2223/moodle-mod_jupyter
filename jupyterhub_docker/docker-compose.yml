@@ -1,4 +1,4 @@
-version: '3'
+version: "3.9"
 
 services:
   jupyterlab:
@@ -45,13 +45,13 @@ services:
 
 volumes:
   data:
-    external:
-      name: ${DATA_VOLUME_HOST}
+    name: ${DATA_VOLUME_HOST}
+    external: true
   db:
-    external:
-      name: ${DB_VOLUME_HOST}
+    name: ${DB_VOLUME_HOST}
+    external: true
 
 networks:
   default:
-    external:
-      name: ${DOCKER_NETWORK_NAME}
+    name: ${DOCKER_NETWORK_NAME}
+    external: true
