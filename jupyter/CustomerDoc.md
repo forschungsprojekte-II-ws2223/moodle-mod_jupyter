@@ -63,3 +63,5 @@ To use the Plugin, a running instance of Jupyterhub is needed which exposes the 
 4. Now you have open a Jupyter Notebook
 
 ### Usage of Plugin
+- jupyterhub konfig
+- nbgitpuller
