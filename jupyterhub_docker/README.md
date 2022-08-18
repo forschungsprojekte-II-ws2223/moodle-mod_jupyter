@@ -9,9 +9,16 @@ added to the according settings files before executing the server. There add you
 [jupyter_notebook_config.py](./jupyterlab/jupyter_notebook_config.py) in line 14.
 
 First make sure you are in the jupyterhub_docker folder.
-If you are on linux or macOS there is also a [makefile](Makefile) you can use for the setup process.
-(This makefiles deletes already existing jupyterhub volumes and creates new ones, so only use for testing or modify the makefile)  
-If running the makefile was successful the following steps aren't necessary anymore.
+If you are on linux or macOS there is a [makefile](Makefile) and for Windows there is a [Batchfile](Batch.bat) you can use for the setup process.
+
+If running the makefile/Batchfile was successful, run:
+```shell
+docker-compose up -d
+``` 
+to finish the setup.
+
+
+
 
 ## Create volumes and network:  
 Run:
