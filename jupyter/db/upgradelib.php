@@ -19,17 +19,14 @@
  *
  * @package     mod_jupyter
  * @category    upgrade
- * @copyright   2022 Your Name <you@example.com>
+ * @copyright   2022 Your Name <your@email.address>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Helper function used by the upgrade.php file.
  */
 function mod_jupyter_helper_function() {
-    global $DB;
 
     // Please note: you can only use raw low level database access here.
     // Avoid Moodle API calls in upgrade steps.

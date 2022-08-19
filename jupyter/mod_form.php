@@ -18,7 +18,7 @@
  * The main mod_jupyter configuration form.
  *
  * @package     mod_jupyter
- * @copyright   2022 Your Name <you@example.com>
+ * @copyright   2022 Your Name <your@email.address>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,7 +30,7 @@ require_once($CFG->dirroot.'/course/moodleform_mod.php');
  * Module instance settings form.
  *
  * @package     mod_jupyter
- * @copyright   2022 Your Name <you@example.com>
+ * @copyright   2022 Your Name <your@email.address>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_jupyter_mod_form extends moodleform_mod {
@@ -49,7 +49,7 @@ class mod_jupyter_mod_form extends moodleform_mod {
         // Adding the standard "name" field.
         $mform->addElement('text', 'name', get_string('jupytername', 'mod_jupyter'), array('size' => '64'));
 
-        // Adding fields for notebook git repository
+        // Adding fields for notebook git repository.
         $mform->addElement('text', 'repourl', get_string('repourl', 'mod_jupyter'), array('size' => '64'));
         $mform->addElement('text', 'branch', get_string('branch', 'mod_jupyter'), array('size' => '64'));
         $mform->addElement('text', 'file', get_string('file', 'mod_jupyter'), array('size' => '64'));

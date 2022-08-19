@@ -19,7 +19,7 @@
  *
  * @package     mod_jupyter
  * @category    upgrade
- * @copyright   2022 Your Name <you@example.com>
+ * @copyright   2022 Your Name <your@email.address>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -35,8 +35,6 @@ require_once(__DIR__.'/upgradelib.php');
  */
 function xmldb_jupyter_upgrade($oldversion) {
     global $DB;
-
-    $dbman = $DB->get_manager();
 
     // For further information please read {@link https://docs.moodle.org/dev/Upgrade_API}.
     //

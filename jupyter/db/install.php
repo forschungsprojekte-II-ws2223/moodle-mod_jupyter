@@ -19,11 +19,10 @@
  *
  * @package     mod_jupyter
  * @category    upgrade
- * @copyright   2022 Your Name <you@example.com>
+ * @copyright   2022 Your Name <your@email.address>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Custom code to be run on installing the plugin.
