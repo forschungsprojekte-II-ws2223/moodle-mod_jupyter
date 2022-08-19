@@ -18,7 +18,7 @@
  * Plugin version and other meta-data are defined here.
  *
  * @package     mod_jupyter
- * @copyright   2022 Your Name <you@example.com>
+ * @copyright   2022 Your Name <your@email.address>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

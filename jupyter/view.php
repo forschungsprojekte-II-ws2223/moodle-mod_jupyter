@@ -24,9 +24,9 @@
 
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
-require (__DIR__ . '/vendor/autoload.php');
+require(__DIR__ . '/vendor/autoload.php');
 
-//MOODLE specific config
+// MOODLE specific config.
 
 // Course module id.
 $id = optional_param('id', 0, PARAM_INT);
@@ -54,49 +54,58 @@ $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
 
-//User interface
+// User interface.
 use Firebase\JWT\JWT;
 
-$uniqueId=mb_strtolower($USER->username, "UTF-8");
+$uniqueid = mb_strtolower($USER->username, "UTF-8");
 
-//custom key must equal key in jupyterhub_docker .env !
+// Custom key must equal key in jupyterhub_docker .env!
 $key = 'your-256-bit-secret';
 $data = [
-    "name"=> $uniqueId,
-    "iat"=> time(),
-    "exp"=> time()+15
+    "name" => $uniqueid,
+    "iat" => time(),
+    "exp" => time() + 15
 ];
 $jwt = JWT::encode($data, $key, 'HS256');
 
-//Get admin settings
+// Get admin settings.
 $url = get_config('mod_jupyter', 'jupyterurl');
 $ip = get_config('mod_jupyter', 'jupyterip');
 $port = get_config('mod_jupyter', 'jupyterport');
 
-$gitpath = genLink(
+$gitpath = gen_link(
     $moduleinstance->repourl,
     $moduleinstance->branch,
     $moduleinstance->file
 );
 
-//If url empty, use port and ip
-if(empty($url)){
-    $jupyterLogin="http://" . $ip . ":" . $port . $gitpath . "&auth_token=".$jwt;
+// If url empty, use port and ip.
+if (empty($url)) {
+    $jupyterlogin = "http://" . $ip . ":" . $port . $gitpath . "&auth_token=" . $jwt;
 
-}else{
-    $jupyterLogin= $url . $gitpath . "&auth_token=".$jwt;
+} else {
+    $jupyterlogin = $url . $gitpath . "&auth_token="  . $jwt;
 }
 
-$templatecontext=[
-    'login'=> $jupyterLogin
+$templatecontext = [
+    'login' => $jupyterlogin
 ];
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading($route);
-echo $OUTPUT->render_from_template('mod_jupyter/manage',$templatecontext);
+echo $OUTPUT->render_from_template('mod_jupyter/manage', $templatecontext);
 echo $OUTPUT->footer();
 
-function genLink(string $repo, string $branch, string $file) : string {
+
+/**
+ * Creates nbgitpuller part of the link to the jupyterhub.
+ *
+ * @param string $repo
+ * @param string $branch
+ * @param string $file
+ * @return string
+ */
+function gen_link(string $repo, string $branch, string $file) : string {
     return $jupyterhub .
         '/hub/user-redirect/git-pull?repo=' .
         urlencode($repo) .

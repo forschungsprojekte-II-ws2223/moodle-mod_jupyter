@@ -6,3 +6,4 @@ jupyter_config_default.py
 jupyter/vendor/
 /.vscode/
 /composer.phar
+/node_modules/

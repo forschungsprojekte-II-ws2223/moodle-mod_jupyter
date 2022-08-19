@@ -19,7 +19,7 @@
  *
  * @package     mod_jupyter
  * @category    string
- * @copyright   2022 Your Name <you@example.com>
+ * @copyright   2022 Your Name <your@email.address>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,7 +30,7 @@ $string['modulenameplural'] = '';
 $string['modulename'] = 'JupyterHub';
 $string['pluginadministration'] = 'pluginadministration';
 $string['jupytername_help'] = 'Help text';
-$string['jupytername'] = 'Jupyter Name'; //Name of the activity module instance
+$string['jupytername'] = 'Jupyter Name'; // Name of the activity module instance.
 $string['jupytersettings'] = 'Standard settings';
 $string['jupyterfieldset'] = '';
 $string['repourl'] = 'Git Repository URL';
@@ -39,16 +39,16 @@ $string['file'] = 'Notebook file to open';
 
 $string['jupyter:addinstance'] = 'Add a new Jupyter Activity';
 
-//Admin plugin settings
-//General
+// Admin plugin settings.
+// General.
 $string['generalconfig'] = 'General settings';
 $string['generalconfig_desc'] = 'Settings required to reach the JupyterHub this plugin uses. Replace the default values with your own <strong>URL</strong>, <strong>Port</strong> and <strong>IP</strong> if necessary.';
-//URL
+// URL.
 $string['jupyterurl'] = 'Jupyter URL';
 $string['jupyterurl_desc'] = 'Add the URL to your JupyterHub. If <strong>no URL</strong> has been specified, the plugin will try to reach the JupyterHub via the provided IP and Port.';
-//IP
+// IP.
 $string['jupyterip'] = 'Jupyter IP';
 $string['jupyterip_desc'] = 'Add the ip to your JupyterHub. IPv4 dotted quad (IP address).';
-//Port
+// Port.
 $string['jupyterport'] = 'Jupyter Port';
 $string['jupyterport_desc'] = 'Add the port your JupyterHub runs on.';

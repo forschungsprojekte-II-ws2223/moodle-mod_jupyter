@@ -2,9 +2,7 @@ stages:
   - test
   - release
 
-# image is hosted hosted on https://hub.docker.com/r/maxsch1/moodle-ci/tags, since the container registry on our gitlab didnt work for me:
-# https://sopra.informatik.uni-stuttgart.de/kib3-student-projects/kib3-stupro-ss-22/container_registry
-image: maxsch1/moodle-ci:4
+image: sopra.informatik.uni-stuttgart.de:5050/kib3-student-projects/kib3-stupro-ss-22:latest
 
 variables:
     DB: "mariadb"
@@ -14,6 +12,7 @@ variables:
     MOODLE_DIR: "/var/www/html/moodle"
     MOODLE_BEHAT_WDHOST: "http://selenium-standalone-chrome:4444/wd/hub"
     MOODLE_START_BEHAT_SERVERS: "NO"
+    IGNORE_NAMES: "lib.php, upgrade.php"
 
 .install_moodle: 
   only:
@@ -45,11 +44,11 @@ test:
     - moodle-plugin-ci phpmd
     - moodle-plugin-ci validate
     - moodle-plugin-ci phpunit
-    #- moodle-plugin-ci codechecker
-    #- moodle-plugin-ci grunt
+    - moodle-plugin-ci codechecker
+    - moodle-plugin-ci grunt
     #- moodle-plugin-ci mustache
-    #- moodle-plugin-ci phpdoc
-    # TODO: disabled checks dont work (yet) or fail on violation --> fix these issues in the codebase
+    - moodle-plugin-ci phpdoc
+    # Note: mustache does not work, as HTML validator cannot be called
 
 # Disabled for now since we dont have any behat tests yet and setup takes a long time
 # test_behat:

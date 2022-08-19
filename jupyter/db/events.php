@@ -15,12 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Event observer definitions for the mod_jupyter plugin.
-*
-* @package   mod_jupyter
-* @copyright Year, You Name <your@email.address>
-* @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
-*/
+ * Event observer definitions for the mod_jupyter plugin.
+ *
+ * @package   mod_jupyter
+ * @copyright Year, You Name <your@email.address>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
 
 $observers = [
 [
