@@ -51,17 +51,28 @@ To use the Plugin, a running instance of Jupyterhub is needed which exposes the 
    ![Plugin](images/plugin.png)
 5. Click on __Install Plugins__
    ![ChoseFile](images/choseFile.png)
-6. Add the zip version via "Chose a file..." or "Drag and Drop"
+6. Add the zip version via "Choose a file..." or "Drag and Drop"
 7. Click on __"Install plugin from the ZIP file"__ Button to install the Plugin
+8. Click on __OK__ if further configuration are opening to progress installation
 
+## Usage of Plugin for Teacher
 ### Create course
 1. Go to __Site Home__
 2. __Turn on editing__ in the settings
    ![turnOnEdit](images/turnOnEdit.png)
 3. Click on __"Add an activity or resource"__ and add the __Jupyter Hub__ Plugin as an activity
    ![jupyterPlugin](images/jupyterPlugin.png)
-4. Now you have open a Jupyter Notebook
+4. Configuration Jupyter to show the correct file by filling out the blanks
+   ![configJupyter](images/configJupyter.png)
+5. Now you have open a Jupyter Notebook
 
-### Usage of Plugin for Teacher
-- jupyterhub konfig
-- nbgitpuller
+### Jupyterhub Plugin Settings
+1. Go to __Site Administration__
+2. Open on __Plugins__
+3. Click on __Manages Activities__ which can be found under Activity Modules
+4. Find the Jupyter Plugin and click on it to find the settings
+   ![settingsJupyter](images/settingsJupyter.png)
+
+## Usage of Plugin for Students
+### Reset Jupyter Notebook to original Notebook (nbgitpuller)
+To get the original unchanged file, save and rename your changed file and reload the page. This should reload the original file while keeping the file with your changes.
