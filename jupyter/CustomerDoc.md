@@ -62,6 +62,6 @@ To use the Plugin, a running instance of Jupyterhub is needed which exposes the 
    ![jupyterPlugin](images/jupyterPlugin.png)
 4. Now you have open a Jupyter Notebook
 
-### Usage of Plugin
+### Usage of Plugin for Teacher
 - jupyterhub konfig
 - nbgitpuller
