@@ -19,7 +19,7 @@
  *
  * @package     mod_jupyter
  * @category    upgrade
- * @copyright   2022 Your Name <your@email.address>
+ * @copyright   KIB3 StuPro SS 2022 Uni Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

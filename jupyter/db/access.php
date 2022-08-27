@@ -18,7 +18,7 @@
  * Event observer definitions for the mod_jupyter plugin.
  *
  * @package   mod_jupyter
- * @copyright Year, You Name <your@email.address>
+ * @copyright KIB3 StuPro SS 2022 Uni Stuttgart
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
