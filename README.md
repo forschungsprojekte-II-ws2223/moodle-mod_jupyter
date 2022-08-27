@@ -38,7 +38,8 @@ For the authentication description visit the [README.md](./jupyter/README.md) fi
 
 ## License ##
 
-2022 KIB3 Student Project
+**Kuenstliche Intelligenz in die Berufliche Bildung Bringen (KIB3)**
+**2022 Summer Semester Student Project of University of Stuttgart**
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -50,11 +51,25 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
-this program.  If not, see <https://www.gnu.org/licenses/>.
+this program.  If not, see [GNU license](https://www.gnu.org/licenses).
 
 ## Additional resources
 * [Moodle official development main page](https://docs.moodle.org/dev/Main_Page)
 * [Moodle official output api page](https://docs.moodle.org/dev/Output_API)
 * [Moodle official javascript page](https://docs.moodle.org/dev/Javascript_Modules)
-* [Moodle official development block page](https://docs.moodle.org/dev/Blocks)
+* [Moodle official development activity modules page](https://docs.moodle.org/dev/Activity_modules)
 * [Moodle programming course](https://www.youtube.com/playlist?list=PLgfLVzXXIo5q10qVXDVyD-JZVyZL9pCq0)
+
+## Developers
+* Buchholz, Max
+* Günther, Ralph
+* Klaß, Robin
+* König, Solveigh
+* Marinic, Noah
+* Schüle, Maximilian
+* Stoll, Timo
+* Wohlfart, Phillip
+* Zhang, Yichi
+* Zoller, Nick
+
+developed this plugin in the context of the Student Project in the Summer Semester 2022 for the University of Stuttgart
