@@ -30,6 +30,7 @@ require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 require(__DIR__ . '/vendor/autoload.php');
 
+
 // Moodle specific config.
 
 // Course module id.
@@ -57,14 +58,15 @@ $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
-
-// User interface.
+/**
+ * User interface
+*/
 use Firebase\JWT\JWT;
 
 // Create id with the user's unique username from Moodle.
 $uniqueid = mb_strtolower($USER->username, "UTF-8");
 
-// Custom key must equal key in jupyterhub_docker .env!
+// Custom key must equal JWT_SECRET in jupyterhub_docker .env!
 $key = 'your-256-bit-secret';
 
 $data = [

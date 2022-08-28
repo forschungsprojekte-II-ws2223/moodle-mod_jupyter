@@ -60,7 +60,7 @@ this program.  If not, see [GNU license](https://www.gnu.org/licenses).
 * [Moodle official development activity modules page](https://docs.moodle.org/dev/Activity_modules)
 * [Moodle programming course](https://www.youtube.com/playlist?list=PLgfLVzXXIo5q10qVXDVyD-JZVyZL9pCq0)
 
-## Developers
+## Development Team
 * Buchholz, Max
 * Günther, Ralph
 * Klaß, Robin
@@ -72,4 +72,4 @@ this program.  If not, see [GNU license](https://www.gnu.org/licenses).
 * Zhang, Yichi
 * Zoller, Nick
 
-developed this plugin in the context of the Student Project in the Summer Semester 2022 for the University of Stuttgart
+developed this plugin in the context of the Student Project of University of Stuttgart in the summer semester 2022
