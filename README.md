@@ -70,6 +70,7 @@ this program.  If not, see [GNU license](https://www.gnu.org/licenses).
 * Marinic, Noah
 * Schüle, Maximilian
 * Stoll, Timo
+* Weber, Raphael
 * Wohlfart, Phillip
 * Zhang, Yichi
 * Zoller, Nick
