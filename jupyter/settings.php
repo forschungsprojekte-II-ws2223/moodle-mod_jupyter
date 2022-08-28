@@ -19,7 +19,7 @@
  *
  * @package     mod_jupyter
  * @category    admin
- * @copyright   KIB3 StuPro SS 2022 Uni Stuttgart
+ * @copyright   KIB3 StuPro SS 2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
