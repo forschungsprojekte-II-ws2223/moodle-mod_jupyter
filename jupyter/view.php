@@ -54,9 +54,8 @@ $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
-/**
- * User interface
-*/
+// User interface: 
+
 use Firebase\JWT\JWT;
 
 // Create id with the user's unique username from Moodle.
