@@ -68,7 +68,7 @@ at the start of your file.
 ## Authenticate Description ##
 
 After you install the plugin, add it to your course and click on the activity.
-The site encodes the unique username of moodle of the currently logged in user to a valid jwt token (it looks like this `jwt.io`).
+The site encodes the unique username of moodle of the currently logged in user to a valid jwt token (it looks like [this](jwt.io)).
 It has an expiration time of 15 seconds, after that the token is not valid anymore and can't be used.
 Then this token is sent to jupyterhub and decoded.
 In an iframe the jupyterhub will load the users personal jupyter notebook.
