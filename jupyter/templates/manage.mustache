@@ -24,16 +24,20 @@
 }}
 
 <body>
-<img src="images/unistuttgart_logo_deutsch.png" alt="logo" align="right">
+<img id="uni-logo" src="images/unistuttgart_logo_deutsch.png" alt="logo" align="right">
 <h1 align="left">Jupyter</h1>
 <hr>
 <div align="center">
     <div id="description-wrapper">
         <div id="info">&#9432;</div>
-        <p id="description">To get the original notebook without losing progress, you can save your changes to a different file by clicking on <b>"File"</b> in the top left corner and then select <b>"Save Notebook As..."</b>. Afterwards, you need to <b>delete</b> the original file and click the <b>"Refresh"</b> button.</p>
+        <p id="description">
+            To get the original notebook without losing progress, you can save your changes to a different file by
+            clicking on <b>"File"</b> in the top left corner and then select <b>"Save Notebook As..."</b>. Afterwards,
+            you need to <b>delete</b> the original file and click the <b>"Refresh"</b> button.
+        </p>
         <button id="iframe-refresh-button" onclick="refreshIFrame()">
-            <div id="refresh-text">Reload</div>
-            <div id="refresh-symbol">&#x21bb;</div>
+            Refresh
+            <img id="refresh-icon" src="images/refresh_icon.png" alt="refresh icon">
         </button>
     </div>
     <iframe id="iframe" src={{login}}></iframe>
@@ -58,7 +62,8 @@
     #description-wrapper {
         margin: 20px 0 20px;
         display: flex;
-        outline: 1px solid #888;
+        outline: 1px solid #aaa;
+        border-radius: 5px;
         justify-content: space-evenly;
         align-items: center;
         flex-direction: row;
@@ -70,15 +75,25 @@
 
     #iframe-refresh-button {
         position: relative;
-        border: 2px solid green;
-        border-radius: 4px;
-        padding: 1.5rem 4rem;
-        background: none;
-        cursor: pointer;
-        flex-basis: 10%;
+        padding: 1rem 4rem;
+        text-align: center;
         display: flex;
         align-items: center;
         justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+        background: #1abc9c;
+        border-bottom: 2px solid #12ab8d;
+        box-shadow: inset 0 -2px #12ab8d;
+    }
+
+    #iframe-refresh-button:active {
+        top: 1px;
+        box-shadow: none;
     }
 
     #iframe-refresh-button > div {
@@ -88,43 +103,36 @@
         transition: .2s ease-in-out;
     }
 
-    #refresh-text {
-        left: 50%;
-        transform: translateX(-50%);
+    #refresh-icon {
+        position: absolute;
+        left: 1rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        transition: all 0.4s ease-in-out;
     }
 
-    #refresh-symbol {
-        right: 20%;
-        opacity: 0;
-    }
-
-    #iframe-refresh-button:hover #refresh-text {
-        left: 20%;
-        transform: none;
-    }
-
-    #iframe-refresh-button:hover #refresh-symbol {
-        opacity: 1;
+    #iframe-refresh-button:hover #refresh-icon,
+    #iframe-refresh-button:focus #refresh-icon {
+        transform: rotate(360deg) scale(1.2);
     }
 
     #info {
         color: red;
         font-weight: bold;
         font-size: 2rem;
-        flex-basis: 5%;
     }
 
     #description {
         flex-basis: 100%;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         text-align: left;
     }
 
-    img {
+    #uni-logo {
         height: 3em;
     }
 
-    @media only screen and (max-width:800px) {
+    @media only screen and (max-width:1240px) {
 
         #description-wrapper {
             flex-direction: column;
@@ -134,5 +142,8 @@
             opacity: 1;
         }
 
+        #description {
+            text-align: center;
+        }
     }
 </style>
