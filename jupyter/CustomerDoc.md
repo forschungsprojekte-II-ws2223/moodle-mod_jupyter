@@ -76,3 +76,7 @@ To use the Plugin, a running instance of Jupyterhub is needed which exposes the 
 ## Usage of Plugin for Students
 ### Reset Jupyter Notebook to original Notebook (nbgitpuller)
 To get the original unchanged file, save and rename your changed file and reload the page. This should reload the original file while keeping the file with your changes.
+
+## Troubleshooting
+### Inserting correct URL
+### Inserting right branch
