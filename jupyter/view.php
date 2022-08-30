@@ -61,11 +61,13 @@ $uniqueid = mb_strtolower($USER->username, "UTF-8");
 
 // Custom key must equal key in jupyterhub_docker .env!
 $key = 'your-256-bit-secret';
+
 $data = [
     "name" => $uniqueid,
     "iat" => time(),
     "exp" => time() + 15
 ];
+
 $jwt = JWT::encode($data, $key, 'HS256');
 
 // Get admin settings.
@@ -106,8 +108,7 @@ echo $OUTPUT->footer();
  * @return string
  */
 function gen_link(string $repo, string $branch, string $file) : string {
-    return $jupyterhub .
-        '/hub/user-redirect/git-pull?repo=' .
+    return '/hub/user-redirect/git-pull?repo=' .
         urlencode($repo) .
         '&urlpath=lab%2Ftree%2F' .
         urlencode(substr(strrchr($repo, "/"), 1)) .
