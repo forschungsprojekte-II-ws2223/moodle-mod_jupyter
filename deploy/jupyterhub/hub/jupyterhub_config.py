@@ -12,14 +12,16 @@ c.DockerSpawner.network_name = network_name
 c.DockerSpawner.extra_host_config = { 'network_mode': network_name }
 
 c.JupyterHub.hub_ip = 'jupyterhub'
+c.JupyterHub.bind_url = 'http://:8000/jupyterhub/'
 
-c.Spawner.args = [f'--NotebookApp.allow_origin=*']
-c.JupyterHub.tornado_settings = {
-    'cookie_options': {"SameSite": "None", "Secure": True},
-    'headers': {
-        'Content-Security-Policy': "frame-ancestors 'self' http://localhost:80 http://127.0.0.1:80 http://localhost:8000 http://127.0.0.1:8000"
-    }
-}
+# this is commented out, because the reverse proxy handles this. See secHeaders middleware in traefik/data/dynamic_conf.yml
+# c.Spawner.args = [f'--NotebookApp.allow_origin=*']
+# c.JupyterHub.tornado_settings = {
+#     'cookie_options': {"SameSite": "None", "Secure": True},
+#     'headers': {
+#         'Content-Security-Policy': "frame-ancestors 'self' http://localhost:80 http://127.0.0.1:80 http://localhost:8000 http://127.0.0.1:8000"
+#     }
+# }
 
 # Persist hub data on volume mounted inside container
 data_dir = os.environ.get('DATA_VOLUME_CONTAINER', '/data')

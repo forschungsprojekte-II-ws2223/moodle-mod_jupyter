@@ -8,33 +8,17 @@ added to the according settings files before executing the server. There add you
 [jupyterhub_config.py](./jupyterhub/jupyterhub_config.py) in line 20 and to the list in 
 [jupyter_notebook_config.py](./jupyterlab/jupyter_notebook_config.py) in line 14.
 
-First make sure you are in the jupyterhub_docker folder.
-If you are on linux or macOS there is a [makefile](Makefile) and for Windows there is a [Batchfile](Batch.bat) you can use for the setup process.
-
-If running the makefile/Batchfile was successful, run:
+- To build the containers images (This step is only needed if you modified the dockerfiles or related config files):
+``` shell
+docker compose build
+```
+ 
+- To create and start the containers:
 ```shell
 docker-compose up -d
 ``` 
-to finish the setup.
 
-
-
-
-## Create volumes and network:  
-Run:
-```shell
-docker volume create --name=jupyterhub-data
-docker volume create --name=jupyterhub-db-data
-docker network create jupyterhub-network
-``` 
-
-## Build & Run:  
-Run:
-```shell
-docker-compose build
-docker-compose up
-``` 
-(make sure you are in the jupyterhub_docker folder)
+Run `docker compose down` if you want to delete the containers. The data volumes are not affected by this. If you want to delete these aswell run `docker volume prune` after you executed `docker compose down` (this deletes ALL unused volumes, not just the jupyterhub volumes).
 
 ## Testing
 The jupyterhub uses a json web token [authenticator](https://github.com/izihawa/jwtauthenticator_v2).  
