@@ -96,7 +96,6 @@ $templatecontext = [
 ];
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading($route);
 echo $OUTPUT->render_from_template('mod_jupyter/manage', $templatecontext);
 echo $OUTPUT->footer();
 
@@ -110,6 +109,10 @@ echo $OUTPUT->footer();
  * @return string
  */
 function gen_link(string $repo, string $branch, string $file) : string {
+
+    if (preg_match("/\/$/", "$repo")) {
+        $repo = substr($repo, 0, strlen($repo) - 1);
+    }
     return '/hub/user-redirect/git-pull?repo=' .
         urlencode($repo) .
         '&urlpath=lab%2Ftree%2F' .
