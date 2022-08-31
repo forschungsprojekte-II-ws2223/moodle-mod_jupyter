@@ -73,4 +73,4 @@ this program.  If not, see [GNU license](https://www.gnu.org/licenses).
 * Zhang, Yichi
 * Zoller, Nick
 
-developed this plugin in the context of the Student Project of University of Stuttgart in the summer semester 2022
+developed this plugin in the context of the Student Project of University of Stuttgart in the Summer Semester 2022
