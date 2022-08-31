@@ -1,6 +1,6 @@
 # Customer Documentation
 This project can be found at a private [Gitlab server](https://sopra.informatik.uni-stuttgart.de/kib3-student-projects/kib3-stupro-ss-22) at the moment.
-Project access must be granted by a maintainer.
+Project access must be granted by a maintainer. There are three main directories to the project. First one is the __moodle_docker__ directory where one can host their own Moodle server. It is mainly important for people who are setting up the servers for the users. Second one is __jupyterhub_docker__ and is also for people who are setting it up. This directory is important for the Plugin since it will be communicating with Jupyterhub to spawn a Jupyter Notebook.
 
 ## Prequisition
 If you just want to use the plugin, no further prequisition is needed.
@@ -53,18 +53,23 @@ To use the Plugin, a running instance of Jupyterhub is needed which exposes the 
    ![ChoseFile](images/choseFile.png)
 6. Add the zip version via "Choose a file..." or "Drag and Drop"
 7. Click on __"Install plugin from the ZIP file"__ Button to install the Plugin
-8. Click on __OK__ if further configuration are opening to progress installation
+8. Click on __Continue__ if further configuration are opening to progress installation
+9. A page about current release information will appear. Scroll down and click on __Continue__ again
+10. The next page is about Plugins check. Click on __Upgrade Moodle datebase now__
+11. Click on __Continue__ to progress further
+12. Now the default settings of Jupyterhub will show up. Click on __Save changes__ if there is nothing to change. After that the plugin is installed
 
 ## Usage of Plugin for Teacher
 ### Create course
-1. Go to __Site Home__
-2. __Turn on editing__ in the settings
+1. Get a zip file of the plugin
+2. Go to __Site Home__
+3. __Turn on editing__ in the settings
    ![turnOnEdit](images/turnOnEdit.png)
-3. Click on __"Add an activity or resource"__ and add the __Jupyter Hub__ Plugin as an activity
+4. Click on __"Add an activity or resource"__ and add the __Jupyter Hub__ Plugin as an activity
    ![jupyterPlugin](images/jupyterPlugin.png)
-4. Configuration Jupyter to show the correct file by filling out the blanks
+5. Fill in the blank to show the correct file when opening this Jupyter Notebook
    ![configJupyter](images/configJupyter.png)
-5. Now you have open a Jupyter Notebook
+6. Save and return to the Course overview or display the notebook immediately
 
 ### Jupyterhub Plugin Settings
 1. Go to __Site Administration__
@@ -73,10 +78,47 @@ To use the Plugin, a running instance of Jupyterhub is needed which exposes the 
 4. Find the Jupyter Plugin and click on it to find the settings
    ![settingsJupyter](images/settingsJupyter.png)
 
+### Uninstall Plugin
+1. Go to __Site administration__ > __Plugins__ > __Plugins overview__
+2. Look for __JupyterHub__ and press __Uninstall__
+
 ## Usage of Plugin for Students
+Students can use this plugin to solve tasks which is provide by the teacher. With this plugin, students do not need to open another tab and can resolve their assignment in Moodle.
+
 ### Reset Jupyter Notebook to original Notebook (nbgitpuller)
-To get the original unchanged file, save and rename your changed file and reload the page. This should reload the original file while keeping the file with your changes.
+To get the original unchanged file, save and rename your changed file and reload the page or the iFrame. This should reload the original file while keeping the file with your changes.
 
 ## Troubleshooting
-### Inserting correct URL
-### Inserting right branch
+### Resetting Docker Containers
+To setup Moodle and Jupyterhub from the very start, open Terminal and use commands
+```shell 
+docker kill $(docker -a -q)
+docker rm -f $(docker -a -q)
+```
+This will stop and remove all existing docker container. Also use the following command
+```shell
+docker system prune
+```
+to clear the volume, so if resetting there will be no data from previous volume left
+
+### Port is already used
+On Linux use
+```shell
+sudo lsof -i -P | grep LISTEN | grep :<Insert Port>
+```
+or 
+```shell
+sudo lsof -i -P | grep LISTEN
+```
+to list all used Ports und check by which application is the port used. If not important use
+```shell
+sudo kill <PID>
+```
+to clear the port for Jupyterhub or Moodle. (Hint: Jupyterhub uses port 8000 & 8081 and Moodle uses port 80 & 3306)
+
+### Connection to Jupyterhub failed
+Make sure that in the settings of the plugin the address is correctly inserted to the Jupyterhub. If not, the iFrame show that the connection has failed, because it could not reach Jupyterhub.
+
+### Getting overview over containers
+If everything has been correctly setup, it should looking like below in the image. If user are active, they might spawn notebook and the number of containers increases, adding another one or multiple containers named "jupyter-user".
+![dockerPS](images/dockerPS.png)
