@@ -19,15 +19,15 @@
  *
  * @package     mod_jupyter
  * @category    string
- * @copyright   2022 Your Name <your@email.address>
+ * @copyright   2022 onwards, University of Stuttgart(StuPro 2022)
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'JupyterHub';
+$string['pluginname'] = 'Jupyter Notebook';
 $string['modulenameplural'] = '';
-$string['modulename'] = 'JupyterHub';
+$string['modulename'] = 'Jupyter Notebook';
 $string['pluginadministration'] = 'pluginadministration';
 $string['jupytername_help'] = 'Help text';
 $string['jupytername'] = 'Jupyter Name'; // Name of the activity module instance.

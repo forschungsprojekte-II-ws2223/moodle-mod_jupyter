@@ -19,7 +19,7 @@
  *
  * @package     mod_jupyter
  * @category    upgrade
- * @copyright   2022 Your Name <your@email.address>
+ * @copyright   2022 onwards, University of Stuttgart(StuPro 2022)
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,7 +28,7 @@
  */
 function mod_jupyter_helper_function() {
 
-    // Please note: you can only use raw low level database access here.
+    // Please note: You can only use raw low level database access here.
     // Avoid Moodle API calls in upgrade steps.
     //
     // For more information please read {@link https://docs.moodle.org/dev/Upgrade_API}.

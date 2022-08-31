@@ -1,9 +1,9 @@
 # KIB3 StuPro SS 22
 
-This Moodle plugins allows integrates Moodle and a Jupyter Notebooks to offer a virtual programming environment.
+This Moodle plugin integrates Jupyter Notebooks to offer a virtual programming environment.
 
-This plugin connects to a jupyterhub server and authenticates the Moodle users on the jupyterhub-server. That way they
-can access a jupyter-notebook from within Moodle. Further development includes the options to submit solved
+This plugin connects to a JupyterHub server and authenticates the Moodle users on the JupyterHub Server. That way they
+can access a Jupyter notebook from within Moodle. Further development includes the options to submit solved
 notebooks and to distribute notebooks by the teacher top the students.
 
 
@@ -14,29 +14,27 @@ There's an .editorconfig in this repo, please use it while working on it
 [VS Code Extension](vscode://extension/EditorConfig.EditorConfig)
 
 ## Environment Setup
+
 There are two directories including some docker-based setups to start a [Moodle](./moodle_docker/README.md) and a 
- [JupyterHub-Instance](./jupyterhub_docker/README.md). If you got both of them running, you can install the Moodle-Plugin 
-as described in the dedicated [Readme.md](./jupyter/README.md)
+ [JupyterHub Instance](./jupyterhub_docker/README.md). If you got both of them running, you can install the Moodle plugin 
+as described in the dedicated [README.md](./jupyter/README.md)
 
 
-## Access Plugin UI in course ##
+## Access plugin UI in course ##
 
-0. perform a composer update `composer update` to update dependencies (you need to have composer installed: https://getcomposer.org/download/)
-1. make sure you have a running JupyterHub moodle environment and installed the jupyter plugin as described above
-2. click on one of your courses (if there is non you have to create a course first)
-3. make sure editing is turned on, at the top right
-4. now you can click on `Add an activity or resource` below on the right
-5. choose the `Jupyter Hub` activity plugin
-6. assign a name. The rest of the settings can be ignored.
-7. click on `Save and display`
-8. you should see your personal jupyterlab environment based on your moodle lastname and id inside an iframe
+1. Perform a composer update `composer update` to update dependencies (you need to have composer installed: https://getcomposer.org/download/)
+2. Make sure you have a running JupyterHub Moodle environment and installed the Jupyter plugin as described above
+3. Click on one of your courses (if there is non you have to create a course first)
+4. Make sure editing is turned on, at the top right
+5. Now you can click on `Add an activity or resource` below on the right
+6. Choose the `JupyterHub` activity plugin
+7. Assign a name, the rest of the settings can be ignored
+8. Click on `Save and display`
+9. You should see your personal JupyterLab environment based on your Moodle username and id inside an iFrame
 
-## Authentication Description ##
+## Authentication description ##
 
-The site encodes the id and lastname of the currently logged in user to a valid jwt token (it looks like this `jwt.io`).
-It has an expiration time of 15 seconds, after that the token is not valid anymore and can't be used.
-Then this token is sent to jupyterhub and decoded.
-In an iframe the jupyterhub will load the users personal jupyter notebook.
+For the authentication description visit the [README.md](./jupyter/README.md) file and scroll to the last paragraph "Authentication description".
 
 ## License ##
 
@@ -54,7 +52,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 
-## Additional Resources
+## Additional resources
 * [Moodle official development main page](https://docs.moodle.org/dev/Main_Page)
 * [Moodle official output api page](https://docs.moodle.org/dev/Output_API)
 * [Moodle official javascript page](https://docs.moodle.org/dev/Javascript_Modules)

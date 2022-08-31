@@ -18,7 +18,7 @@
  * Prints an instance of mod_jupyter.
  *
  * @package     mod_jupyter
- * @copyright   2022 StuPro Uni Stuttgart
+ * @copyright   2022 onwards, University of Stuttgart(StuPro 2022)
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -26,7 +26,7 @@ require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 require(__DIR__ . '/vendor/autoload.php');
 
-// MOODLE specific config.
+// Moodle specific config.
 
 // Course module id.
 $id = optional_param('id', 0, PARAM_INT);
@@ -57,6 +57,7 @@ $PAGE->set_context($modulecontext);
 // User interface.
 use Firebase\JWT\JWT;
 
+// Create id with the user's unique username from Moodle.
 $uniqueid = mb_strtolower($USER->username, "UTF-8");
 
 // Custom key must equal key in jupyterhub_docker .env!
@@ -81,7 +82,7 @@ $gitpath = gen_link(
     $moduleinstance->file
 );
 
-// If url empty, use port and ip.
+// If URL empty, use port and ip.
 if (empty($url)) {
     $jupyterlogin = "http://" . $ip . ":" . $port . $gitpath . "&auth_token=" . $jwt;
 
@@ -100,7 +101,7 @@ echo $OUTPUT->footer();
 
 
 /**
- * Creates nbgitpuller part of the link to the jupyterhub.
+ * Creates nbgitpuller part of the link to the JupyterHub.
  *
  * @param string $repo
  * @param string $branch
