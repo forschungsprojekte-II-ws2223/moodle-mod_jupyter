@@ -19,14 +19,13 @@
  *
  * @package     mod_jupyter
  * @category    admin
- * @copyright   2022 Your Name <your@email.address>
+ * @copyright   2022 onwards, University of Stuttgart(StuPro 2022)
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
-    // Line commented out: phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf !
     if ($ADMIN->fulltree) {
         // Defines the plugin settings page - {@link https://docs.moodle.org/dev/Admin_settings}.
 
@@ -34,9 +33,9 @@ if ($hassiteconfig) {
             get_string('generalconfig_desc', 'jupyter')));
 
         // To use a settings value in code, use 'get_config('mod_jupyter', 'settingname'); !
-        // e.g. $value = get_config('mod_jupyter', 'jupyterurl'); returns the url.
+        // e.g. $value = get_config('mod_jupyter', 'jupyterurl'); returns the URL.
 
-        // Jupyter url setting!
+        // Jupyter URL setting!
         $settings->add(new admin_setting_configtext('mod_jupyter/jupyterurl', get_string('jupyterurl', 'jupyter'),
             get_string('jupyterurl_desc', 'jupyter'), '', PARAM_URL));
 
@@ -44,7 +43,7 @@ if ($hassiteconfig) {
         $settings->add(new admin_setting_configtext('mod_jupyter/jupyterip', get_string('jupyterip', 'jupyter'),
             get_string('jupyterip_desc', 'jupyter'), '127.0.0.1', PARAM_HOST));
 
-        // Jupyter Port setting!
+        // Jupyter port setting!
         $settings->add(new admin_setting_configtext('mod_jupyter/jupyterport', get_string('jupyterport', 'jupyter'),
             get_string('jupyterport_desc', 'jupyter'), 8000, PARAM_INT));
 

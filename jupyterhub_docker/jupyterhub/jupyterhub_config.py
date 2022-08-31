@@ -2,7 +2,6 @@ import os
 import sys
 
 c = get_config() # pyright: reportUndefinedVariable=false
-
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_IMAGE']
 
@@ -30,7 +29,9 @@ c.JupyterHub.cookie_secret_file = os.path.join(data_dir,
 # Redirect to JupyterLab, instead of the plain Jupyter notebook
 c.Spawner.default_url = '/lab'
 
-#idle culler setup:
+# Idle culler setup:
+# For further information about the available settings for idle culler check the following link:
+# https://github.com/jupyterhub/jupyterhub-idle-culler
 c.JupyterHub.load_roles = [
     {
         "name": "jupyterhub-idle-culler-role",
@@ -39,7 +40,6 @@ c.JupyterHub.load_roles = [
             "read:users:activity",
             "read:servers",
             "delete:servers",
-            # "admin:users", # if using --cull-users
         ],
         # assignment of role's permissions to:
         "services": ["jupyterhub-idle-culler-service"],
@@ -53,18 +53,17 @@ c.JupyterHub.services = [
             "-m", "jupyterhub_idle_culler",
             "--timeout=3600",
         ],
-        # "admin": True,
     }
 ]
 
-# database setup
+# Database setup
 c.JupyterHub.db_url = 'postgresql://postgres:{password}@{host}/{db}'.format(
     host=os.environ['POSTGRES_HOST'],
     password=os.environ['POSTGRES_PASSWORD'],
     db=os.environ['POSTGRES_DB'],
 )
 
-# Dummy authenticator for testing purposes
+# Dummy authenticator. Enable this for testing only!
 # c.JupyterHub.authenticator_class = "dummy"
 
 # JWT Authenticator Setup
@@ -73,7 +72,7 @@ c.LocalAuthenticator.create_system_users=True
 c.JupyterHub.authenticator_class = 'jwtauthenticator.jwtauthenticator.JSONWebTokenLocalAuthenticator'
 # The secrect key used to generate the given token
 c.JSONWebTokenAuthenticator.secret = os.environ['JWT_SECRET']
-# The claim field contianing the moodle user id
+# The claim field contianing the Moodle user id
 c.JSONWebTokenAuthenticator.username_claim_field = 'name'
 # This config option should match the aud field of the JSONWebToken, empty string to disable the validation of this field.
 c.JSONWebTokenAuthenticator.expected_audience = ''

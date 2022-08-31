@@ -14,7 +14,7 @@ variables:
     MOODLE_START_BEHAT_SERVERS: "NO"
     IGNORE_NAMES: "lib.php, upgrade.php"
 
-.install_moodle: 
+.install_moodle:
   only:
     changes:
       - jupyter/*
@@ -31,7 +31,7 @@ lint:
       - jupyter/*
   script:
     - export PATH="/var/www/html/ci/bin:/var/www/html/ci/vendor/bin:$PATH"
-    # these checks can be run without the moodle install: 
+    # these checks can be run without the Moodle install:
     - moodle-plugin-ci phplint $CI_PROJECT_DIR/jupyter
     - moodle-plugin-ci phpcpd $CI_PROJECT_DIR/jupyter
     - moodle-plugin-ci savepoints $CI_PROJECT_DIR/jupyter
@@ -46,21 +46,7 @@ test:
     - moodle-plugin-ci phpunit
     - moodle-plugin-ci codechecker
     - moodle-plugin-ci grunt
-    #- moodle-plugin-ci mustache
     - moodle-plugin-ci phpdoc
-    # Note: mustache does not work, as HTML validator cannot be called
-
-# Disabled for now since we dont have any behat tests yet and setup takes a long time
-# test_behat:
-#   extends: .install_moodle
-#   services:
-#     - mariadb:10.7.4
-#     - name: selenium/standalone-chrome:4
-#       alias: selenium-standalone-chrome
-#   script:
-#     - export MOODLE_BEHAT_WWWROOT="http://$IPADDRESS:8000"
-#     - php $MOODLE_DIR/admin/tool/behat/cli/init.php --add-core-features-to-theme --parallel=1
-#     - moodle-plugin-ci behat --profile chrome
 
 # Create jupyter.zip as artifact for download
 zip-plugin:
@@ -70,18 +56,17 @@ zip-plugin:
     - cd jupyter
     - composer update
   artifacts:
-    name: jupyter # Name of the resulting .zip
+    # Name of the resulting .zip
+    name: jupyter 
     paths:
-      - jupyter/* # Include whole directory
-    #Does not work because our Gitlab runners version is 12.10 and feature is available at 13.8
-    #exclude:
-    #  - jupyter/README.md
-    #  - jupyter/*.sh
+      # Include whole directory
+      - jupyter/* 
   only:
     refs:
-      - main # Run only on specific branch
+      # Run only on specific branch
+      - main 
       - ci-improvement-regarding-artifact
     changes:
       - jupyter/*
 
-  
+

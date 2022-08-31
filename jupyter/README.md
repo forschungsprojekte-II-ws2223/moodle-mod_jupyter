@@ -1,4 +1,4 @@
-# Jupyter Moodle Plugin #
+# Jupyter Moodle plugin #
 
 This directory includes only the plugin code.
 
@@ -7,28 +7,29 @@ This directory includes only the plugin code.
 If you are using the [moodle-docker setup](../moodle_docker/README.md) you can use the [installer script](install.sh)
 to install/update the plugin into the running container.
 
-1. execute the script:
+1.Execute the script:
 ```shell
 ./install.sh
 ```  
-(if you are on Windows you can just execute the commands in the script manually (or write a Windows version of the script))
-2. log into your moodle site as admin and go to _Site administration >
+If you are on Windows you can just execute the commands in the script manually or write a Windows version of the script.
+
+2.Log in to your Moodle site as admin and go to _Site administration >
 Notifications_ to complete the installation.
 
 ### Updating
-To update the plugin, just run `./install.sh` again. After a couple of seconds the updated version should be on your moodle server.
+To update the plugin, just run `./install.sh` again. After a couple of seconds the updated version should be on your Moodle server.
 
 ## Installing via uploaded ZIP file ##
 
 1. Log in to your Moodle site as an admin and go to _Site administration >
    Plugins > Install plugins_.
-2. Upload the ZIP file (only jupyter.zip) with the plugin code. You should only be prompted to add
-   extra details if your plugin type is not automatically detected.
+2. Upload the ZIP file (only jupyter.zip) with the plugin code. If your plugin type is not automatically detected, you have to add
+   extra details.
 3. Check the plugin validation report and finish the installation.
 
 ## Installing manually ##
 
-The plugin can be also installed by putting the contents of this directory to
+The plugin can also be installed by putting the contents of this directory to
 
     {your/moodle/dirroot}/mod/jupyter
 
@@ -40,7 +41,6 @@ Alternatively, you can run
     $ php admin/cli/upgrade.php
 
 to complete the installation from the command line.
-
 
 ## Installing new dependencies ##
 
@@ -65,10 +65,10 @@ require 'vendor/autoload.php';
 ```
 at the start of your file.
 
-## Authenticate Description ##
+## Authenticate description ##
 
 After you install the plugin, add it to your course and click on the activity.
-The site encodes the unique username of moodle of the currently logged in user to a valid jwt token (it looks like this `jwt.io`).
+The site encodes the unique username of Moodle of the currently logged in user to a valid jwt token (it looks like this `jwt.io`).
 It has an expiration time of 15 seconds, after that the token is not valid anymore and can't be used.
-Then this token is sent to jupyterhub and decoded.
-In an iframe the jupyterhub will load the users personal jupyter notebook.
+Then this token is sent to JupyterHub and decoded.
+In an iFrame the JupyterHub will load the users personal Jupyter notebook.

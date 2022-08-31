@@ -18,7 +18,7 @@
  * The main mod_jupyter configuration form.
  *
  * @package     mod_jupyter
- * @copyright   2022 Your Name <your@email.address>
+ * @copyright   2022 onwards, University of Stuttgart(StuPro 2022)
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,7 +30,7 @@ require_once($CFG->dirroot.'/course/moodleform_mod.php');
  * Module instance settings form.
  *
  * @package     mod_jupyter
- * @copyright   2022 Your Name <your@email.address>
+ * @copyright   2022 onwards, University of Stuttgart(StuPro 2022)
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_jupyter_mod_form extends moodleform_mod {
@@ -66,6 +66,7 @@ class mod_jupyter_mod_form extends moodleform_mod {
             $mform->setType('file', PARAM_CLEANHTML);
         }
 
+        // Setting rules for the input fields above.
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('name', 'jupytername', 'mod_jupyter');
