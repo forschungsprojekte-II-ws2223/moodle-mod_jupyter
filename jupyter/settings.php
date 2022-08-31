@@ -35,17 +35,12 @@ if ($hassiteconfig) {
         // To use a settings value in code, use 'get_config('mod_jupyter', 'settingname'); !
         // e.g. $value = get_config('mod_jupyter', 'jupyterurl'); returns the URL.
 
+        $regexipandurl = "/(^(https?:\/\/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\:?([0-9]{1,5})?$)";
+        $regexipandurl .= "|";
+        $regexipandurl .= "(^((https?:\/\/)|^(www\.))([a-zA-Z0-9\?\/\+\*\~\=\-\#\@\!\&\%\_]+\.[a-z]{2,4})(\/[a-zA-Z0-9\?\/\+\*\~\=\-\#\@\!\&\%\_]*)*$)/";
+
         // Jupyter URL setting!
         $settings->add(new admin_setting_configtext('mod_jupyter/jupyterurl', get_string('jupyterurl', 'jupyter'),
-            get_string('jupyterurl_desc', 'jupyter'), '', PARAM_URL));
-
-        // Jupyter IP setting!
-        $settings->add(new admin_setting_configtext('mod_jupyter/jupyterip', get_string('jupyterip', 'jupyter'),
-            get_string('jupyterip_desc', 'jupyter'), '127.0.0.1', PARAM_HOST));
-
-        // Jupyter port setting!
-        $settings->add(new admin_setting_configtext('mod_jupyter/jupyterport', get_string('jupyterport', 'jupyter'),
-            get_string('jupyterport_desc', 'jupyter'), 8000, PARAM_INT));
-
+            get_string('jupyterurl_desc', 'jupyter'), 'http://127.0.0.1:8000', $regexipandurl));
     }
 }
