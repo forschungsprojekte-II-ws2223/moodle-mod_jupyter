@@ -42,6 +42,12 @@ Alternatively, you can run
 
 to complete the installation from the command line.
 
+## Plugin settings ##
+
+Here the user can enter the general settings required to reach the JupyterHub. 
+Therefore the user can replace the default value with his own URL/IP. 
+The input cannot be empty and must be a valid URL or IP. 
+
 ## Installing new dependencies ##
 
 To get started, you first have to install Composer locally (see https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos
@@ -65,7 +71,7 @@ require 'vendor/autoload.php';
 ```
 at the start of your file.
 
-## Authenticate description ##
+## Authenticate Description ##
 
 After you install the plugin, add it to your course and click on the activity.
 The site encodes the unique username of Moodle of the currently logged in user to a valid jwt token (it looks like [this](jwt.io)).

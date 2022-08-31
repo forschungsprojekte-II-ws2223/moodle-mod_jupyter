@@ -74,8 +74,6 @@ $jwt = JWT::encode($data, $key, 'HS256');
 
 // Get admin settings.
 $url = get_config('mod_jupyter', 'jupyterurl');
-$ip = get_config('mod_jupyter', 'jupyterip');
-$port = get_config('mod_jupyter', 'jupyterport');
 
 $gitpath = gen_link(
     $moduleinstance->repourl,
@@ -83,13 +81,7 @@ $gitpath = gen_link(
     $moduleinstance->file
 );
 
-// If URL empty, use port and ip.
-if (empty($url)) {
-    $jupyterlogin = "http://" . $ip . ":" . $port . $gitpath . "&auth_token=" . $jwt;
-
-} else {
-    $jupyterlogin = $url . $gitpath . "&auth_token="  . $jwt;
-}
+$jupyterlogin = $url . $gitpath . "&auth_token="  . $jwt;
 
 $templatecontext = [
     'login' => $jupyterlogin
