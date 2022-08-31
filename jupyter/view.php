@@ -18,13 +18,14 @@
  * Prints an instance of mod_jupyter.
  *
  * @package     mod_jupyter
- * @copyright   2022 onwards, University of Stuttgart(StuPro 2022)
+ * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 require(__DIR__ . '/vendor/autoload.php');
+
 
 // Moodle specific config.
 
@@ -53,14 +54,14 @@ $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
-
 // User interface.
+
 use Firebase\JWT\JWT;
 
 // Create id with the user's unique username from Moodle.
 $uniqueid = mb_strtolower($USER->username, "UTF-8");
 
-// Custom key must equal key in jupyterhub_docker .env!
+// Custom key must equal JWT_SECRET in jupyterhub_docker .env!
 $key = 'your-256-bit-secret';
 
 $data = [

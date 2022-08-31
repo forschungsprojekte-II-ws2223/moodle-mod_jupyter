@@ -18,7 +18,7 @@
  * The main mod_jupyter configuration form.
  *
  * @package     mod_jupyter
- * @copyright   2022 onwards, University of Stuttgart(StuPro 2022)
+ * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,7 +30,7 @@ require_once($CFG->dirroot.'/course/moodleform_mod.php');
  * Module instance settings form.
  *
  * @package     mod_jupyter
- * @copyright   2022 onwards, University of Stuttgart(StuPro 2022)
+ * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_jupyter_mod_form extends moodleform_mod {

@@ -18,7 +18,7 @@
  * Display information about all the mod_jupyter modules in the requested course.
  *
  * @package     mod_jupyter
- * @copyright   2022 onwards, University of Stuttgart(StuPro 2022)
+ * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
