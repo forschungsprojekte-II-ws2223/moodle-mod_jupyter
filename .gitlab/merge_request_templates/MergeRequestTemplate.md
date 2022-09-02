@@ -4,6 +4,7 @@
 
 - [ ] The code was reviewed.
 - [ ] The code conventions were complied with.
+- [ ] The code complies with the naming conventions.
 - [ ] The code is commented sufficiently.
 - [ ] Issues related to the branch are closed.
 - [ ] The feature related to the branch was tested if possible.
