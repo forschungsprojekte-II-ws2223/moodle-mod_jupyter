@@ -39,7 +39,7 @@ For the authentication description visit the [README.md](./jupyter/README.md) fi
 ## License ##
 
 **Kuenstliche Intelligenz in die Berufliche Bildung Bringen (KIB3)**
-**2022 Summer Semester Student Project of University of Stuttgart**
+**2022 summer semester student project of University of Stuttgart**
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
