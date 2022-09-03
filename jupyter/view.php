@@ -82,9 +82,11 @@ $gitpath = gen_link(
 );
 
 $jupyterlogin = $url . $gitpath . "&auth_token="  . $jwt;
+$name = $moduleinstance->name;
 
 $templatecontext = [
-    'login' => $jupyterlogin
+    'login' => $jupyterlogin,
+    'name' => $name
 ];
 
 echo $OUTPUT->header();
