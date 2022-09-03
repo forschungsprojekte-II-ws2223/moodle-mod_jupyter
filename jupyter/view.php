@@ -74,6 +74,7 @@ $jupyterurl = get_config('mod_jupyter', 'jupyterurl');
 $repo = $moduleinstance->repourl;
 $branch = $moduleinstance->branch;
 $file = $moduleinstance->file;
+$name = $moduleinstance->name;
 $gitfilelink = gen_gitfilelink();
 
 $gitreachable = check_url($gitfilelink)[0] === 200;
@@ -83,7 +84,8 @@ echo $OUTPUT->header();
 
 if ($gitreachable && $jupyterreachable) {
     echo $OUTPUT->render_from_template('mod_jupyter/manage', [
-        'login' => $jupyterurl . gen_gitpath($repo, $branch, $file) . "&auth_token="  . $jwt
+        'login' => $jupyterurl . gen_gitpath($repo, $branch, $file) . "&auth_token="  . $jwt,
+        'name' => $name
     ]);
 } else {
     show_error_message();
