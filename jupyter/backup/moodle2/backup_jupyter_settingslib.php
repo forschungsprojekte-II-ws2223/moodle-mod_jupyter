@@ -15,8 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This activity has not particular settings but the inherited from the generic backup_activity_task so here there
- * isn't any class definition, like the ones existing in /backup/moodle2/backup_settingslib.php (activities section).
+ * Definition of all backup settings of the extension (inherited from backup_activity_task).
  *
  * @package   mod_jupyter
  * @copyright KIB3 StuPro SS2022 Development Team of the University of Stuttgart

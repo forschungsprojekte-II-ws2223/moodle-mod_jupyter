@@ -15,13 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Definition of all the restore steps that will be used by the restore_choice_activity_task.
+ *
  * @package   mod_jupyter
  * @copyright KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
- * Definition of all the restore steps that will be used by the restore_choice_activity_task.
+ * Class that provides all steps for restoring up the activity.
  */
 class restore_jupyter_activity_structure_step extends restore_activity_structure_step {
 
@@ -43,7 +45,7 @@ class restore_jupyter_activity_structure_step extends restore_activity_structure
     /**
      * Definition of how to get all needed information from the backup file.
      *
-     * @param $data
+     * @param object $data
      *
      * @return void
      */

@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Backup task that provides all the settings and steps to perform one complete backup of the activity.
+ *
  * @package   mod_jupyter
  * @copyright KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -27,7 +29,7 @@ require_once($CFG->dirroot . '/mod/jupyter/backup/moodle2/backup_jupyter_stepsli
 require_once($CFG->dirroot . '/mod/jupyter/backup/moodle2/backup_jupyter_settingslib.php');
 
 /**
- * Backup task that provides all the settings and steps to perform one complete backup of the activity.
+ * Class that sets all steps to backup the activity.
  */
 class backup_jupyter_activity_task extends backup_activity_task {
 
@@ -49,7 +51,7 @@ class backup_jupyter_activity_task extends backup_activity_task {
     /**
      * Transformations to perform in the activity in order to get transportable (encoded) links.
      *
-     * @param $content
+     * @param object $content
      *
      * @return array|string|string[]|null
      */
