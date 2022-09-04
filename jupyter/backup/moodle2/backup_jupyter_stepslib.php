@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Define the complete jupyter structure for backup, with file and id annotations
  */
