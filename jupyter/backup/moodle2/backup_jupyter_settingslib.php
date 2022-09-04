@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package moodlecore
- * @subpackage backup-moodle2
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 
 // This activity has not particular settings but the inherited from the generic
 // backup_activity_task so here there isn't any class definition, like the ones
