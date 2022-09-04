@@ -15,21 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Definition for the complete jupyter structure for backup, with file and id annotations.
+ *
  * @package   mod_jupyter
  * @copyright KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
-/**
- * Define the complete jupyter structure for backup, with file and id annotations
- */
 class backup_jupyter_activity_structure_step extends backup_activity_structure_step {
 
-    protected function define_structure() {
 
-        // To know if we are including userinfo
-        $userinfo = $this->get_setting_value('userinfo');
+    /**
+     * Definition of the structure of the backup file.
+     *
+     * @return mixed
+     */
+    protected function define_structure() {
 
         // Define each element separated
         $jupyter = new backup_nested_element('jupyter', array('id'),
@@ -37,8 +38,6 @@ class backup_jupyter_activity_structure_step extends backup_activity_structure_s
 
         // Define sources
         $jupyter->set_source_table('jupyter', array('id' => backup::VAR_ACTIVITYID));
-
-        // Define id annotations
 
         // Define file annotations
         $jupyter->annotate_files('mod_jupyter', 'intro', null);

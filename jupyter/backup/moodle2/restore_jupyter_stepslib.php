@@ -15,25 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Definition of all the restore steps that will be used by the restore_choice_activity_task.
+ *
  * @package   mod_jupyter
  * @copyright KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 
-/**
- * Define all the restore steps that will be used by the restore_jupyter_activity_task
- */
-
-/**
- * Structure step to restore one jupyter activity
- */
 class restore_jupyter_activity_structure_step extends restore_activity_structure_step {
 
+    /**
+     * Creation of the standard activity structure containing all information from the backup file.
+     *
+     * @return mixed
+     */
     protected function define_structure() {
 
         $paths = array();
-        $userinfo = $this->get_setting_value('userinfo');
 
         $paths[] = new restore_path_element('jupyter', '/activity/jupyter');
 
@@ -41,6 +40,12 @@ class restore_jupyter_activity_structure_step extends restore_activity_structure
         return $this->prepare_activity_structure($paths);
     }
 
+    /**
+     * Definition of how to get all needed information from the backup file.
+     *
+     * @param $data
+     * @return void
+     */
     protected function process_jupyter($data) {
         global $DB;
 
