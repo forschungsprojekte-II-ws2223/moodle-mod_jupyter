@@ -176,7 +176,7 @@ function show_error_message() {
 
     \core\notification::error(get_string('errorheading', 'jupyter', ['instancename' => $moduleinstance->name]));
 
-    if(is_siteadmin()){
+    if (is_siteadmin()) {
         if (!$jupyterreachable) {
             \core\notification::error(get_string('adminsettingserror', 'jupyter', ['url' => $jupyterurl]));
         }
