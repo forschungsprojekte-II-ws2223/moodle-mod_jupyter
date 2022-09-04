@@ -19,6 +19,7 @@ class backup_jupyter_activity_structure_step extends backup_activity_structure_s
         // Define id annotations
 
         // Define file annotations
+        $jupyter->annotate_files('mod_jupyter', 'intro', null);
 
         // Return the root element (jupyter), wrapped into standard activity structure
         return $this->prepare_activity_structure($jupyter);

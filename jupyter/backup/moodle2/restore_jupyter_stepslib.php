@@ -53,5 +53,6 @@ class restore_jupyter_activity_structure_step extends restore_activity_structure
 
     protected function after_execute() {
         // Add jupyter related files, no need to match by itemname (just internally handled context)
+        $this->add_related_files('mod_jupyter', 'intro', null);
     }
 }

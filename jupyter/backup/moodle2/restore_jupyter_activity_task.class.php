@@ -48,13 +48,25 @@ class restore_jupyter_activity_task extends restore_activity_task {
      * processed by the link decoder
      */
     public static function define_decode_contents() {
+        $contents = array();
+
+        $contents[] = new restore_decode_content('jupyter', array('intro'), 'jupyter');
+
+        return $contents;
     }
 
     /**
      * Define the decoding rules for links belonging
      * to the activity to be executed by the link decoder
      */
-    public static function define_decode_rules() {}
+    public static function define_decode_rules() {
+        $rules = array();
+
+        $rules[] = new restore_decode_rule('JUPYTERVIEWBYID', '/mod/jupyter/view.php?id=$1', 'course_module');
+        $rules[] = new restore_decode_rule('JUPYTERINDEX', '/mod/jupyter/index.php?id=$1', 'course');
+
+        return $rules;
+    }
 
     /**
      * Define the restore log rules that will be applied
@@ -62,7 +74,18 @@ class restore_jupyter_activity_task extends restore_activity_task {
      * jupyter logs. It must return one array
      * of {@link restore_log_rule} objects
      */
-    public static function define_restore_log_rules() {}
+    public static function define_restore_log_rules() {
+        $rules = array();
+
+        $rules[] = new restore_log_rule('jupyter', 'add', 'view.php?id={course_module}', '{jupyter}');
+        $rules[] = new restore_log_rule('jupyter', 'update', 'view.php?id={course_module}', '{jupyter}');
+        $rules[] = new restore_log_rule('jupyter', 'view', 'view.php?id={course_module}', '{jupyter}');
+        $rules[] = new restore_log_rule('jupyter', 'choose', 'view.php?id={course_module}', '{jupyter}');
+        $rules[] = new restore_log_rule('jupyter', 'choose again', 'view.php?id={course_module}', '{jupyter}');
+        $rules[] = new restore_log_rule('jupyter', 'report', 'report.php?id={course_module}', '{jupyter}');
+
+        return $rules;
+    }
 
     /**
      * Define the restore log rules that will be applied
@@ -78,8 +101,8 @@ class restore_jupyter_activity_task extends restore_activity_task {
         $rules = array();
 
         // Fix old wrong uses (missing extension)
-        $rules[] = new restore_log_rule('jupyter', 'view all', 'index?id={course}', null,
-            null, null, 'index.php?id={course}');
+        $rules[] = new restore_log_rule('jupyter', 'view all', 'index?id={course}', null, null, null,
+            'index.php?id={course}');
         $rules[] = new restore_log_rule('jupyter', 'view all', 'index.php?id={course}', null);
 
         return $rules;
