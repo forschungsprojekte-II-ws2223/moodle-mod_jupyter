@@ -15,8 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Jupyter restore task that provides all the settings and steps to perform one complete restore of the activity.
- *
  * @package   mod_jupyter
  * @copyright KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -27,6 +25,9 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/jupyter/backup/moodle2/restore_jupyter_stepslib.php');
 
+/**
+ * Jupyter restore task that provides all the settings and steps to perform one complete restore of the activity.
+ */
 class restore_jupyter_activity_task extends restore_activity_task {
 
     /**

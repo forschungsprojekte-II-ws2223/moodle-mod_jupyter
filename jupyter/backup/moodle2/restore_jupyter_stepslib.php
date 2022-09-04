@@ -15,14 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Definition of all the restore steps that will be used by the restore_choice_activity_task.
- *
  * @package   mod_jupyter
  * @copyright KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
+/**
+ * Definition of all the restore steps that will be used by the restore_choice_activity_task.
+ */
 class restore_jupyter_activity_structure_step extends restore_activity_structure_step {
 
     /**
@@ -44,6 +44,7 @@ class restore_jupyter_activity_structure_step extends restore_activity_structure
      * Definition of how to get all needed information from the backup file.
      *
      * @param $data
+     *
      * @return void
      */
     protected function process_jupyter($data) {
@@ -59,8 +60,12 @@ class restore_jupyter_activity_structure_step extends restore_activity_structure
         $this->apply_activity_instance($newitemid);
     }
 
+    /**
+     * Add jupyter related files. There is no need to match by itemname (just internally handled context).
+     *
+     * @return void
+     */
     protected function after_execute() {
-        // Add jupyter related files, no need to match by itemname (just internally handled context)
         $this->add_related_files('mod_jupyter', 'intro', null);
     }
 }

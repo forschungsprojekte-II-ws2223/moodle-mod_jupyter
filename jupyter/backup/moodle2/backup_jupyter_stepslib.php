@@ -15,13 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Definition for the complete jupyter structure for backup, with file and id annotations.
- *
  * @package   mod_jupyter
  * @copyright KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+
+/**
+ * Definition for the complete jupyter structure for backup, with file and id annotations.
+ */
 class backup_jupyter_activity_structure_step extends backup_activity_structure_step {
 
 
