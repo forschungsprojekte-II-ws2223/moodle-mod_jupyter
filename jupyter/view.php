@@ -176,10 +176,13 @@ function show_error_message() {
 
     \core\notification::error(get_string('errorheading', 'jupyter', ['instancename' => $moduleinstance->name]));
 
-    if (!$jupyterreachable) {
-        \core\notification::error(get_string('adminsettingserror', 'jupyter', ['url' => $jupyterurl]));
+    if(is_siteadmin()){
+        if (!$jupyterreachable) {
+            \core\notification::error(get_string('adminsettingserror', 'jupyter', ['url' => $jupyterurl]));
+        }
+        if (!$gitreachable) {
+            \core\notification::error(get_string('instancesettingserror', 'jupyter', ['url' => $gitfilelink]));
+        }
     }
-    if (!$gitreachable) {
-        \core\notification::error(get_string('instancesettingserror', 'jupyter', ['url' => $gitfilelink]));
-    }
+
 }
