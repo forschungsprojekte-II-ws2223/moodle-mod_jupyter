@@ -48,7 +48,10 @@ $string['instancesettingserror'] = '<strong>Cause:</strong> The provided Git Rep
 // Admin plugin settings.
 // General.
 $string['generalconfig'] = 'General settings';
-$string['generalconfig_desc'] = 'Settings required to reach the JupyterHub this plugin uses. Replace the default value with your own <strong>URL/IP</strong>.';
+$string['generalconfig_desc'] = 'Settings required to reach the JupyterHub this plugin uses.';
 // URL.
-$string['jupyterurl'] = 'Jupyter URL/IP';
-$string['jupyterurl_desc'] = 'Add the URL (e.g. https://moodle.org) or IP (e.g. http://127.0.0.1:8000) to your JupyterHub.';
+$string['jupyterurl'] = 'JupyterHub URL';
+$string['jupyterurl_desc'] = 'Add the URL of your JupyterHubHere.<br>Must be a valid URL (e.g. https://yourjupyterhub.com).';
+// JWT.
+$string['jupytersecret'] = 'Jupyterhub JWT Secret';
+$string['jupytersecret_desc'] = 'Add the JWT secret of your JupyterHub here.<br><strong>Make sure your JupyterHub is using a secure 256-bit secret!!!</strong>';
