@@ -77,6 +77,10 @@ $gitfilelink = gen_gitfilelink();
 $gitreachable = check_url($gitfilelink)[0] === 200;
 $jupyterreachable = check_jupyter($jupyterurl);
 
+// Mark as done after user views the course
+$completion = new completion_info($course);
+$completion->set_module_viewed($cm);
+
 echo $OUTPUT->header();
 
 if ($gitreachable && $jupyterreachable) {
