@@ -36,11 +36,11 @@ if ($hassiteconfig) {
         // e.g. $value = get_config('mod_jupyter', 'jupyterurl'); returns the URL.
 
         $urlregex = "/(^(https?:\/\/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\:?([0-9]{1,5})?$)"
-            . "|"
-            . "(^((https?:\/\/)|^(www\.))([a-zA-Z0-9\?\/\+\*\~\=\-\#\@\!\&\%\_]+\.[a-z]{2,4})(\/[a-zA-Z0-9\?\/\+\*\~\=\-\#\@\!\&\%\_]*)*$)/";
+        . "|"
+        . "(^((https?:\/\/)|^(www\.))([a-zA-Z0-9\?\/\+\*\~\=\-\#\@\!\&\%\_]+\.[a-z]{2,4})(\/[a-zA-Z0-9\?\/\+\*\~\=\-\#\@\!\&\%\_]*)*$)/";
 
         $settings->add(new admin_setting_configtext('mod_jupyter/jupyterurl', get_string('jupyterurl', 'jupyter'),
-            get_string('jupyterurl_desc', 'jupyter'), NULL, $urlregex));
+            get_string('jupyterurl_desc', 'jupyter'), null, $urlregex));
 
         $settings->add(new admin_setting_configpasswordunmask('mod_jupyter/jupytersecret', get_string('jupytersecret', 'jupyter'),
             get_string('jupytersecret_desc', 'jupyter'), 'your-256-bit-secret'));
