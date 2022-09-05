@@ -87,6 +87,10 @@ $templatecontext = [
     'login' => $jupyterlogin
 ];
 
+// Mark as done after user views the course
+$completion = new completion_info($course);
+$completion->set_module_viewed($cm);
+
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('mod_jupyter/manage', $templatecontext);
 echo $OUTPUT->footer();
