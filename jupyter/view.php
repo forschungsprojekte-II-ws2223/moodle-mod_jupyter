@@ -61,14 +61,11 @@ $PAGE->set_context($modulecontext);
 // Create id with the user's unique username from Moodle.
 $uniqueid = mb_strtolower($USER->username, "UTF-8");
 
-// Custom key must equal JWT_SECRET in jupyterhub_docker .env!
-$key = 'your-256-bit-secret';
-
 $jwt = JWT::encode([
     "name" => $uniqueid,
     "iat" => time(),
     "exp" => time() + 15
-], $key, 'HS256');
+], get_config('mod_jupyter', 'jupytersecret'), 'HS256');
 
 $jupyterurl = get_config('mod_jupyter', 'jupyterurl');
 $repo = $moduleinstance->repourl;
