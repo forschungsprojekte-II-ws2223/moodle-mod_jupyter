@@ -37,7 +37,10 @@ $string['repourl'] = 'Git Repository URL';
 $string['branch'] = 'Branch';
 $string['file'] = 'Notebook file to open';
 
-$string['jupyter:addinstance'] = 'Add a new Jupyter Activity';
+$string['jupyter:addinstance'] = 'Add a new Jupyter Notebook activity';
+$string['jupyter:view'] = 'View a Jupyter Notebook activity';
+$string['jupyter:viewerrordetails'] = 'View extended information on errors occurring in the Jupyter Notebook activity';
+
 
 $string['errorheading'] = '<strong>Error</strong><br>Sorry, your Jupyter Notebook (<i>"{$a->instancename}"</i>) could not be loaded.<br>Please try contacting an admin.';
 
