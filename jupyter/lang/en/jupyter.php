@@ -42,7 +42,7 @@ $string['jupyter:view'] = 'View a Jupyter Notebook activity';
 $string['jupyter:viewerrordetails'] = 'View extended information on errors occurring in the Jupyter Notebook activity';
 
 
-$string['errorheading'] = '<strong>Error</strong><br>Sorry, your Jupyter Notebook (<i>"{$a->instancename}"</i>) could not be loaded.<br>Please try contacting an admin.';
+$string['errorheading'] = '<strong>Error</strong><br>Sorry, your Jupyter Notebook (<i>"{$a->instancename}"</i>) could not be loaded due to a connection issue.';
 
 $string['adminsettingserror'] = '<strong>Cause:</strong> The provided URL (<i>"{$a->url}"</i>) is not available or does not lead to a JupyterHub.<br>Check the <i>Admin Settings</i> and make sure the URL matches the URL of your JupyterHub.';
 
