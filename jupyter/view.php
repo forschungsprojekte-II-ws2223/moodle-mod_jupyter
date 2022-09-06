@@ -172,11 +172,11 @@ function check_url(string $url) : array {
  * Shows different error messages depending on cause of error
  */
 function show_error_message() {
-    global $gitreachable, $jupyterreachable, $jupyterurl, $gitfilelink, $moduleinstance;
+    global $gitreachable, $jupyterreachable, $jupyterurl, $gitfilelink, $moduleinstance, $modulecontext;
 
     \core\notification::error(get_string('errorheading', 'jupyter', ['instancename' => $moduleinstance->name]));
 
-    if (is_siteadmin()) {
+    if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
         if (!$jupyterreachable) {
             \core\notification::error(get_string('adminsettingserror', 'jupyter', ['url' => $jupyterurl]));
         }
