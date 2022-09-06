@@ -81,9 +81,6 @@ $jupyterreachable = check_jupyter($jupyterurl);
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
-// Mark as done after user views the course
-$completion = new completion_info($course);
-$completion->set_module_viewed($cm);
 
 echo $OUTPUT->header();
 
