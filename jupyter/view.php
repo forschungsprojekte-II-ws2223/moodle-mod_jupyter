@@ -88,7 +88,8 @@ if ($gitreachable && $jupyterreachable) {
     echo $OUTPUT->render_from_template('mod_jupyter/manage', [
         'login' => $jupyterurl . gen_gitpath($repo, $branch, $file) . "&auth_token="  . $jwt,
         'name' => $name,
-        'resetbuttontext' => get_string('resetbuttontext', 'jupyter')
+        'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
+        'description' => get_string('resetbuttoninfo', 'jupyter')
     ]);
 } else {
     show_error_message();
