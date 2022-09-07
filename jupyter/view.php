@@ -133,7 +133,7 @@ function gen_gitfilelink() : string {
 }
 
 /**
- * Checks if jupyterhub is reachable
+ * Checks if JupyterHub is reachable
  * @param string $url
  * @return bool
  */
@@ -150,9 +150,9 @@ function check_jupyter(string $url) : bool {
 }
 
 /**
- * Send http request to url and return response status code
- * @param string $url The url to check for availability.
- * @return array Returns http status code of the request and response header string
+ * Send HTTP request to URL and return response status code
+ * @param string $url The URL to check for availability.
+ * @return array Returns HTTP status code of the request and response header string
  */
 function check_url(string $url) : array {
     $client = new GuzzleHttp\Client();

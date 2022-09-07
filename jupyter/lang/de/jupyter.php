@@ -46,7 +46,7 @@ $string['adminsettingserror'] = '<strong>Ursache:</strong> Die angegebene URL (<
 $string['instancesettingserror'] = '<strong>Ursache:</strong> Die angegebene Git Repository URL (<i>"{$a->url}"</i>) ist nicht verfügbar or führt nicht zu einer Jupyter-Notebook-Datei.<br>Prüfen Sie bitte die <i>Aktivitäts Einstellungen</i>  stellen Sie sicher, dass <i>Git Repository URL</i>, <i>Branch</i> und <i>Zu öffnende Notebook-Datei</i> korrekt eingetragen wurden.';
 
 $string['resetbuttontext'] = 'Zurücksetzen';
-$string['resetbuttoninfo'] = 'Um das Notebook in den ursprünglichen Zustand zurückzusetzen, ohne den Fortschritt zu verlieren, können Sie Ihre Änderungen in einer anderen Datei speichern, indem Sie auf <b>"File"</b> in der oberen linken Ecke klicken und <b>"Notebook speicher als..."</b> auswählen. Danach muss das bisherige Notebook gelöscht werden und dann der <b>"Zurücksetzen"</b> Button geklickt werden';
+$string['resetbuttoninfo'] = 'Um das Notebook in den ursprünglichen Zustand zurückzusetzen, ohne den Fortschritt zu verlieren, können Sie Ihre Änderungen in einer anderen Datei speichern, indem Sie auf <b>"File"</b> in der oberen linken Ecke klicken und <b>"Notebook speichern als..."</b> auswählen. Danach muss das bisherige Notebook gelöscht werden und dann der <b>"Zurücksetzen"</b> Button geklickt werden';
 
 // Admin plugin settings.
 // General.
