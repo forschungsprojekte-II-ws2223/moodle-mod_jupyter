@@ -6,5 +6,4 @@ COPY ./requirements.txt .
 RUN pip install -r ./requirements.txt
 RUN rm requirements.txt
 
-RUN pip install nbgitpuller==1.1.0
 RUN jupyter serverextension enable nbgitpuller --sys-prefix

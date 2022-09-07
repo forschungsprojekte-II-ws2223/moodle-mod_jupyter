@@ -30,19 +30,34 @@ $string['modulenameplural'] = '';
 $string['modulename'] = 'Jupyter Notebook';
 $string['pluginadministration'] = 'pluginadministration';
 $string['jupytername_help'] = 'Help text';
-$string['jupytername'] = 'Jupyter Name'; // Name of the activity module instance.
+$string['jupytername'] = 'Jupyter Notebook Name'; // Name of the activity module instance.
 $string['jupytersettings'] = 'Standard settings';
 $string['jupyterfieldset'] = '';
 $string['repourl'] = 'Git Repository URL';
 $string['branch'] = 'Branch';
 $string['file'] = 'Notebook file to open';
 
-$string['jupyter:addinstance'] = 'Add a new Jupyter Activity';
+$string['jupyter:addinstance'] = 'Add a new Jupyter Notebook activity';
+$string['jupyter:view'] = 'View a Jupyter Notebook activity';
+$string['jupyter:viewerrordetails'] = 'View extended information on errors occurring in the Jupyter Notebook activity';
+
+
+$string['errorheading'] = '<strong>Error</strong><br>Sorry, your Jupyter Notebook (<i>"{$a->instancename}"</i>) could not be loaded due to a connection issue.';
+
+$string['adminsettingserror'] = '<strong>Cause:</strong> The provided URL (<i>"{$a->url}"</i>) is not available or does not lead to a JupyterHub.<br>Check the <i>Admin Settings</i> and make sure the URL matches the URL of your JupyterHub.';
+
+$string['instancesettingserror'] = '<strong>Cause:</strong> The provided Git Repository URL (<i>"{$a->url}"</i>) is not available or does not lead to a Jupyter Notebook file.<br>Check the <i>Activity Settings</i>  and make sure <i>Git Repository URL</i>, <i>Branch</i> and <i>Notebook file to open</i> are set correctly.';
+
+$string['resetbuttontext'] = 'Reset';
+$string['resetbuttoninfo'] = 'To get the original notebook without losing progress, you can save your changes to a different file by clicking on <b>"File"</b> in the top left corner and then select <b>"Save Notebook As..."</b>. Afterwards,you need to <b>delete</b> the original file and click the <b>"Reset"</b> button.';
 
 // Admin plugin settings.
 // General.
 $string['generalconfig'] = 'General settings';
-$string['generalconfig_desc'] = 'Settings required to reach the JupyterHub this plugin uses. Replace the default value with your own <strong>URL/IP</strong>.';
+$string['generalconfig_desc'] = 'Settings required to reach the JupyterHub this plugin uses.';
 // URL.
-$string['jupyterurl'] = 'Jupyter URL/IP';
-$string['jupyterurl_desc'] = 'Add the URL (e.g. https://moodle.org) or IP (e.g. http://127.0.0.1:8000) to your JupyterHub.';
+$string['jupyterurl'] = 'JupyterHub URL';
+$string['jupyterurl_desc'] = 'Add the URL of your JupyterHub here.<br>Must be a valid URL (e.g. https://yourjupyterhub.com).';
+// JWT.
+$string['jupytersecret'] = 'Jupyterhub JWT Secret';
+$string['jupytersecret_desc'] = 'Add the JWT secret of your JupyterHub here.<br><strong>Make sure your JupyterHub is using a secure 256-bit secret!!!</strong>';
