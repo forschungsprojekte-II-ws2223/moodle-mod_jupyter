@@ -1,5 +1,5 @@
 # Jupyterhub Docker
-This folder contains a simple JupyterHub docker deployment, that uses a postgres database and spawns notebooks as docker containers.
+This folder contains a simple JupyterHub docker deployment, that uses a postgres database and spawns Notebooks as Docker containers.
 
 # Setup
 
