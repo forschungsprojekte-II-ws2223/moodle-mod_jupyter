@@ -69,8 +69,8 @@ $jwt = JWT::encode([
 
 $jupyterurl = get_config('mod_jupyter', 'jupyterurl');
 $repo = $moduleinstance->repourl;
-$branch = $moduleinstance->branch;
-$file = $moduleinstance->file;
+$branch = urlencode(trim($moduleinstance->branch));
+$file = urlencode(trim($moduleinstance->file));
 $name = $moduleinstance->name;
 $gitfilelink = gen_gitfilelink();
 
@@ -86,7 +86,7 @@ echo $OUTPUT->header();
 
 if ($gitreachable && $jupyterreachable) {
     echo $OUTPUT->render_from_template('mod_jupyter/manage', [
-        'login' => $jupyterurl . gen_gitpath($repo, $branch, $file) . "&auth_token="  . $jwt,
+        'login' => $jupyterurl . gen_gitpath() . "&auth_token="  . $jwt,
         'name' => $name,
         'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
         'description' => get_string('resetbuttoninfo', 'jupyter')
@@ -113,9 +113,9 @@ function gen_gitpath() : string {
         '&urlpath=lab%2Ftree%2F' .
         urlencode(substr(strrchr($repo, "/"), 1)) .
         '%2F' .
-        urlencode($file) .
+        $file .
         '&branch=' .
-        urlencode($branch);
+        $branch;
 }
 
 /**
