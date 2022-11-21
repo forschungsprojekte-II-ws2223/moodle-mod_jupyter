@@ -1,8 +1,9 @@
-stages:
-  - test
-  - release
-
 image: sopra.informatik.uni-stuttgart.de:5050/kib3-student-projects/kib3-stupro-ss-22:latest
+
+stages:
+ - lint
+ - test
+ - zip-plugin
 
 variables:
     DB: "mariadb"
@@ -15,28 +16,44 @@ variables:
     IGNORE_NAMES: "lib.php, upgrade.php"
 
 .install_moodle:
-  only:
-    changes:
-      - jupyter/*
+  rules:
+    - changes:
+      - "*.md"
+      - "setup/*"
+      when: never
+    - when: always
   before_script:
     - export PATH="/var/www/html/ci/bin:/var/www/html/ci/vendor/bin:$PATH"
-    - moodle-plugin-ci install --moodle=$MOODLE_DIR --db-host=mariadb --no-init --plugin=$CI_PROJECT_DIR/jupyter/ -vvv
+    - moodle-plugin-ci install --moodle=$MOODLE_DIR --db-host=mariadb --no-init --plugin=$CI_PROJECT_DIR -vvv
     - cd $MOODLE_DIR
     - export IPADDRESS=`grep "$HOSTNAME$" /etc/hosts | awk '{print $1}'`
     - php -S $IPADDRESS:8000 -t $MOODLE_DIR > /dev/null 2>&1 &
 
 lint:
-  only:
-    changes:
-      - jupyter/*
+  stage: lint
+  rules:
+    - changes:
+      - "*.md"
+      - "setup/*"
+      - ".vscode/*"
+      when: never
+    - when: always
   script:
     - export PATH="/var/www/html/ci/bin:/var/www/html/ci/vendor/bin:$PATH"
     # these checks can be run without the Moodle install:
-    - moodle-plugin-ci phplint $CI_PROJECT_DIR/jupyter
-    - moodle-plugin-ci phpcpd $CI_PROJECT_DIR/jupyter
-    - moodle-plugin-ci savepoints $CI_PROJECT_DIR/jupyter
+    - moodle-plugin-ci phplint $CI_PROJECT_DIR
+    - moodle-plugin-ci phpcpd $CI_PROJECT_DIR
+    - moodle-plugin-ci savepoints $CI_PROJECT_DIR
 
 test:
+  stage: test
+  rules:
+    - changes:
+      - "*.md"
+      - "setup/*"
+      - ".vscode/*"
+      when: never
+    - when: always
   extends: .install_moodle
   services:
     - mariadb:10.7.4
@@ -44,29 +61,22 @@ test:
     - moodle-plugin-ci phpmd
     - moodle-plugin-ci validate
     - moodle-plugin-ci phpunit
-    - moodle-plugin-ci codechecker
+    - moodle-plugin-ci codechecker --max-warnings 0
     - moodle-plugin-ci grunt
     - moodle-plugin-ci phpdoc
 
-# Create jupyter.zip as artifact for download
 zip-plugin:
-  stage: release
-  # Each job needs a script, even if not used https://gitlab.com/gitlab-org/gitlab/-/issues/19717
+  stage: zip-plugin
   script:
-    - cd jupyter
     - composer update
   artifacts:
     # Name of the resulting .zip
-    name: jupyter 
+    name: moodle-mod_jupyter
     paths:
-      # Include whole directory
-      - jupyter/* 
+      - ./*
   only:
     refs:
       # Run only on specific branch
-      - main 
-      - ci-improvement-regarding-artifact
-    changes:
-      - jupyter/*
+      - main
 
 
