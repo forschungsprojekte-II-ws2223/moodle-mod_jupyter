@@ -3,6 +3,6 @@
 jupyter_config_default.py
 /.vs/slnx.sqlite
 /.vs/*
-jupyter/vendor/
+vendor/
 /composer.phar
 /node_modules/
