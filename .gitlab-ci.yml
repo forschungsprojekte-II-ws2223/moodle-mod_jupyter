@@ -1,25 +1,25 @@
 image: sopra.informatik.uni-stuttgart.de:5050/kib3-student-projects/kib3-stupro-ss-22:latest
 
 stages:
- - lint
- - test
- - zip-plugin
+  - lint
+  - test
+  - zip-plugin
 
 variables:
-    DB: "mariadb"
-    MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "true"
-    TRAVIS_BUILD_DIR: "$CI_PROJECT_DIR"
-    MOODLE_BRANCH: "MOODLE_311_STABLE"
-    MOODLE_DIR: "/var/www/html/moodle"
-    MOODLE_BEHAT_WDHOST: "http://selenium-standalone-chrome:4444/wd/hub"
-    MOODLE_START_BEHAT_SERVERS: "NO"
-    IGNORE_NAMES: "lib.php, upgrade.php"
+  DB: "mariadb"
+  MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "true"
+  TRAVIS_BUILD_DIR: "$CI_PROJECT_DIR"
+  MOODLE_BRANCH: "MOODLE_311_STABLE"
+  MOODLE_DIR: "/var/www/html/moodle"
+  MOODLE_BEHAT_WDHOST: "http://selenium-standalone-chrome:4444/wd/hub"
+  MOODLE_START_BEHAT_SERVERS: "NO"
+  IGNORE_NAMES: "lib.php, upgrade.php"
 
 .install_moodle:
   rules:
     - changes:
-      - "*.md"
-      - "setup/*"
+        - "*.md"
+        - "setup/*"
       when: never
     - when: always
   before_script:
@@ -33,9 +33,9 @@ lint:
   stage: lint
   rules:
     - changes:
-      - "*.md"
-      - "setup/*"
-      - ".vscode/*"
+        - "*.md"
+        - "setup/*"
+        - ".vscode/*"
       when: never
     - when: always
   script:
@@ -49,9 +49,9 @@ test:
   stage: test
   rules:
     - changes:
-      - "*.md"
-      - "setup/*"
-      - ".vscode/*"
+        - "*.md"
+        - "setup/*"
+        - ".vscode/*"
       when: never
     - when: always
   extends: .install_moodle
@@ -68,7 +68,7 @@ test:
 zip-plugin:
   stage: zip-plugin
   script:
-    - composer update
+    - composer install
   artifacts:
     # Name of the resulting .zip
     name: moodle-mod_jupyter
@@ -78,5 +78,3 @@ zip-plugin:
     refs:
       # Run only on specific branch
       - main
-
-
