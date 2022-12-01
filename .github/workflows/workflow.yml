@@ -12,11 +12,10 @@ env:
   MOODLE_START_BEHAT_SERVERS: NO
   IGNORE_NAMES: lib.php, upgrade.php
 
-runs-on: ubuntu-latest
-
 jobs:
+  runs-on: ubuntu-latest
   lint:
-    path-ignore:
+    paths-ignore:
       - '*.md'
       - '.vscode/*'
     steps:
@@ -29,7 +28,7 @@ jobs:
           moodle-plugin-ci savepoints $CI_PROJECT_DIR
 
   install_moodle:
-    path-ignore:
+    paths-ignore:
       - '*.md'
       - 'documentation/**'
     steps:
@@ -42,7 +41,7 @@ jobs:
           php -S $IPADDRESS:8000 -t $MOODLE_DIR > /dev/null 2>&1 &
 
   test:
-    path-ignore:
+    paths-ignore:
       - '*.md'
       - '.vsc/**'
     steps:
