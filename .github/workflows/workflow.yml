@@ -1,0 +1,7 @@
+name: moodle-mod_jupyter CI
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
