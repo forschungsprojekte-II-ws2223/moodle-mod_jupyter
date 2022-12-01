@@ -46,7 +46,9 @@ jobs:
     #paths-ignore:
     #  - '**.md'
     #  - '.vsc/**'
-    services: mariadb:10.7.4
+    services: 
+      mariadb:
+        image: mariadb:10.7.4
     steps:
       - name: test
         run: |
