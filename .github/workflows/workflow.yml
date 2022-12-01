@@ -2,6 +2,57 @@ name: moodle-mod_jupyter CI
 
 on: push
 
+env:
+  DB: mariadb
+  MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
+  TRAVIS_BUILD_DIR: $CI_PROJECT_DIR
+  MOODLE_BRANCH: MOODLE_311_STABLE
+  MOODLE_DIR: /var/www/html/moodle
+  MOODLE_BEHAT_WDHOST: http://selenium-standalone-chrome:4444/wd/hub
+  MOODLE_START_BEHAT_SERVERS: NO
+  IGNORE_NAMES: lib.php, upgrade.php
+
+runs-on: ubuntu-latest
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  lint:
+    path-ignore:
+      - '*.md'
+      - '.vscode/*'
+    steps:
+      - name: lint
+        # these checks can be run without the Moodle install:
+        run: |
+          export PATH="/var/www/html/ci/bin:/var/www/html/ci/vendor/bin:$PATH"
+          moodle-plugin-ci phplint $CI_PROJECT_DIR
+          moodle-plugin-ci phpcpd $CI_PROJECT_DIR
+          moodle-plugin-ci savepoints $CI_PROJECT_DIR
+
+  install_moodle:
+    path-ignore:
+      - '*.md'
+      - 'documentation/**'
+    steps:
+      - name: Installing Moodle
+        run: |
+          export PATH="/var/www/html/ci/bin:/var/www/html/ci/vendor/bin:$PATH"
+          moodle-plugin-ci install --moodle=$MOODLE_DIR --db-host=mariadb --no-init --plugin=$CI_PROJECT_DIR -vvv
+          cd $MOODLE_DIR
+          export IPADDRESS=`grep "$HOSTNAME$" /etc/hosts | awk '{print $1}'`
+          php -S $IPADDRESS:8000 -t $MOODLE_DIR > /dev/null 2>&1 &
+
+  test:
+    path-ignore:
+      - '*.md'
+      - '.vsc/**'
+    steps:
+      - name: test
+        run: |
+          moodle-plugin-ci phpmd
+          moodle-plugin-ci validate
+          moodle-plugin-ci phpunit
+          moodle-plugin-ci codechecker --max-warnings 0
+          moodle-plugin-ci grunt
+          moodle-plugin-ci phpdoc
+    
+    #zip-plugin job
