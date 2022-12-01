@@ -16,7 +16,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     paths-ignore:
-      - '*.md'
+      - '**.md'
       - '.vscode/*'
     steps:
       - name: lint
@@ -30,7 +30,7 @@ jobs:
   install_moodle:
     runs-on: ubuntu-latest
     paths-ignore:
-      - '*.md'
+      - '**.md'
       - 'documentation/**'
     steps:
       - name: Installing Moodle
@@ -44,7 +44,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     paths-ignore:
-      - '*.md'
+      - '**.md'
       - '.vsc/**'
     services: mariadb:10.7.4
     steps:
