@@ -3,18 +3,18 @@ name: moodle-mod_jupyter CI
 on: push
 
 env:
-  DB: mariadb
-  MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
-  TRAVIS_BUILD_DIR: $CI_PROJECT_DIR
-  MOODLE_BRANCH: MOODLE_311_STABLE
-  MOODLE_DIR: /var/www/html/moodle
-  MOODLE_BEHAT_WDHOST: http://selenium-standalone-chrome:4444/wd/hub
-  MOODLE_START_BEHAT_SERVERS: NO
-  IGNORE_NAMES: lib.php, upgrade.php
+  DB: 'mariadb'
+  MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'true'
+  TRAVIS_BUILD_DIR: '$CI_PROJECT_DIR'
+  MOODLE_BRANCH: 'MOODLE_311_STABLE'
+  MOODLE_DIR: '/var/www/html/moodle'
+  MOODLE_BEHAT_WDHOST: 'http://selenium-standalone-chrome:4444/wd/hub'
+  MOODLE_START_BEHAT_SERVERS: 'NO'
+  IGNORE_NAMES: 'lib.php, upgrade.php'
 
 jobs:
-  runs-on: ubuntu-latest
   lint:
+    runs-on: ubuntu-latest
     paths-ignore:
       - '*.md'
       - '.vscode/*'
@@ -28,6 +28,7 @@ jobs:
           moodle-plugin-ci savepoints $CI_PROJECT_DIR
 
   install_moodle:
+    runs-on: ubuntu-latest
     paths-ignore:
       - '*.md'
       - 'documentation/**'
@@ -41,9 +42,11 @@ jobs:
           php -S $IPADDRESS:8000 -t $MOODLE_DIR > /dev/null 2>&1 &
 
   test:
+    runs-on: ubuntu-latest
     paths-ignore:
       - '*.md'
       - '.vsc/**'
+    services: mariadb:10.7.4
     steps:
       - name: test
         run: |
