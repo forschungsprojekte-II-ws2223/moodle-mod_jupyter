@@ -72,10 +72,10 @@ $repo = $moduleinstance->repourl;
 $branch = urlencode(trim($moduleinstance->branch));
 $file = urlencode(trim($moduleinstance->file));
 $name = $moduleinstance->name;
-$gitfilelink = gen_gitfilelink();
+$gitfilelink = \mod_jupyter\helper::gen_gitfilelink($repo, $file, $branch);
 
-$gitreachable = check_url($gitfilelink)[0] === 200;
-$jupyterreachable = check_jupyter($jupyterurl);
+$gitreachable = \mod_jupyter\helper::check_url($gitfilelink)[0] === 200;
+$jupyterreachable = \mod_jupyter\helper::check_jupyter($jupyterurl);
 
 // Mark as done after user views the course.
 $completion = new completion_info($course);
@@ -85,104 +85,16 @@ echo $OUTPUT->header();
 
 if ($gitreachable && $jupyterreachable) {
     echo $OUTPUT->render_from_template('mod_jupyter/manage', [
-        'login' => $jupyterurl . gen_gitpath() . "&auth_token=" . $jwt,
+        'login' => $jupyterurl . \mod_jupyter\helper::gen_gitpath($repo, $file, $branch) . "&auth_token=" . $jwt,
         'name' => $name,
         'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
         'description' => get_string('resetbuttoninfo', 'jupyter')
     ]);
 } else {
-    show_error_message();
+    \mod_jupyter\helper::show_error_message($gitreachable, $jupyterreachable, $jupyterurl, $gitfilelink, $moduleinstance, $modulecontext);
 }
 
 echo $OUTPUT->footer();
 
-/**
- * Creates nbgitpuller part of the link to the JupyterHub.
- * @return string the formatted path and query parameters for nbgitpuller
- */
-function gen_gitpath(): string {
-    global $repo, $file, $branch;
 
-    if (preg_match("/\/$/", "$repo")) {
-        $repo = substr($repo, 0, strlen($repo) - 1);
-    }
 
-    return '/hub/user-redirect/git-pull?repo=' .
-        urlencode($repo) .
-        '&urlpath=lab%2Ftree%2F' .
-        urlencode(substr(strrchr($repo, "/"), 1)) .
-        '%2F' .
-        $file .
-        '&branch=' .
-        $branch;
-}
-
-/**
- * Generates link to file in git repository
- * @return string example: https://github.com/username/reponame/blob/branch/notebook.ipynb
- */
-function gen_gitfilelink(): string {
-    global $repo, $file, $branch;
-
-    if (preg_match("/\/$/", "$repo")) {
-        $repo = substr($repo, 0, strlen($repo) - 1);
-    }
-
-    return $repo . "/blob/" . $branch . "/" . $file;
-}
-
-/**
- * Checks if JupyterHub is reachable
- * @param string $url
- * @return bool
- */
-function check_jupyter(string $url): bool {
-    $res = check_url($url);
-
-    if ($res[0] !== 401 && strpos($url, "127.0.0.1") !== false) {
-        $res = check_url(str_replace("127.0.0.1", "host.docker.internal", $url));
-    }
-
-    // Check if respose code matches and "x-jupyterhub-version" header is set in response header.
-    // Response code should be 401 because we didnt pass an auth token.
-    return $res[0] === 401 && $res[1] != "";
-}
-
-/**
- * Send HTTP request to URL and return response status code
- * @param string $url The URL to check for availability.
- * @return array Returns HTTP status code of the request and response header string
- */
-function check_url(string $url): array {
-    $client = new GuzzleHttp\Client();
-    try {
-        $res = $client->get($url);
-    } catch (GuzzleHttp\Exception\RequestException $e) {
-        $res = $e->getResponse();
-    } catch (GuzzleHttp\Exception\ConnectException $e) {
-        return [0, ""];
-    }
-
-    return [
-        $res->getStatusCode(),
-        $res->getHeaderLine("x-jupyterhub-version")
-    ];
-}
-
-/**
- * Shows different error messages depending on cause of error
- */
-function show_error_message() {
-    global $gitreachable, $jupyterreachable, $jupyterurl, $gitfilelink, $moduleinstance, $modulecontext;
-
-    \core\notification::error(get_string('errorheading', 'jupyter', ['instancename' => $moduleinstance->name]));
-
-    if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
-        if (!$jupyterreachable) {
-            \core\notification::error(get_string('adminsettingserror', 'jupyter', ['url' => $jupyterurl]));
-        }
-        if (!$gitreachable) {
-            \core\notification::error(get_string('instancesettingserror', 'jupyter', ['url' => $gitfilelink]));
-        }
-    }
-}
