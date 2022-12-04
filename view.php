@@ -27,6 +27,7 @@ require_once(__DIR__ . '/lib.php');
 require(__DIR__ . '/vendor/autoload.php');
 
 use Firebase\JWT\JWT;
+use GuzzleHttp\Client;
 
 // Moodle specific config.
 global $DB, $PAGE, $USER, $OUTPUT;
