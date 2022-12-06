@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ["7.3", "7.4", "8.0"]
+        php: ["8.0"]
         moodle-branch: ["MOODLE_311_STABLE"]
         database: [mariadb]
 
@@ -121,7 +121,7 @@ jobs:
         id: create-new-release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ github.run_numbere }}
+          tag_name: ${{ github.run_number }}
           release_name: Release ${{ github.run_number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Github
