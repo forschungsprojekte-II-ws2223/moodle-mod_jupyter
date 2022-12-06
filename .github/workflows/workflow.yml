@@ -96,6 +96,8 @@ jobs:
         run: moodle-plugin-ci phpunit
 
   build:
+    runs-on: ubuntu-latest
+    needs: test
     steps:
       - uses: actions/checkout@v2
       - name: Get Composer Cache Directory
