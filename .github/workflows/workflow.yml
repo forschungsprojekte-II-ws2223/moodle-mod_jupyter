@@ -116,7 +116,7 @@ jobs:
         run: zip -r ${{ github.event.repository.name }}.zip . -x ".git/*" ".github/*" "phpcs.xml" "composer.json" "composer.lock" ".gitignore"
 
       - name: Release
-      - uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v1
         with:
           files: ${{ github.event.repository.name }}.zip
         env:
