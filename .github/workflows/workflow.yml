@@ -129,8 +129,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create-new-release.outputs.upload_url }}
-          asset_path: ./jupyter.zip
-          asset_name: jupyter-v${{ github.run_number }}.zip
+          asset_path: ./${{ github.event.repository.name }}.zip
+          asset_name: ${{ github.event.repository.name }}-v${{ github.run_number }}.zip
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Github
