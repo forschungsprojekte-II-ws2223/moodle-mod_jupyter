@@ -1,10 +1,6 @@
-#     #zip-plugin job
-
 name: Moodle Plugin CI
 
-on: [push, pull_request]
-  release:
-    types: -created
+on: [push, pull_request, release: types: -created]
 
 jobs:
   test:
