@@ -125,3 +125,12 @@ jobs:
           release_name: Release ${{ github.event.repository.name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Github
+      - name:
+        uses: actions/upload-release-asset@v1
+        with:
+          asset_path: ./jupyter.zip
+          asset_name: jupyter-v${{ github.run_number }}.zip
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Github
+
