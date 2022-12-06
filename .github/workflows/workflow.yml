@@ -118,8 +118,10 @@ jobs:
         run: zip -r ${{ github.event.repository.name }}.zip . -x ".git/*" ".github/*" "phpcs.xml" "composer.json" "composer.lock" ".gitignore"
 
       - name: Release
-        uses: softprops/action-gh-release@v1
+        id: create-new-release
+        uses: actions/create-release@v1
         with:
-          files: ${{ github.event.repository.name }}.zip
+          tagname: ${{ github.event.repository.name }}
+          release_name: Release ${{ github.event.repository.name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Github
