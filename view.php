@@ -27,7 +27,6 @@ require_once(__DIR__ . '/lib.php');
 require(__DIR__ . '/vendor/autoload.php');
 
 use Firebase\JWT\JWT;
-use GuzzleHttp\Client;
 
 // Moodle specific config.
 global $DB, $PAGE, $USER, $OUTPUT;
@@ -73,10 +72,11 @@ $repo = $moduleinstance->repourl;
 $branch = urlencode(trim($moduleinstance->branch));
 $file = urlencode(trim($moduleinstance->file));
 $name = $moduleinstance->name;
-$gitfilelink = \mod_jupyter\helper::gen_gitfilelink($repo, $file, $branch);
+$gitfilelink = \mod_jupyter\git_generator::gen_gitfilelink($repo, $file, $branch);
 
-$gitreachable = \mod_jupyter\helper::check_url($gitfilelink)[0] === 200;
-$jupyterreachable = \mod_jupyter\helper::check_jupyter($jupyterurl);
+$client = new GuzzleHttp\Client();
+$gitreachable = \mod_jupyter\availiability_checker::check_url($gitfilelink, $client)[0] === 200;
+$jupyterreachable = \mod_jupyter\availiability_checker::check_jupyter($jupyterurl, $client, $gitfilelink);
 
 // Mark as done after user views the course.
 $completion = new completion_info($course);
@@ -86,13 +86,13 @@ echo $OUTPUT->header();
 
 if ($gitreachable && $jupyterreachable) {
     echo $OUTPUT->render_from_template('mod_jupyter/manage', [
-        'login' => $jupyterurl . \mod_jupyter\helper::gen_gitpath($repo, $file, $branch) . "&auth_token=" . $jwt,
+        'login' => $jupyterurl . \mod_jupyter\git_generatorr::gen_gitpath($repo, $file, $branch) . "&auth_token=" . $jwt,
         'name' => $name,
         'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
         'description' => get_string('resetbuttoninfo', 'jupyter')
     ]);
 } else {
-    \mod_jupyter\helper::show_error_message($gitreachable, $jupyterreachable, $jupyterurl, $gitfilelink, $moduleinstance, $modulecontext);
+    \mod_jupyter\error_handler::show_error_message($gitreachable, $jupyterreachable, $jupyterurl, $gitfilelink, $moduleinstance, $modulecontext);
 }
 
 echo $OUTPUT->footer();
