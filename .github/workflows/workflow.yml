@@ -61,7 +61,7 @@ jobs:
         run: moodle-plugin-ci phplint $CI_PROJECT_DIR
 
       - name: PHP Copy/Paste Detector
-        continue-on-error: true # This step will show errors but will not fail
+        #continue-on-error: true # This step will show errors but will not fail
         if: ${{ always() }}
         run: moodle-plugin-ci phpcpd $CI_PROJECT_DIR
 
@@ -71,7 +71,7 @@ jobs:
 
       # test stage
       - name: PHP Mess Detector
-        continue-on-error: true # This step will show errors but will not fail
+        #continue-on-error: true # This step will show errors but will not fail
         if: ${{ always() }}
         run: moodle-plugin-ci phpmd
 
