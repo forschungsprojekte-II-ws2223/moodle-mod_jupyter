@@ -1,4 +1,4 @@
-## Merge Request Template
+## Pull Request Template
 
 #### Things to check before merging branches:
 
