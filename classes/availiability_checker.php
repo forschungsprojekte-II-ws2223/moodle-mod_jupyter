@@ -33,7 +33,8 @@ class availiability_checker {
      * @param string $url The URL to check for availability.
      * @return array Returns HTTP status code of the request and response header string
      */
-    public static function check_url(string $url, $client): array {
+    public static function check_url(string $url): array {
+        $client = new GuzzleHttp\Client();
         try {
             $res = $client->get($url);
         } catch (GuzzleHttp\Exception\RequestException $e) {
@@ -53,8 +54,8 @@ class availiability_checker {
      * @param string $url
      * @return bool
      */
-    public static function check_jupyter(string $url, $client): bool {
-        self::check_url($url, $client);
+    public static function check_jupyter(string $url): bool {
+        self::check_url($url);
 
         if ($res[0] !== 401 && strpos($url, "127.0.0.1") !== false) {
             $res = check_url(str_replace("127.0.0.1", "host.docker.internal", $url));
