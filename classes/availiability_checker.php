@@ -27,6 +27,8 @@ namespace mod_jupyter;
 defined('MOODLE_INTERNAL') || die();
 require(dirname(__DIR__) . '/vendor/autoload.php');
 
+use Guzzle\GuzzleHttp\Client;
+
 
 class availiability_checker {
     /**
