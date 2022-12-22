@@ -74,7 +74,7 @@ $file = urlencode(trim($moduleinstance->file));
 $name = $moduleinstance->name;
 $gitfilelink = \mod_jupyter\git_generator::gen_gitfilelink($repo, $file, $branch);
 
-$client = new GuzzleHttp\Client();
+//$client = new GuzzleHttp\Client();
 $gitreachable = \mod_jupyter\availiability_checker::check_url($gitfilelink)[0] === 200;
 $jupyterreachable = \mod_jupyter\availiability_checker::check_jupyter($jupyterurl);
 
