@@ -27,6 +27,7 @@ namespace mod_jupyter;
 defined('MOODLE_INTERNAL') || die();
 require(dirname(__DIR__) . '/vendor/autoload.php');
 
+
 class availiability_checker {
     /**
      * Send HTTP request to URL and return response status code
