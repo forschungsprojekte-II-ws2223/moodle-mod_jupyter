@@ -75,8 +75,8 @@ $name = $moduleinstance->name;
 $gitfilelink = \mod_jupyter\git_generator::gen_gitfilelink($repo, $file, $branch);
 
 //$client = new GuzzleHttp\Client();
-$gitreachable = \mod_jupyter\availiability_checker::check_url($gitfilelink)[0] === 200;
-$jupyterreachable = \mod_jupyter\availiability_checker::check_jupyter($jupyterurl);
+$gitreachable = \mod_jupyter\availability_checker::check_url($gitfilelink)[0] === 200;
+$jupyterreachable = \mod_jupyter\availability_checker::check_jupyter($jupyterurl);
 
 // Mark as done after user views the course.
 $completion = new completion_info($course);
@@ -86,7 +86,7 @@ echo $OUTPUT->header();
 
 if ($gitreachable && $jupyterreachable) {
     echo $OUTPUT->render_from_template('mod_jupyter/manage', [
-        'login' => $jupyterurl . \mod_jupyter\git_generatorr::gen_gitpath($repo, $file, $branch) . "&auth_token=" . $jwt,
+        'login' => $jupyterurl . \mod_jupyter\git_generator::gen_gitpath($repo, $file, $branch) . "&auth_token=" . $jwt,
         'name' => $name,
         'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
         'description' => get_string('resetbuttoninfo', 'jupyter')
