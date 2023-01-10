@@ -25,10 +25,11 @@
 namespace mod_jupyter;
 
 defined('MOODLE_INTERNAL') || die();
-require(dirname(__DIR__) . '/vendor/autoload.php');
+require($CFG->dirroot . '/mod/jupyter/vendor/autoload.php');
 
-use Guzzle\GuzzleHttp\Client;
-
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\ConnectException;
 
 class availiability_checker {
     /**
@@ -37,12 +38,12 @@ class availiability_checker {
      * @return array Returns HTTP status code of the request and response header string
      */
     public static function check_url(string $url): array {
-        $client = new GuzzleHttp\Client();
+        $client = new Client();
         try {
             $res = $client->get($url);
-        } catch (GuzzleHttp\Exception\RequestException $e) {
+        } catch (RequestException $e) {
             $res = $e->getResponse();
-        } catch (GuzzleHttp\Exception\ConnectException $e) {
+        } catch (ConnectException $e) {
             return [0, ""];
         }
 
@@ -61,7 +62,7 @@ class availiability_checker {
         self::check_url($url);
 
         if ($res[0] !== 401 && strpos($url, "127.0.0.1") !== false) {
-            $res = check_url(str_replace("127.0.0.1", "host.docker.internal", $url));
+            $res = self::check_url(str_replace("127.0.0.1", "host.docker.internal", $url));
         }
 
         // Check if respose code matches and "x-jupyterhub-version" header is set in response header.
