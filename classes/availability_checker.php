@@ -31,7 +31,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ConnectException;
 
-class availiability_checker {
+class availability_checker {
     /**
      * Send HTTP request to URL and return response status code
      * @param string $url The URL to check for availability.
