@@ -29,7 +29,10 @@ defined('MOODLE_INTERNAL') || die();
 class git_generator {
     /**
      * Creates nbgitpuller part of the link to the JupyterHub.
-     * @return string the formatted path and query parameters for nbgitpuller
+     * @param string $repo Repository to use
+     * @param string $file File to use
+     * @param string $branch Branch to use
+     * @return string The formatted path and query parameters for nbgitpuller
      */
     public static function gen_gitpath($repo, $file, $branch): string {
 
@@ -48,9 +51,12 @@ class git_generator {
     }
 
      /**
-      * Generates link to file in git repository
-      * @return string example: https://github.com/username/reponame/blob/branch/notebook.ipynb
-      */
+    * Generates link to file in git repository.
+    * @param string $repo Repository to use
+    * @param string $file File to use
+    * @param string $branch Branch to use
+    * @return string example: https://github.com/username/reponame/blob/branch/notebook.ipynb
+    */
     public static function gen_gitfilelink($repo, $file, $branch): string {
 
         if (preg_match("/\/$/", "$repo")) {
