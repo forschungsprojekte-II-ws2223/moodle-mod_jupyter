@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Provides assertment of functions used in the plugin
+ * Provides function for creating an error message.
  *
  * @package     mod_jupyter
  * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart

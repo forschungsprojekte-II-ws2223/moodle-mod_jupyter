@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Provides assertment of functions used in the plugin
+ * Provides functions to check availability of an url and the jupyterhub used in the plugin.
  *
  * @package     mod_jupyter
  * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
@@ -55,8 +55,8 @@ class availability_checker {
     }
 
     /**
-     * Checks if JupyterHub is reachable
-     * @param string $url
+     * Check if JupyterHub url is reachable
+     * @param string $url The URL to check for availability.
      * @return bool
      */
     public static function check_jupyter(string $url): bool {
