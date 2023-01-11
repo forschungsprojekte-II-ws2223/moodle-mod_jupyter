@@ -30,6 +30,7 @@ require($CFG->dirroot . '/mod/jupyter/vendor/autoload.php');
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Psr7\Exception\MalformedUriException;
 
 class availability_checker {
     /**
@@ -43,7 +44,7 @@ class availability_checker {
             $res = $client->get($url);
         } catch (RequestException $e) {
             $res = $e->getResponse();
-        } catch (ConnectException $e) {
+        } catch (ConnectException | MalformedUriException $e) {
             return [0, ""];
         }
 
