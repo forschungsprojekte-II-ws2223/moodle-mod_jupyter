@@ -60,7 +60,7 @@ class availability_checker {
      * @return bool
      */
     public static function check_jupyter(string $url): bool {
-        self::check_url($url);
+        $res = self::check_url($url);
 
         if ($res[0] !== 401 && strpos($url, "127.0.0.1") !== false) {
             $res = self::check_url(str_replace("127.0.0.1", "host.docker.internal", $url));
