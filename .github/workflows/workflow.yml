@@ -30,7 +30,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
         with:
-          path: plugin
+          path: jupyter
 
       - name: Setup PHP ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
@@ -63,16 +63,16 @@ jobs:
       # lint stage
       - name: PHP Lint
         if: ${{ always() }}
-        run: moodle-plugin-ci phplint $CI_PROJECT_DIR
+        run: moodle-plugin-ci phplint jupyter
 
       - name: PHP Copy/Paste Detector
         #continue-on-error: true # This step will show errors but will not fail
         if: ${{ always() }}
-        run: moodle-plugin-ci phpcpd $CI_PROJECT_DIR
+        run: moodle-plugin-ci phpcpd jupyter
 
       - name: Check upgrade savepoints
         if: ${{ always() }}
-        run: moodle-plugin-ci savepoints $CI_PROJECT_DIR
+        run: moodle-plugin-ci savepoints jupyter
 
       # test stage
       - name: PHP Mess Detector
