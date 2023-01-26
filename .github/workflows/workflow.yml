@@ -49,9 +49,9 @@ jobs:
           sudo locale-gen en_AU.UTF-8
           echo "NVM_DIR=$HOME/.nvm" >> $GITHUB_ENV
 
-      - name: Install dependencies
+      - name: Install plugin dependencies
         run: |
-          composer install ./jupyter
+          cd jupyter && composer install
 
       - name: Install moodle-plugin-ci
         run: |
