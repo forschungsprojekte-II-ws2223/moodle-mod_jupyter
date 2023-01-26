@@ -91,7 +91,13 @@ if ($gitreachable && $jupyterreachable) {
         'description' => get_string('resetbuttoninfo', 'jupyter')
     ]);
 } else {
-    \mod_jupyter\error_handler::show_error_message($gitreachable, $jupyterreachable, $jupyterurl, $gitfilelink, $moduleinstance, $modulecontext);
+    \mod_jupyter\error_handler::show_error_message(
+        $gitreachable,
+        $jupyterreachable,
+        $jupyterurl,
+        $gitfilelink,
+        $moduleinstance,
+        $modulecontext);
 }
 
 echo $OUTPUT->footer();
