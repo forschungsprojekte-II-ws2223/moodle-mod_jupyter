@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-/**
- * Provides functions to check availability of an url and the jupyterhub used in the plugin.
- *
- * @package     mod_jupyter
- * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_jupyter;
 
 defined('MOODLE_INTERNAL') || die();
@@ -32,6 +24,13 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Exception\MalformedUriException;
 
+/**
+ * Provides functions to check availability of an url and the jupyterhub used in the plugin.
+ *
+ * @package     mod_jupyter
+ * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class availability_checker {
     /**
      * Send HTTP request to URL and return response status code

@@ -14,18 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+namespace mod_jupyter;
+
 /**
- * Provides assertment of functions used in the plugin
+ * Provides functions used for the setup of JupyterHub.
  *
  * @package     mod_jupyter
  * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace mod_jupyter;
-
-defined('MOODLE_INTERNAL') || die();
-
 class git_generator {
     /**
      * Creates nbgitpuller part of the link to the JupyterHub.
