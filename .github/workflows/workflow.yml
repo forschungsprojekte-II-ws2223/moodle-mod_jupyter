@@ -91,7 +91,7 @@ jobs:
 
       - name: Validating
         if: ${{ always() }}
-        run: moodle-plugin-ci validate
+        run: moodle-plugin-ci validate -vvv
 
       - name: Grunt
         if: ${{ always() }}
