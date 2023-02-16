@@ -22,12 +22,32 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_jupyter;
+class mod_jupyter_generator extends testing_module_generator {
 
-defined('MOODLE_INTERNAL') || die();
+    /**
+     * Create new jupyter module instance
+     *
+     * @param array|stdClass $record
+     * @param array $options
+     * @return stdClass mod_jupyter_structure
+     */
+    public function create_instance($record = null, array $options = null) {
+        global $CFG;
+        $record = (object)(array)$record;
 
-class test_test extends \advanced_testcase {
-    public function test_adding() {
-        $this->assertEquals(2, 1+2);
+        $defaultjupytersettings = array(
+            'name'  => 'Jupyter',
+            'repourl' => 'https://github.com/maxschuele/notebook-test',
+            'branch' => 'main',
+            'file'  => '01.00-IPython-Beyond-Normal-Python.ipynb'
+        );
+
+        foreach ($defaultjupytersettings as $name => $value) {
+            if (!isset($record->{$name})) {
+                $record->{$name} = $value;
+            }
+        }
+
+        return parent::create_instance($record, (array)$options);
     }
 }
