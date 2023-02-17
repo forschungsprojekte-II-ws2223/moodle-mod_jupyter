@@ -15,23 +15,17 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace mod_jupyter;
+
+defined('MOODLE_INTERNAL') || die();
+
 /**
- * Test cases for error creation in view.php
- *
  * @package     mod_jupyter
  * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class error_handler_test extends \advanced_testcase {
-    public function test_error_is_created() {
-        global $CFG, $DB;
-        $this->resetAfterTest();
-        $course = $this->getDataGenerator()->create_course();
-        $jupyter = $this->getDataGenerator()->create_module('jupyter', array('course' => $course->id));
-        // $moduleinstance->name = 'test';
-        // \mod_jupyter\error_handler::show_error_message();
-        // $notficationstack = core\notification::fetch();
-        // $this->assertEquals(count($notficationstack), 0);
+class availability_checker_test extends \advanced_testcase {
+    public function test_something() {
+        $gitfilelink = "";
+        $this->assertEquals($gitfilelink, "");
     }
-
 }

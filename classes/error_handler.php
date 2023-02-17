@@ -29,7 +29,7 @@ class error_handler {
      */
     public static function show_error_message() {
         global $gitreachable, $jupyterreachable, $jupyterurl, $gitfilelink, $moduleinstance, $modulecontext;
-        \core\notification::error(get_string('errorheading', 'jupyter', ['instancename' => $moduleinstance->name]));
+        \core\notification::error(get_string('errorheading', 'jupyter', ['instancename' => 'ass']));
 
         if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
             if (!$jupyterreachable) {

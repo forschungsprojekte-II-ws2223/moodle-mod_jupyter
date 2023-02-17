@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+namespace mod_jupyter;
+
 /**
  * PHPUnit data generator testcase.
  *
@@ -22,9 +24,6 @@
  * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace mod_jupyter;
-
 class generator_test extends \advanced_testcase {
     /**
      * Tests if plugin instance is created succesfully and can be addded to a course.

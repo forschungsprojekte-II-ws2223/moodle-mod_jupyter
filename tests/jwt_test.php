@@ -15,23 +15,31 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace mod_jupyter;
+defined('MOODLE_INTERNAL') || die();
+require('/bitnami/moodle/mod/jupyter/vendor/autoload.php');
+
+use Firebase\JWT\JWT;
+namespace Firebase\JWT;
+use stdClass;
+use ArrayObject;
 /**
- * Test cases for error creation in view.php
- *
  * @package     mod_jupyter
  * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class error_handler_test extends \advanced_testcase {
-    public function test_error_is_created() {
-        global $CFG, $DB;
+class jwt_test extends \advanced_testcase {
+    public function test_simple_encode() {
         $this->resetAfterTest();
-        $course = $this->getDataGenerator()->create_course();
-        $jupyter = $this->getDataGenerator()->create_module('jupyter', array('course' => $course->id));
-        // $moduleinstance->name = 'test';
-        // \mod_jupyter\error_handler::show_error_message();
-        // $notficationstack = core\notification::fetch();
-        // $this->assertEquals(count($notficationstack), 0);
+        global $USER;
+        $user = $this->getDataGenerator()->create_user(array('email' => 'user@example.com', 'username' => 'user'));
+        $this->setUser($user);
+        $uniqueid = mb_strtolower($USER->username, "UTF-8");
+        $jwt = JWT::encode([
+            "name" => $uniqueid,
+            "iat" => time(),
+            "exp" => time() + 15
+        ], get_config('mod_jupyter', 'jupytersecret'), 'HS256');
+        $decoded = JWT::decode($jwt, new Key('your-256-bit-secret', 'HS256'));
+        $this->assertSame($decoded->name, $uniqueid);
     }
-
 }
