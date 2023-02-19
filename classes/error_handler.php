@@ -26,6 +26,11 @@ namespace mod_jupyter;
 
 use core\notification;
 
+/**
+ * Error handler.
+ *
+ * @package mod_jupyter
+ */
 class error_handler {
     /**
      * Shows different error messages depending on cause of error (instance/admin settings).

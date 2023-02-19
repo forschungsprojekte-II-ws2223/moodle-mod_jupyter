@@ -35,6 +35,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Exception\MalformedUriException;
 
 /**
+ * Handles interaction with jupyter api.
  *
  * @package mod_jupyter
  */
@@ -43,7 +44,7 @@ class handler {
     /** @var Client guzzle http client */
     private $client;
 
-    /** @var string user name */
+    /** @var string username */
     private string $user;
 
     /** @var int contextid needed to get file for activity */
@@ -68,6 +69,7 @@ class handler {
     }
 
     /**
+     * Returns the url to users notebook and notebook file.
      *
      * @return string
      * @throws GuzzleException
@@ -80,12 +82,14 @@ class handler {
 
     // TODO: error handling!
     /**
+     * Check if user exists and spawn container
      *
      * @return void
      * @throws GuzzleException
      */
     private function check_user_status() {
         $client = $this->client;
+        $route = "/hub/api/users/{$this->user}";
         // Check if user exists.
         try {
             $res = $client->get("/hub/api/users/{$this->user}");
@@ -105,6 +109,7 @@ class handler {
 
     // TODO: error handling!
     /**
+     * Check if notebook exists
      *
      * @return void
      * @throws coding_exception
@@ -117,7 +122,8 @@ class handler {
 
         $route = "/user/{$this->user}/contents/{$file->get_filename()}";
 
-        $res = $this->client->get($route);
+        // Check if file is already there.
+        $res = $this->client->get($route, ['query' => ['content' => '0']]);
 
         if ($res->getStatusCode() == 404) {
             $f = base64_encode($file->get_content());
