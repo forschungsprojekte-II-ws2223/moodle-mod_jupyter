@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace mod_jupyter;
-
 /**
  * Provides function for creating an error message.
  *
@@ -23,20 +21,22 @@ namespace mod_jupyter;
  * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace mod_jupyter;
+
+use core\notification;
+
 class error_handler {
     /**
      * Shows different error messages depending on cause of error (instance/admin settings).
      */
     public static function show_error_message() {
-        global $gitreachable, $jupyterreachable, $jupyterurl, $gitfilelink, $moduleinstance, $modulecontext;
-        \core\notification::error(get_string('errorheading', 'jupyter', ['instancename' => $moduleinstance->name]));
+        global $jupyterreachable, $jupyterurl, $moduleinstance, $modulecontext;
+        notification::error(get_string('errorheading', 'jupyter', ['instancename' => $moduleinstance->name]));
 
         if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
             if (!$jupyterreachable) {
-                \core\notification::error(get_string('adminsettingserror', 'jupyter', ['url' => $jupyterurl]));
-            }
-            if (!$gitreachable) {
-                \core\notification::error(get_string('instancesettingserror', 'jupyter', ['url' => $gitfilelink]));
+                notification::error(get_string('adminsettingserror', 'jupyter', ['url' => $jupyterurl]));
             }
         }
     }

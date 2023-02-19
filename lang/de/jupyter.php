@@ -58,3 +58,6 @@ $string['jupyterurl_desc'] = 'Fügen Sie hier die URL Ihres JupyterHub ein.<br>M
 // JWT.
 $string['jupytersecret'] = 'Jupyterhub JWT Secret';
 $string['jupytersecret_desc'] = 'Fügen Sie hier das JWT-Geheimnis Ihres JupyterHub ein. <br><strong>Stellen Sie sicher, dass Ihr JupyterHub ein sicheres 256-Bit-Geheimnis verwendet!!!</strong>';
+
+$string['package'] = 'Notebook file';
+$string['package_help'] = 'Somehelptext';

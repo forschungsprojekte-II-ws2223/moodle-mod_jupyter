@@ -49,18 +49,23 @@ function jupyter_supports($feature) {
  * in mod_form.php) this function will create a new instance and return the id
  * number of the instance.
  *
- * @param object $moduleinstance An object from the form.
+ * @param object $data An object from the form.
  * @param mod_jupyter_mod_form $mform The form.
  * @return int The id of the newly inserted record.
  */
-function jupyter_add_instance($moduleinstance, $mform = null) {
+function jupyter_add_instance($data, $mform = null): int {
     global $DB;
 
-    $moduleinstance->timecreated = time();
+    $data->timecreated = time();
+    $data->timemodified = $data->timecreated;
+    $cmid = $data->coursemodule;
 
-    $id = $DB->insert_record('jupyter', $moduleinstance);
+    $data->id = $DB->insert_record('jupyter', $data);
 
-    return $id;
+    $DB->set_field('course_modules', 'instance', $data->id, ['id' => $cmid]);
+    jupyter_set_mainfile($data);
+
+    return $data->id;
 }
 
 /**
@@ -69,17 +74,17 @@ function jupyter_add_instance($moduleinstance, $mform = null) {
  * Given an object containing all the necessary data (defined in mod_form.php),
  * this function will update an existing instance with new data.
  *
- * @param object $moduleinstance An object from the form in mod_form.php.
+ * @param object $data An object from the form in mod_form.php.
  * @param mod_jupyter_mod_form $mform The form.
  * @return bool True if successful, false otherwise.
  */
-function jupyter_update_instance($moduleinstance, $mform = null) {
+function jupyter_update_instance($data, $mform = null) {
     global $DB;
 
-    $moduleinstance->timemodified = time();
-    $moduleinstance->id = $moduleinstance->instance;
+    $data->timemodified = time();
+    $data->id = $data->instance;
 
-    return $DB->update_record('jupyter', $moduleinstance);
+    return $DB->update_record('jupyter', $data);
 }
 
 /**
@@ -99,4 +104,22 @@ function jupyter_delete_instance($id) {
     $DB->delete_records('jupyter', array('id' => $id));
 
     return true;
+}
+
+/**
+ * Saves draft files as the activity package.
+ *
+ * @param stdClass $data an object from the form
+ */
+function jupyter_set_mainfile(stdClass $data): void {
+    $fs = get_file_storage();
+    $cmid = $data->coursemodule;
+    $context = context_module::instance($cmid);
+
+    if (!empty($data->packagefile)) {
+        $fs = get_file_storage();
+        $fs->delete_area_files($context->id, 'mod_jupyter', 'package');
+        file_save_draft_area_files($data->packagefile, $context->id, 'mod_jupyter', 'package',
+            0, ['subdirs' => 0, 'maxfiles' => 1]);
+    }
 }

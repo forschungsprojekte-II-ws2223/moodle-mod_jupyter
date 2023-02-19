@@ -27,6 +27,9 @@ require_once(__DIR__ . '/lib.php');
 require(__DIR__ . '/vendor/autoload.php');
 
 use Firebase\JWT\JWT;
+use mod_jupyter\git_generator;
+use mod_jupyter\availability_checker;
+use mod_jupyter\error_handler;
 
 // Moodle specific config.
 global $DB, $PAGE, $USER, $OUTPUT;
@@ -57,42 +60,37 @@ $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
 // User interface.
-
-// Create id with the user's unique username from Moodle.
-$uniqueid = mb_strtolower($USER->username, "UTF-8");
-
-$jwt = JWT::encode([
-    "name" => $uniqueid,
-    "iat" => time(),
-    "exp" => time() + 15
-], get_config('mod_jupyter', 'jupytersecret'), 'HS256');
-
 $jupyterurl = get_config('mod_jupyter', 'jupyterurl');
-$repo = $moduleinstance->repourl;
-$branch = urlencode(trim($moduleinstance->branch));
-$file = urlencode(trim($moduleinstance->file));
-$name = $moduleinstance->name;
-$gitfilelink = \mod_jupyter\git_generator::gen_gitfilelink($repo, $file, $branch);
-
-$gitreachable = \mod_jupyter\availability_checker::check_url($gitfilelink)[0] === 200;
-$jupyterreachable = \mod_jupyter\availability_checker::check_jupyter($jupyterurl);
-
-// Mark as done after user views the course.
-$completion = new completion_info($course);
-$completion->set_module_viewed($cm);
+$jupyterreachable = availability_checker::check_jupyter($jupyterurl);
 
 echo $OUTPUT->header();
 
-if ($gitreachable && $jupyterreachable) {
+if ($jupyterreachable) {
+    $jwt = JWT::encode([
+        "name" => mb_strtolower($USER->username, "UTF-8"), // Create id with the user's unique username from Moodle.
+        "iat" => time(),
+        "exp" => time() + 15
+    ], get_config('mod_jupyter', 'jupytersecret'), 'HS256');
+
+    $fs = get_file_storage();
+    $files = $fs->get_area_files($modulecontext->id, 'mod_jupyter', 'package', 0, 'id', false);
+    $file = reset($files);
+
+    $content = $file->get_content();
+    $filename = $file->get_filename();
+
     echo $OUTPUT->render_from_template('mod_jupyter/manage', [
-        'login' => $jupyterurl . \mod_jupyter\git_generator::gen_gitpath($repo, $file, $branch) . "&auth_token=" . $jwt,
-        'name' => $name,
+        'login' => $jupyterurl . "?auth_token=" . $jwt,
         'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
         'description' => get_string('resetbuttoninfo', 'jupyter')
     ]);
 } else {
-    \mod_jupyter\error_handler::show_error_message();
+    error_handler::show_error_message();
 }
+
+// Mark as done after user views the course.
+$completion = new completion_info($course);
+$completion->set_module_viewed($cm);
 
 echo $OUTPUT->footer();
 
