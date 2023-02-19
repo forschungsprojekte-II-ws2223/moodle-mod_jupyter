@@ -34,14 +34,27 @@ use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Exception\MalformedUriException;
 
+/**
+ *
+ * @package mod_jupyter
+ */
 class handler {
 
+    /** @var Client guzzle http client */
     private $client;
 
+    /** @var string user name */
     private string $user;
 
+    /** @var int contextid needed to get file for activity */
     private int $contextid;
 
+    /**
+     * Constructor.
+     *
+     * @param string $user
+     * @param int $contextid
+     */
     public function __construct(string $user, int $contextid) {
         $this->client = new Client([
             'base_uri' => 'http://127.0.0.1:8000',
@@ -54,6 +67,11 @@ class handler {
         $this->contextid = $contextid;
     }
 
+    /**
+     *
+     * @return string
+     * @throws GuzzleException
+     */
     public function jupyter_url() : string {
         $this->check_user_status();
 
@@ -104,7 +122,7 @@ class handler {
         if ($res->getStatusCode() == 404) {
             $f = base64_encode($file->get_content());
 
-            $res = $this->client->put($route)
+            $res = $this->client->put($route);
         }
     }
 }
