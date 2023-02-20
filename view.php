@@ -31,7 +31,7 @@ use Firebase\JWT\JWT;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use mod_jupyter\error_handler;
-use mod_jupyter\handler;
+use mod_jupyter\jupyterhub_handler;
 
 // Moodle specific config.
 global $DB, $PAGE, $USER, $OUTPUT;
@@ -62,13 +62,13 @@ $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
 // User interface.
-$jupyterurl = get_config('mod_jupyter', 'jupyterurl');
+$jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
 
 echo $OUTPUT->header();
 
 $user = mb_strtolower($USER->username, "UTF-8"); // Create id with the user's unique username from Moodle.
 
-$handler = new handler($user, $modulecontext->id);
+$handler = new jupyterhub_handler($user, $modulecontext->id);
 
 try {
     $notebookpath = $handler->get_notebook_path();
@@ -77,16 +77,16 @@ try {
         "name" => $user,
         "iat" => time(),
         "exp" => time() + 15
-    ], get_config('mod_jupyter', 'jupytersecret'), 'HS256');
+    ], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
 
     echo $OUTPUT->render_from_template('mod_jupyter/manage', [
-        'login' => $jupyterurl . $notebookpath . "?auth_token=" . $jwt,
+        'login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt,
         'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
         'description' => get_string('resetbuttoninfo', 'jupyter')
     ]);
 } catch (RequestException $e) {
     if ($e->hasResponse()) {
-        notification::error($e->getResponse()->getBody()->getContents());
+        notification::error("{$e->getResponse()->getBody()->getContents()}");
     } else {
         notification::error("{$e->getCode()}: {$e->getMessage()}");
     }

@@ -49,6 +49,7 @@ class mod_jupyter_mod_form extends moodleform_mod {
         // Adding the standard "name" field.
         $mform->addElement('text', 'name', get_string('jupytername', 'mod_jupyter'), array('size' => '64'));
 
+        // Adding file manager for jupyter notebook file.
         $mform->addElement('filemanager', 'packagefile', get_string('package', 'mod_jupyter'), null, [
             'accepted_types' => '.ipynb',
             'maxbytes' => 0,
@@ -70,16 +71,26 @@ class mod_jupyter_mod_form extends moodleform_mod {
         $mform->addHelpButton('name', 'jupytername', 'mod_jupyter');
 
         // Adding the standard "intro" and "introformat" fields.
-        if ($CFG->branch >= 29) {
-            $this->standard_intro_elements();
-        } else {
-            $this->add_intro_editor();
-        }
+        $this->standard_intro_elements();
 
         // Add standard elements.
         $this->standard_coursemodule_elements();
 
         // Add standard buttons.
         $this->add_action_buttons();
+    }
+
+    /**
+     * Enforce defaults here.
+     *
+     * @param array $defaultvalues From defaults
+     * @return void
+     */
+    public function data_preprocessing(&$defaultvalues) {
+        // Load existing notebook file into file manager draft area.
+        $draftitemid = file_get_submitted_draft_itemid('packagefiele');
+        file_prepare_draft_area($draftitemid, $this->context->id, 'mod_jupyter',
+            'package', 0, ['subdirs' => 0, 'maxfiles' => 1]);
+        $defaultvalues['packagefile'] = $draftitemid;
     }
 }

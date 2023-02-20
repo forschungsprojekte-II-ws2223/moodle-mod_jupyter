@@ -36,11 +36,11 @@ class error_handler {
      * Shows different error messages depending on cause of error (instance/admin settings).
      */
     public static function show_error_message() {
-        global $jupyterreachable, $jupyterurl, $moduleinstance, $modulecontext;
+        global $jupyterhuburl, $moduleinstance, $modulecontext;
         notification::error(get_string('errorheading', 'jupyter', ['instancename' => $moduleinstance->name]));
 
         if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
-                notification::error(get_string('adminsettingserror', 'jupyter', ['url' => $jupyterurl]));
+                notification::error(get_string('adminsettingserror', 'jupyter', ['url' => $jupyterhuburl]));
         }
     }
 

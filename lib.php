@@ -84,6 +84,8 @@ function jupyter_update_instance($data, $mform = null) {
     $data->timemodified = time();
     $data->id = $data->instance;
 
+    jupyter_set_mainfile($data);
+
     return $DB->update_record('jupyter', $data);
 }
 

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Provides function for creating an error message.
+ * Handles interaction with jupyter api.
  *
  * Reference for the used jupyterhub and jupyterlab api's:
  * https://jupyterhub.readthedocs.io/en/stable/reference/rest-api.html
@@ -40,7 +40,7 @@ use GuzzleHttp\Exception\RequestException;
  *
  * @package mod_jupyter
  */
-class handler {
+class jupyterhub_handler {
 
     /** @var Client guzzle http client */
     private $client;
@@ -59,9 +59,12 @@ class handler {
      */
     public function __construct(string $user, int $contextid) {
         $this->client = new Client([
-        'base_uri' => 'http://host.docker.internal:8000',
+        'base_uri' => str_replace(
+            '127.0.0.1',
+            'host.docker.internal',
+            get_config('mod_jupyter', 'jupyterhub_url')), // TODO: Check if moodle is actually running in docker!
         'headers' => [
-          'Authorization' => 'token secret-token'
+          'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
         ]
           ]);
 

@@ -29,20 +29,37 @@ if ($hassiteconfig) {
     if ($ADMIN->fulltree) {
         // Defines the plugin settings page - {@link https://docs.moodle.org/dev/Admin_settings}.
 
-        $settings->add(new admin_setting_heading('jupyter_settings_heading', get_string('generalconfig', 'jupyter'),
-            get_string('generalconfig_desc', 'jupyter')));
+        $settings->add(new admin_setting_heading(
+            'jupyter_settings_heading',
+            get_string('generalconfig', 'jupyter'),
+            get_string('generalconfig_desc', 'jupyter')
+        ));
 
-        // To use a settings value in code, use 'get_config('mod_jupyter', 'settingname'); !
-        // e.g. $value = get_config('mod_jupyter', 'jupyterurl'); returns the URL.
-
+        // TODO: find a better solution for this.
         $urlregex = "/(^(https?:\/\/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\:?([0-9]{1,5})?$)"
             . "|(^((https?:\/\/)|^(www\.))"
             . "([a-zA-Z0-9\?\/\+\*\~\=\-\#\@\!\&\%\_\.]+\.[a-z]{2,4})(\/[a-zA-Z0-9\?\/\+\*\~\=\-\#\@\!\&\%\_]*)*$)/";
 
-        $settings->add(new admin_setting_configtext('mod_jupyter/jupyterurl', get_string('jupyterurl', 'jupyter'),
-            get_string('jupyterurl_desc', 'jupyter'), null, $urlregex));
+        $settings->add(new admin_setting_configtext(
+            'mod_jupyter/jupyterhub_url',
+            get_string('jupyterhub_url', 'jupyter'),
+            get_string('jupyterhub_url_desc', 'jupyter'),
+            null,
+            $urlregex
+        ));
 
-        $settings->add(new admin_setting_configpasswordunmask('mod_jupyter/jupytersecret', get_string('jupytersecret', 'jupyter'),
-            get_string('jupytersecret_desc', 'jupyter'), 'your-256-bit-secret'));
+        $settings->add(new admin_setting_configpasswordunmask(
+            'mod_jupyter/jupyterhub_jwt_secret',
+            get_string('jupyterhub_jwt_secret', 'jupyter'),
+            get_string('jupyterhub_jwt_secret_desc', 'jupyter'),
+            'your-256-bit-secret'
+        ));
+
+        $settings->add(new admin_setting_configpasswordunmask(
+            'mod_jupyter/jupyterhub_api_token',
+            get_string('jupyterhub_api_token', 'jupyter'),
+            get_string('jupyterhub_api_token_desc', 'jupyter'),
+            "secret-token"
+        ));
     }
 }
