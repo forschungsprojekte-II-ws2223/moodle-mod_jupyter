@@ -40,9 +40,7 @@ class error_handler {
         notification::error(get_string('errorheading', 'jupyter', ['instancename' => $moduleinstance->name]));
 
         if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
-            if (!$jupyterreachable) {
                 notification::error(get_string('adminsettingserror', 'jupyter', ['url' => $jupyterurl]));
-            }
         }
     }
 

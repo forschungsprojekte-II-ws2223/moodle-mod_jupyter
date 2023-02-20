@@ -31,12 +31,9 @@ namespace mod_jupyter;
 defined('MOODLE_INTERNAL') || die();
 require($CFG->dirroot . '/mod/jupyter/vendor/autoload.php');
 
-use coding_exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Exception\MalformedUriException;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Handles interaction with jupyter api.
@@ -76,48 +73,56 @@ class handler {
      * Returns the url to users notebook and notebook file.
      *
      * @return string
-     * @throws GuzzleException
+     * @throws ConnectException
+     * @throws RequestException
      */
-    public function jupyter_url() : string {
+    public function get_notebook_path() : string {
         $this->check_user_status();
 
         return $this->check_notebook_status();
     }
 
-    // TODO: error handling!
     /**
-     * Check if user exists and spawn container
+     * Check if user exists and spawn server
      *
      * @return void
-     * @throws GuzzleException
+     * @throws ConnectException
+     * @throws RequestException
      */
     private function check_user_status() {
-        $client = $this->client;
         $route = "/hub/api/users/{$this->user}";
         // Check if user exists.
         try {
-            $res = $client->get($route);
+            $res = $this->client->get($route);
         } catch (RequestException $e) {
             // Create user if not found.
-            if ($e->getCode() == 404) {
-                $res = $client->post($route);
+            if ($e->hasResponse() && $e->getCode() == 404) {
+                $res = $this->client->post($route);
+            } else {
+                // For other errors we throw the exception.
+                throw $e;
             }
         }
 
         // Spawn users server if not running.
         if (json_decode($res->getBody(), true)["server"] == null) {
-            $client->post($route . "/servers/");
+            $res = $this->client->post($route . "/server");
+            /** //phpcs:ignore moodle.Commenting.InlineComment.DocBlock
+             * Should return 201 created.
+             * Could also return 202 accepted which means server is started asynchronous.
+             * We would have to wait for the server to be ready then using progress api.
+             * Example: http://jupyterhub.readthedocs.io/en/stable/reference/server-api.html
+             * TODO: handle 202.
+             */
         }
     }
 
-
-    // TODO: error handling!
     /**
-     * Check if notebook exists
+     * Check if notebook exists on users server already. If not upload it to the users server.
      *
-     * @return string
-     * @throws coding_exception
-     * @throws GuzzleException
+     * @return string returns a link to the notebook file
+     * @throws RequestException
+     * @throws ConnectException
      */
     private function check_notebook_status() : string {
         $fs = get_file_storage();
@@ -131,12 +136,14 @@ class handler {
         try {
             $this->client->get($route, ['query' => ['content' => '0']]);
         } catch (RequestException $e) {
-            if ($e->getCode() == 404) {
-                $res = $this->client->put($route, ['json' => [
+            if ($e->hasResponse() && $e->getCode() == 404) {
+                $this->client->put($route, ['json' => [
                 'type' => 'file',
                 'format' => 'base64',
                 'content' => base64_encode($file->get_content()),
                 ]]);
+            } else {
+                throw $e;
             }
         }
 

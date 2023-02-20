@@ -26,9 +26,10 @@ require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require(__DIR__ . '/vendor/autoload.php');
 
+use core\notification;
 use Firebase\JWT\JWT;
-use mod_jupyter\git_generator;
-use mod_jupyter\availability_checker;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
 use mod_jupyter\error_handler;
 use mod_jupyter\handler;
 
@@ -62,28 +63,34 @@ $PAGE->set_context($modulecontext);
 
 // User interface.
 $jupyterurl = get_config('mod_jupyter', 'jupyterurl');
-$jupyterreachable = availability_checker::check_jupyter($jupyterurl);
 
 echo $OUTPUT->header();
 
-if ($jupyterreachable) {
-    $user = $USER->username;
+$user = mb_strtolower($USER->username, "UTF-8"); // Create id with the user's unique username from Moodle.
 
-    $handler = new handler($user, $modulecontext->id);
+$handler = new handler($user, $modulecontext->id);
 
-    $r = $handler->jupyter_url();
+try {
+    $notebookpath = $handler->get_notebook_path();
+
     $jwt = JWT::encode([
-        "name" => mb_strtolower($user, "UTF-8"), // Create id with the user's unique username from Moodle.
+        "name" => $user,
         "iat" => time(),
         "exp" => time() + 15
     ], get_config('mod_jupyter', 'jupytersecret'), 'HS256');
 
     echo $OUTPUT->render_from_template('mod_jupyter/manage', [
-        'login' => $jupyterurl . $r . "?auth_token=" . $jwt,
+        'login' => $jupyterurl . $notebookpath . "?auth_token=" . $jwt,
         'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
         'description' => get_string('resetbuttoninfo', 'jupyter')
     ]);
-} else {
+} catch (RequestException $e) {
+    if ($e->hasResponse()) {
+        notification::error($e->getResponse()->getBody()->getContents());
+    } else {
+        notification::error("{$e->getCode()}: {$e->getMessage()}");
+    }
+} catch (ConnectException $e) {
     error_handler::show_error_message();
 }
 
