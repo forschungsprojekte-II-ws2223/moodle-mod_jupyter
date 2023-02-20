@@ -30,6 +30,7 @@ use Firebase\JWT\JWT;
 use mod_jupyter\git_generator;
 use mod_jupyter\availability_checker;
 use mod_jupyter\error_handler;
+use mod_jupyter\handler;
 
 // Moodle specific config.
 global $DB, $PAGE, $USER, $OUTPUT;
@@ -66,21 +67,19 @@ $jupyterreachable = availability_checker::check_jupyter($jupyterurl);
 echo $OUTPUT->header();
 
 if ($jupyterreachable) {
+    $user = $USER->username;
+
+    $handler = new handler($user, $modulecontext->id);
+
+    $r = $handler->jupyter_url();
     $jwt = JWT::encode([
-        "name" => mb_strtolower($USER->username, "UTF-8"), // Create id with the user's unique username from Moodle.
+        "name" => mb_strtolower($user, "UTF-8"), // Create id with the user's unique username from Moodle.
         "iat" => time(),
         "exp" => time() + 15
     ], get_config('mod_jupyter', 'jupytersecret'), 'HS256');
 
-    $fs = get_file_storage();
-    $files = $fs->get_area_files($modulecontext->id, 'mod_jupyter', 'package', 0, 'id', false);
-    $file = reset($files);
-
-    $content = $file->get_content();
-    $filename = $file->get_filename();
-
     echo $OUTPUT->render_from_template('mod_jupyter/manage', [
-        'login' => $jupyterurl . "?auth_token=" . $jwt,
+        'login' => $jupyterurl . $r . "?auth_token=" . $jwt,
         'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
         'description' => get_string('resetbuttoninfo', 'jupyter')
     ]);

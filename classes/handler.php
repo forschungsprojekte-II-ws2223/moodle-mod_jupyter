@@ -17,6 +17,10 @@
 /**
  * Provides function for creating an error message.
  *
+ * Reference for the used jupyterhub and jupyterlab api's:
+ * https://jupyterhub.readthedocs.io/en/stable/reference/rest-api.html
+ * https://jupyter-server.readthedocs.io/en/latest/developers/rest-api.html
+ *
  * @package     mod_jupyter
  * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -58,10 +62,10 @@ class handler {
      */
     public function __construct(string $user, int $contextid) {
         $this->client = new Client([
-            'base_uri' => 'http://127.0.0.1:8000',
-            'headers' => [
-              'Authorization' => 'token secret-token'
-            ]
+        'base_uri' => 'http://host.docker.internal:8000',
+        'headers' => [
+          'Authorization' => 'token secret-token'
+        ]
           ]);
 
         $this->user = $user;
@@ -77,7 +81,7 @@ class handler {
     public function jupyter_url() : string {
         $this->check_user_status();
 
-        return "";
+        return $this->check_notebook_status();
     }
 
     // TODO: error handling!
@@ -92,17 +96,17 @@ class handler {
         $route = "/hub/api/users/{$this->user}";
         // Check if user exists.
         try {
-            $res = $client->get("/hub/api/users/{$this->user}");
+            $res = $client->get($route);
         } catch (RequestException $e) {
             // Create user if not found.
             if ($e->getCode() == 404) {
-                $res = $client->post("/hub/api/users/{$this->user}");
+                $res = $client->post($route);
             }
         }
 
         // Spawn users server if not running.
         if (json_decode($res->getBody(), true)["server"] == null) {
-            $res = $client->post("/hub/api/users/{$this->user}/servers/");
+            $client->post($route . "/servers/");
         }
     }
 
@@ -111,24 +115,31 @@ class handler {
     /**
      * Check if notebook exists
      *
-     * @return void
+     * @return string
      * @throws coding_exception
      * @throws GuzzleException
      */
-    private function check_notebook_status() {
+    private function check_notebook_status() : string {
         $fs = get_file_storage();
         $files = $fs->get_area_files($this->contextid, 'mod_jupyter', 'package', 0, 'id', false);
         $file = reset($files);
+        $filename = $file->get_filename();
 
-        $route = "/user/{$this->user}/contents/{$file->get_filename()}";
+        $route = "/user/{$this->user}/api/contents/work/{$filename}";
 
         // Check if file is already there.
-        $res = $this->client->get($route, ['query' => ['content' => '0']]);
-
-        if ($res->getStatusCode() == 404) {
-            $f = base64_encode($file->get_content());
-
-            $res = $this->client->put($route);
+        try {
+            $this->client->get($route, ['query' => ['content' => '0']]);
+        } catch (RequestException $e) {
+            if ($e->getCode() == 404) {
+                $res = $this->client->put($route, ['json' => [
+                'type' => 'file',
+                'format' => 'base64',
+                'content' => base64_encode($file->get_content()),
+                ]]);
+            }
         }
+
+        return "/hub/user-redirect/lab/tree/work/{$filename}";
     }
 }
