@@ -2,25 +2,33 @@
 
 This Moodle plugin integrates Jupyter Notebooks to offer a virtual programming environment.
 
-This plugin connects to a JupyterHub server and authenticates the Moodle users on the JupyterHub Server. That way they
+The plugin connects to a JupyterHub server and authenticates the Moodle users on the JupyterHub Server. That way they
 can access a Jupyter notebook from within Moodle. Further development includes the options to submit solved
-notebooks and to distribute notebooks by the teacher top the students.
+notebooks and to distribute notebooks by the teacher to the students.
 
 ## Installation
 
-1. Clone this repository:  
-   `git clone git@github.com:forschungsprojekte-II-ws2223/moodle-mod_jupyter.git jupyter`  
-   (The folder name should be jupyter not moodle-mod_jupyter)
-2. Add third-party dependencies with [composer](https://getcomposer.org/download/):  
-   `cd jupyter && composer install`
+Clone this repository:
+
+```shell
+git clone git@github.com:forschungsprojekte-II-ws2223/moodle-mod_jupyter.git jupyter
+```
+
+(The folder name should be jupyter not moodle-mod_jupyter)
+
+Add third-party dependencies with [composer](https://getcomposer.org/download/):
+
+```shell
+cd jupyter && composer install
+```
 
 ### Installing via uploaded ZIP file
 
 1. Log in to your Moodle site as an admin and go to _Site administration >
    Plugins > Install plugins_.
-2. Upload the ZIP file (jupyter.zip) with the plugin code. If your plugin type is not automatically detected, you have to add
-   extra details.
-3. Check the plugin validation report and finish the installation.
+1. Remove the `.git` folder from the directory (else file upload as zip won't work).
+1. Upload the ZIP file (jupyter.zip) with the plugin code.
+1. Check the plugin validation report and finish the installation.
 
 ### Installing manually
 
@@ -36,23 +44,6 @@ Alternatively, you can run
     $ php admin/cli/upgrade.php
 
 to complete the installation from the command line.
-
-## Plugin settings
-
-Here the user can enter the general settings required to reach the JupyterHub.
-Therefore the user can replace the default value with his own URL/IP.
-The input cannot be empty and must be a valid URL or IP.
-
-## Access plugin UI in course
-
-1. Make sure you have a running JupyterHub Moodle environment and installed the Jupyter plugin as described above
-2. Click on one of your courses (if there is non you have to create a course first)
-3. Make sure editing is turned on, at the top right
-4. Now you can click on `Add an activity or resource` below on the right
-5. Choose the `JupyterHub` activity plugin
-6. Assign a name, the rest of the settings can be ignored
-7. Click on `Save and display`
-8. You should see your personal JupyterLab environment based on your Moodle username and id inside an iFrame
 
 ## Development Environment Setup
 
