@@ -6,35 +6,23 @@ This plugin connects to a JupyterHub server and authenticates the Moodle users o
 can access a Jupyter notebook from within Moodle. Further development includes the options to submit solved
 notebooks and to distribute notebooks by the teacher top the students.
 
-# How to use this repository
+## Installation
 
-There's an .editorconfig in this repo, please use it while working on it.  
-[EditorConfig VS Code Extension](vscode://extension/EditorConfig.EditorConfig)
+1. Clone this repository:  
+   `git clone git@github.com:forschungsprojekte-II-ws2223/moodle-mod_jupyter.git jupyter`  
+   (The folder name should be jupyter not moodle-mod_jupyter)
+2. Add third-party dependencies with [composer](https://getcomposer.org/download/):  
+   `cd jupyter && composer install`
 
-## Development Environment Setup
-
-Follow [this](./setup/DevEnvSetup.md) guide for setting up the development environment.
-
-## Access plugin UI in course
-
-1. Make sure you have a running JupyterHub Moodle environment and installed the Jupyter plugin as described above
-2. Click on one of your courses (if there is non you have to create a course first)
-3. Make sure editing is turned on, at the top right
-4. Now you can click on `Add an activity or resource` below on the right
-5. Choose the `JupyterHub` activity plugin
-6. Assign a name, the rest of the settings can be ignored
-7. Click on `Save and display`
-8. You should see your personal JupyterLab environment based on your Moodle username and id inside an iFrame
-
-## Installing via uploaded ZIP file
+### Installing via uploaded ZIP file
 
 1. Log in to your Moodle site as an admin and go to _Site administration >
    Plugins > Install plugins_.
-2. Upload the ZIP file (only jupyter.zip) with the plugin code. If your plugin type is not automatically detected, you have to add
+2. Upload the ZIP file (jupyter.zip) with the plugin code. If your plugin type is not automatically detected, you have to add
    extra details.
 3. Check the plugin validation report and finish the installation.
 
-## Installing manually
+### Installing manually
 
 The plugin can also be installed by putting the contents of this directory to
 
@@ -55,33 +43,24 @@ Here the user can enter the general settings required to reach the JupyterHub.
 Therefore the user can replace the default value with his own URL/IP.
 The input cannot be empty and must be a valid URL or IP.
 
-## Installing new dependencies
+## Access plugin UI in course
 
-Make sure that the composer package manager is installed (see [getcomposer.org]()).
+1. Make sure you have a running JupyterHub Moodle environment and installed the Jupyter plugin as described above
+2. Click on one of your courses (if there is non you have to create a course first)
+3. Make sure editing is turned on, at the top right
+4. Now you can click on `Add an activity or resource` below on the right
+5. Choose the `JupyterHub` activity plugin
+6. Assign a name, the rest of the settings can be ignored
+7. Click on `Save and display`
+8. You should see your personal JupyterLab environment based on your Moodle username and id inside an iFrame
 
-New dependencies can be added in the `composer.json` file via the `require` key (package names are mapped to version constraints; see composer.json for an example). Afterwards, you have to run
+## Development Environment Setup
 
-```shell
-$ composer install
-```
+Follow [this](https://github.com/forschungsprojekte-II-ws2223/setup/blob/main/DevEnvSetup.md) guide for setting up the development environment.
 
-to resolve and install the newly added dependencies.
+There's an .editorconfig in this repo, please use it while working on it.
 
-Alternatively, you can run
-
-```shell
-$ composer require [dependency you want to add]
-```
-
-which makes running the update command obsolete.
-
-To automatically load all dependencies when executing a php file, you need to include the line
-
-```php
-require 'vendor/autoload.php';
-```
-
-at the start of your file.
+[EditorConfig VS Code Extension](vscode://extension/EditorConfig.EditorConfig)
 
 ## License
 
@@ -123,4 +102,3 @@ this program. If not, see [GNU license](https://www.gnu.org/licenses).
 - Zoller, Nick
 
 developed this plugin in the context of the Student Project of University of Stuttgart in the Summer Semester 2022
-
