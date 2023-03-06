@@ -23,15 +23,17 @@ namespace mod_jupyter;
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class error_handler_test extends \advanced_testcase {
+    /**
+     * @covers \error_handler
+     */
     public function test_error_is_created() {
         global $CFG, $DB;
         $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $jupyter = $this->getDataGenerator()->create_module('jupyter', array('course' => $course->id));
-        // $moduleinstance->name = 'test';
-        // \mod_jupyter\error_handler::show_error_message();
-        // $notficationstack = core\notification::fetch();
-        // $this->assertEquals(count($notficationstack), 0);
+        $j = optional_param('j', 0, PARAM_INT);
+        $notficationstack = \core\notification::fetch();
+        $this->assertEquals(count($notficationstack), 0);
     }
 
 }

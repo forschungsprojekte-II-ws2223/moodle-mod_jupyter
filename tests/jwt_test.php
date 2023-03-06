@@ -28,6 +28,9 @@ use ArrayObject;
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class jwt_test extends \advanced_testcase {
+    /**
+     * @coversNothing
+     */
     public function test_simple_encode() {
         $this->resetAfterTest();
         global $USER;
