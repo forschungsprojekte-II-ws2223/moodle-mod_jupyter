@@ -24,6 +24,7 @@ namespace mod_jupyter;
  */
 class error_handler_test extends \advanced_testcase {
     /**
+     * Test if error is created
      * @covers \error_handler
      * @return void
      */
