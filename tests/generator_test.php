@@ -27,6 +27,7 @@ namespace mod_jupyter;
 class generator_test extends \advanced_testcase {
     /**
      * Tests if plugin instance is created succesfully and can be addded to a course.
+     * @covers \lib.php
      */
     public function test_create_instance() {
         global $DB;

@@ -16,12 +16,11 @@
 
 namespace mod_jupyter;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * @package     mod_jupyter
  * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \availability_checker
  */
 class availability_checker_test extends \advanced_testcase {
     public function test_something() {
