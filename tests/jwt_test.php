@@ -22,7 +22,9 @@ use Firebase\JWT\JWT;
 namespace Firebase\JWT;
 use stdClass;
 use ArrayObject;
+
 /**
+ * Test if JWT encoding/decoding works
  * @package     mod_jupyter
  * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -30,6 +32,7 @@ use ArrayObject;
 class jwt_test extends \advanced_testcase {
     /**
      * @coversNothing
+     * @return void
      */
     public function test_simple_encode() {
         $this->resetAfterTest();

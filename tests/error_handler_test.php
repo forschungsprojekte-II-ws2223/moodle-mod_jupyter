@@ -25,6 +25,7 @@ namespace mod_jupyter;
 class error_handler_test extends \advanced_testcase {
     /**
      * @covers \error_handler
+     * @return void
      */
     public function test_error_is_created() {
         global $CFG, $DB;
