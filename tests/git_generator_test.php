@@ -25,6 +25,7 @@ namespace mod_jupyter;
  */
 class git_generator_test extends \advanced_testcase {
     /**
+     * Test intended input
      * @covers \git_generator::gen_gitfile
      * @return void
      */
@@ -33,11 +34,12 @@ class git_generator_test extends \advanced_testcase {
         $repo = "https://github.com/username/reponame";
         $file = "notebook.ipynb";
         $branch = "branch";
-        $gitfilelink = \mod_jupyter\git_generator::gen_gitfilelink($reo, $file, $branch);
+        $gitfilelink = \mod_jupyter\git_generator::gen_gitfilelink($repo, $file, $branch);
         $this->assertEquals($gitfilelink, "https://github.com/username/reponame/blob/branch/notebook.ipynb");
     }
 
     /**
+     * Test empty strings
      * @covers \git_generator::gen_gitfile
      * @return void
      */
@@ -47,6 +49,7 @@ class git_generator_test extends \advanced_testcase {
         $this->assertEquals($gitfilelink, "/blob//");
     }
     /**
+     * Test integers instead of strings
      * @covers \git_generator::gen_gitfile
      * @return void
      */
@@ -57,6 +60,7 @@ class git_generator_test extends \advanced_testcase {
     }
 
     /**
+     * Test intended input
      * @covers \git_generator::gen_gitpath
      * @return void
      */
@@ -70,6 +74,7 @@ class git_generator_test extends \advanced_testcase {
         $this->assertEquals($gitpath, $expected);
     }
     /**
+     * Test empty strings
      * @covers \git_generator::gen_gitpath
      * @return void
      */
@@ -77,5 +82,16 @@ class git_generator_test extends \advanced_testcase {
         $this->resetAfterTest();
         $gitpath = \mod_jupyter\git_generator::gen_gitpath("", "", "");
         $this->assertEquals($gitpath, '/hub/user-redirect/git-pull?repo=&urlpath=lab%2Ftree%2F%2F&branch=');
+    }
+
+    /**
+     * Test integers instead of strings
+     * @covers \git_generator::gen_gitpath
+     * @return void
+     */
+    public function test_gen_gitpath_numbers() {
+        $this->resetAfterTest();
+        $gitpath = \mod_jupyter\git_generator::gen_gitpath(1, 2, 3);
+        $this->assertEquals($gitpath, '/hub/user-redirect/git-pull?repo=1&urlpath=lab%2Ftree%2F%2F2&branch=3');
     }
 }

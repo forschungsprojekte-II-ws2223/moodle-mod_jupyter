@@ -31,6 +31,7 @@ use ArrayObject;
  */
 class jwt_test extends \advanced_testcase {
     /**
+     * Test if JWT encoding/decoding works
      * @coversNothing
      * @return void
      */
