@@ -17,6 +17,7 @@
 namespace mod_jupyter;
 
 /**
+ * Test various inputs
  * @package     mod_jupyter
  * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,15 +26,20 @@ namespace mod_jupyter;
 class git_generator_test extends \advanced_testcase {
     /**
      * @covers \git_generator::gen_gitfile
+     * @return void
      */
     public function test_gen_gitfile_standard() {
         $this->resetAfterTest();
-        $gitfilelink = \mod_jupyter\git_generator::gen_gitfilelink("https://github.com/username/reponame", "notebook.ipynb", "branch");
+        $repo = "https://github.com/username/reponame";
+        $file = "notebook.ipynb";
+        $branch = "branch";
+        $gitfilelink = \mod_jupyter\git_generator::gen_gitfilelink($reo, $file, $branch);
         $this->assertEquals($gitfilelink, "https://github.com/username/reponame/blob/branch/notebook.ipynb");
     }
 
     /**
      * @covers \git_generator::gen_gitfile
+     * @return void
      */
     public function test_gen_gitfile_empty() {
         $this->resetAfterTest();
@@ -42,6 +48,7 @@ class git_generator_test extends \advanced_testcase {
     }
     /**
      * @covers \git_generator::gen_gitfile
+     * @return void
      */
     public function test_gen_gitfile_numbers() {
         $this->resetAfterTest();
@@ -51,6 +58,7 @@ class git_generator_test extends \advanced_testcase {
 
     /**
      * @covers \git_generator::gen_gitpath
+     * @return void
      */
     public function test_gen_gitpath_standard() {
         $this->resetAfterTest();
@@ -63,6 +71,7 @@ class git_generator_test extends \advanced_testcase {
     }
     /**
      * @covers \git_generator::gen_gitpath
+     * @return void
      */
     public function test_gen_gitpath_empty() {
         $this->resetAfterTest();

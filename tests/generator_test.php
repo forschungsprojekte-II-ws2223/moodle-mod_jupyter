@@ -20,7 +20,6 @@ namespace mod_jupyter;
  * PHPUnit data generator testcase.
  *
  * @package     mod_jupyter
- * @category    phpunit
  * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,6 +27,7 @@ class generator_test extends \advanced_testcase {
     /**
      * Tests if plugin instance is created succesfully and can be addded to a course.
      * @covers \lib.php
+     * @return void
      */
     public function test_create_instance() {
         global $DB;

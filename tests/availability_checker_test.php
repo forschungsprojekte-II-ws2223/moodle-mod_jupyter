@@ -17,6 +17,7 @@
 namespace mod_jupyter;
 
 /**
+ * Testfile for availability_checker
  * @package     mod_jupyter
  * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

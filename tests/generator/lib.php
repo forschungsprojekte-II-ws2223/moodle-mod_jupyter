@@ -15,15 +15,13 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Prints an instance of mod_jupyter.
+ * Creates an instance of mod_jupyter for testing purpose.
  *
  * @package     mod_jupyter
  * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class mod_jupyter_generator extends testing_module_generator {
-
     /**
      * Create new jupyter module instance
      *
@@ -36,10 +34,10 @@ class mod_jupyter_generator extends testing_module_generator {
         $record = (object)(array)$record;
 
         $defaultjupytersettings = array(
-            'name'  => 'Jupyter',
+            'name' => 'Jupyter',
             'repourl' => 'https://github.com/maxschuele/notebook-test',
             'branch' => 'main',
-            'file'  => '01.00-IPython-Beyond-Normal-Python.ipynb'
+            'file' => '01.00-IPython-Beyond-Normal-Python.ipynb'
         );
 
         foreach ($defaultjupytersettings as $name => $value) {
