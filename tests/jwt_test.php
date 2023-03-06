@@ -16,7 +16,7 @@
 
 namespace mod_jupyter;
 defined('MOODLE_INTERNAL') || die();
-require('/bitnami/moodle/mod/jupyter/vendor/autoload.php');
+require(dirname(__DIR__, 1). '/vendor/autoload.php');
 
 use Firebase\JWT\JWT;
 namespace Firebase\JWT;
