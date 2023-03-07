@@ -6,44 +6,49 @@ The plugin connects to a JupyterHub server and authenticates the Moodle users on
 can access a Jupyter notebook from within Moodle. Further development includes the options to submit solved
 notebooks and to distribute notebooks by the teacher to the students.
 
-## Installation
+## Plugin Installation
 
-Clone this repository:
+**Make sure you have a compatible JupyterHub running and reachable.  
+Details on how to set this up can be found here: https://github.com/forschungsprojekte-II-ws2223/setup/blob/main/README.md**
 
-```shell
-git clone git@github.com:forschungsprojekte-II-ws2223/moodle-mod_jupyter.git jupyter
-```
+1. Clone this repository:
 
-(The folder name should be jupyter not moodle-mod_jupyter)
+   ```shell
+   git clone git@github.com:forschungsprojekte-II-ws2223/moodle-mod_jupyter.git jupyter
+   ```
 
-Add third-party dependencies with [composer](https://getcomposer.org/download/):
+   (The folder name should be jupyter not moodle-mod_jupyter)
 
-```shell
-cd jupyter && composer install
-```
+1. Add third-party dependencies with [composer](https://getcomposer.org/download/):
 
-### Installing via uploaded ZIP file
+   ```shell
+   cd jupyter && composer install
+   ```
 
-1. Log in to your Moodle site as an admin and go to _Site administration >
-   Plugins > Install plugins_.
-1. Remove the `.git` folder from the directory (else file upload as zip won't work).
-1. Upload the ZIP file (jupyter.zip) with the plugin code.
-1. Check the plugin validation report and finish the installation.
+1. Installing the plugin
 
-### Installing manually
+   ### Installing via uploaded ZIP file
 
-The plugin can also be installed by putting the contents of this directory to
+   1. Log in to your Moodle site as an admin and go to _Site administration >
+      Plugins > Install plugins_.
+   1. Remove the `.git` folder from the directory (else file upload as zip won't work).
+   1. Upload the ZIP file (jupyter.zip) with the plugin code.
+   1. Check the plugin validation report and finish the installation.
 
-    {your/moodle/dirroot}/mod/jupyter
+   ### Installing manually
 
-Afterwards, log in to your Moodle site as an admin and go to _Site administration >
-Notifications_ to complete the installation.
+   The plugin can also be installed by putting the contents of this directory to
 
-Alternatively, you can run
+   `{your/moodle/dirroot}/mod/jupyter`
 
-    $ php admin/cli/upgrade.php
+   Afterwards, log in to your Moodle site as an admin and go to _Site administration >
+   Notifications_ to complete the installation.
 
-to complete the installation from the command line.
+   Alternatively, you can run
+
+   `$ php admin/cli/upgrade.php`
+
+   to complete the installation from the command line.
 
 ## Development Environment Setup
 

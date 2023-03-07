@@ -59,10 +59,7 @@ class jupyterhub_handler {
      */
     public function __construct(string $user, int $contextid) {
         $this->client = new Client([
-        'base_uri' => str_replace(
-            '127.0.0.1',
-            'host.docker.internal',
-            get_config('mod_jupyter', 'jupyterhub_url')), // TODO: Check if moodle is actually running in docker!
+        'base_uri' => get_config('mod_jupyter', 'jupyterhub_url'), // TODO: Check if moodle is actually running in docker!
         'headers' => [
           'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
         ]
@@ -80,9 +77,29 @@ class jupyterhub_handler {
      * @throws RequestException
      */
     public function get_notebook_path() : string {
+        $this->check_jupyterhub_reachable();
         $this->check_user_status();
 
         return $this->check_notebook_status();
+    }
+
+    /**
+     * Check if jupyterhub is reachable
+     *
+     */
+    private function check_jupyterhub_reachable() {
+        try {
+            $res = $this->client->get();
+        } catch (RequestException $e) {
+            if (!($e->hasResponse() && $e->getCode() == 401)) {
+                throw $e;
+            }
+        } catch (ConnectException $e) {
+            $this->client->base_uri = str_replace(
+                '127.0.0.1',
+                'host.docker.internal',
+                get_config('mod_jupyter', 'jupyterhub_url'));
+        }
     }
 
     /**
