@@ -89,16 +89,21 @@ class jupyterhub_handler {
      */
     private function check_jupyterhub_reachable() {
         try {
-            $res = $this->client->get();
+            $res = $this->client->get("/");
         } catch (RequestException $e) {
             if (!($e->hasResponse() && $e->getCode() == 401)) {
                 throw $e;
             }
         } catch (ConnectException $e) {
-            $this->client->base_uri = str_replace(
-                '127.0.0.1',
-                'host.docker.internal',
-                get_config('mod_jupyter', 'jupyterhub_url'));
+            $this->client = new Client([
+                'base_uri' => str_replace(
+                    '127.0.0.1',
+                    'host.docker.internal',
+                    get_config('mod_jupyter', 'jupyterhub_url')), // TODO: Check if moodle is actually running in docker!
+                'headers' => [
+                  'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
+                ]
+                  ]);
         }
     }
 
