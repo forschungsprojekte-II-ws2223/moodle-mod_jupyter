@@ -26,7 +26,12 @@ require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require(__DIR__ . '/vendor/autoload.php');
 
+use core\notification;
 use Firebase\JWT\JWT;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
+use mod_jupyter\error_handler;
+use mod_jupyter\jupyterhub_handler;
 
 // Moodle specific config.
 global $DB, $PAGE, $USER, $OUTPUT;
@@ -57,42 +62,41 @@ $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
 // User interface.
+$jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
 
-// Create id with the user's unique username from Moodle.
-$uniqueid = mb_strtolower($USER->username, "UTF-8");
+echo $OUTPUT->header();
 
-$jwt = JWT::encode([
-    "name" => $uniqueid,
-    "iat" => time(),
-    "exp" => time() + 15
-], get_config('mod_jupyter', 'jupytersecret'), 'HS256');
+$user = mb_strtolower($USER->username, "UTF-8"); // Create id with the user's unique username from Moodle.
 
-$jupyterurl = get_config('mod_jupyter', 'jupyterurl');
-$repo = $moduleinstance->repourl;
-$branch = urlencode(trim($moduleinstance->branch));
-$file = urlencode(trim($moduleinstance->file));
-$name = $moduleinstance->name;
-$gitfilelink = \mod_jupyter\git_generator::gen_gitfilelink($repo, $file, $branch);
+$handler = new jupyterhub_handler($user, $modulecontext->id);
 
-$gitreachable = \mod_jupyter\availability_checker::check_url($gitfilelink)[0] === 200;
-$jupyterreachable = \mod_jupyter\availability_checker::check_jupyter($jupyterurl);
+try {
+    $notebookpath = $handler->get_notebook_path();
+
+    $jwt = JWT::encode([
+        "name" => $user,
+        "iat" => time(),
+        "exp" => time() + 15
+    ], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
+
+    echo $OUTPUT->render_from_template('mod_jupyter/manage', [
+        'login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt,
+        'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
+        'description' => get_string('resetbuttoninfo', 'jupyter')
+    ]);
+} catch (RequestException $e) {
+    if ($e->hasResponse()) {
+        notification::error("{$e->getResponse()->getBody()->getContents()}");
+    } else {
+        notification::error("{$e->getCode()}: {$e->getMessage()}");
+    }
+} catch (ConnectException $e) {
+    error_handler::show_error_message();
+}
 
 // Mark as done after user views the course.
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
-
-echo $OUTPUT->header();
-
-if ($gitreachable && $jupyterreachable) {
-    echo $OUTPUT->render_from_template('mod_jupyter/manage', [
-        'login' => $jupyterurl . \mod_jupyter\git_generator::gen_gitpath($repo, $file, $branch) . "&auth_token=" . $jwt,
-        'name' => $name,
-        'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
-        'description' => get_string('resetbuttoninfo', 'jupyter')
-    ]);
-} else {
-    \mod_jupyter\error_handler::show_error_message();
-}
 
 echo $OUTPUT->footer();
 

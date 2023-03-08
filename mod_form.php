@@ -49,21 +49,20 @@ class mod_jupyter_mod_form extends moodleform_mod {
         // Adding the standard "name" field.
         $mform->addElement('text', 'name', get_string('jupytername', 'mod_jupyter'), array('size' => '64'));
 
-        // Adding fields for notebook git repository.
-        $mform->addElement('text', 'repourl', get_string('repourl', 'mod_jupyter'), array('size' => '64'));
-        $mform->addElement('text', 'branch', get_string('branch', 'mod_jupyter'), array('size' => '64'));
-        $mform->addElement('text', 'file', get_string('file', 'mod_jupyter'), array('size' => '64'));
+        // Adding file manager for jupyter notebook file.
+        $mform->addElement('filemanager', 'packagefile', get_string('package', 'mod_jupyter'), null, [
+            'accepted_types' => '.ipynb',
+            'maxbytes' => 0,
+            'maxfiles' => 1,
+            'subdirs' => 0,
+        ]);
+        $mform->addHelpButton('packagefile', 'package', 'mod_jupyter');
+        $mform->addRule('packagefile', null, 'required');
 
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
-            $mform->setType('repourl', PARAM_URL);
-            $mform->setType('branch', PARAM_TEXT);
-            $mform->setType('file', PARAM_TEXT);
         } else {
             $mform->setType('name', PARAM_CLEANHTML);
-            $mform->setType('repourl', PARAM_CLEANHTML);
-            $mform->setType('branch', PARAM_CLEANHTML);
-            $mform->setType('file', PARAM_CLEANHTML);
         }
 
         // Setting rules for the input fields above.
@@ -71,32 +70,27 @@ class mod_jupyter_mod_form extends moodleform_mod {
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('name', 'jupytername', 'mod_jupyter');
 
-        $mform->addRule('repourl', null, 'required', null, 'client');
-
-        $urlregex = "/(^(https?:\/\/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\:?([0-9]{1,5})?$)"
-            . "|(^((https?:\/\/)|^(www\.))"
-            . "([a-zA-Z0-9\?\/\+\*\~\=\-\#\@\!\&\%\_\.]+\.[a-z]{2,4})(\/[a-zA-Z0-9\?\/\+\*\~\=\-\#\@\!\&\%\_]*)*$)/";
-
-        $mform->addRule('repourl', "Must be a valid git URL", 'regex', $urlregex, 'client');
-        $mform->addRule('repourl', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
-
-        $mform->addRule('branch', null, 'required', null, 'client');
-        $mform->addRule('branch', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
-
-        $mform->addRule('file', null, 'required', null, 'client');
-        $mform->addRule('file', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
-
         // Adding the standard "intro" and "introformat" fields.
-        if ($CFG->branch >= 29) {
-            $this->standard_intro_elements();
-        } else {
-            $this->add_intro_editor();
-        }
+        $this->standard_intro_elements();
 
         // Add standard elements.
         $this->standard_coursemodule_elements();
 
         // Add standard buttons.
         $this->add_action_buttons();
+    }
+
+    /**
+     * Enforce defaults here.
+     *
+     * @param array $defaultvalues From defaults
+     * @return void
+     */
+    public function data_preprocessing(&$defaultvalues) {
+        // Load existing notebook file into file manager draft area.
+        $draftitemid = file_get_submitted_draft_itemid('packagefiele');
+        file_prepare_draft_area($draftitemid, $this->context->id, 'mod_jupyter',
+            'package', 0, ['subdirs' => 0, 'maxfiles' => 1]);
+        $defaultvalues['packagefile'] = $draftitemid;
     }
 }

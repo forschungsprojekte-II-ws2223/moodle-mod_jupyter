@@ -36,6 +36,8 @@ $string['jupyterfieldset'] = '';
 $string['repourl'] = 'Git Repository URL';
 $string['branch'] = 'Branch';
 $string['file'] = 'Notebook file to open';
+$string['package'] = 'Notebook file to open';
+$string['package_help'] = 'Add the notbook file that will be displayed in the activity here.';
 
 $string['jupyter:addinstance'] = 'Add a new Jupyter Notebook activity';
 $string['jupyter:view'] = 'View a Jupyter Notebook activity';
@@ -55,9 +57,13 @@ $string['resetbuttoninfo'] = 'To get the original Notebook without losing progre
 // General.
 $string['generalconfig'] = 'General settings';
 $string['generalconfig_desc'] = 'Settings required to reach the JupyterHub this plugin uses.';
-// URL.
-$string['jupyterurl'] = 'JupyterHub URL';
-$string['jupyterurl_desc'] = 'Add the URL of your JupyterHub here.<br>Must be a valid URL (e.g. https://yourjupyterhub.com).';
-// JWT.
-$string['jupytersecret'] = 'Jupyterhub JWT Secret';
-$string['jupytersecret_desc'] = 'Add the JWT secret of your JupyterHub here.<br><strong>Make sure your JupyterHub is using a secure 256-bit secret!!!</strong>';
+// Jupyterhub URL.
+$string['jupyterhub_url'] = 'JupyterHub URL';
+$string['jupyterhub_url_desc'] = 'Add the URL of your JupyterHub here.<br>Must be a valid URL (e.g. https://yourjupyterhub.com).';
+// Jupyterhub JWT Token.
+$string['jupyterhub_jwt_secret'] = 'Jupyterhub JWT Secret';
+$string['jupyterhub_jwt_secret_desc'] = 'Add the JWT secret of your JupyterHub here.<br><strong>Make sure your JupyterHub is using a secure 256-bit secret!!!</strong>';
+// JupyterHub API Token.
+$string['jupyterhub_api_token'] = 'Jupyterhub API Token';
+$string['jupyterhub_api_token_desc'] = 'Add the API token of your JupyterHub here. <br><strong>Make sure your JupyterHub is using a secure 256-bit token!!!</strong>';
+
