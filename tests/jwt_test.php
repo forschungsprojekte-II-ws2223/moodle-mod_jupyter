@@ -41,6 +41,7 @@ class jwt_test extends \advanced_testcase {
         $user = $this->getDataGenerator()->create_user(array('email' => 'user@example.com', 'username' => 'user'));
         $this->setUser($user);
         $uniqueid = mb_strtolower($USER->username, "UTF-8");
+        set_config('jupytersecret', 'your-256-bit-secret', 'mod_jupyter');
         $jwt = JWT::encode([
             "name" => $uniqueid,
             "iat" => time(),
