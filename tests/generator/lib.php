@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Creates an instance of mod_jupyter for testing purpose.
  *
@@ -30,20 +32,45 @@ class mod_jupyter_generator extends testing_module_generator {
      * @return stdClass mod_jupyter_structure
      */
     public function create_instance($record = null, array $options = null) {
-        global $CFG;
+        global $USER, $CFG;
+        require_once($CFG->dirroot . '/lib/resourcelib.php');
         $record = (object)(array)$record;
 
-        $defaultjupytersettings = array(
-            'name' => 'Jupyter',
-            'repourl' => 'https://github.com/maxschuele/notebook-test',
-            'branch' => 'main',
-            'file' => '01.00-IPython-Beyond-Normal-Python.ipynb'
-        );
+        // Fill in optional values if not specified.
+        if (!isset($record->display)) {
+            $record->display = RESOURCELIB_DISPLAY_AUTO;
+        }
+        if (!isset($record->printintro)) {
+            $record->printintro = 0;
+        }
+        if (!isset($record->showsize)) {
+            $record->showsize = 0;
+        }
+        if (!isset($record->showtype)) {
+            $record->showtype = 0;
+        }
+        if (!isset($record->name)) {
+            $record->name = 'JupyterInstanceName';
+        }
 
-        foreach ($defaultjupytersettings as $name => $value) {
-            if (!isset($record->{$name})) {
-                $record->{$name} = $value;
+        // The 'files' value corresponds to the draft file area ID. If not
+        // specified, create a default file.
+        if (!isset($record->package)) {
+            if (empty($USER->username) || $USER->username === 'guest') {
+                throw new coding_exception('jupyter generator requires a current user');
             }
+            $usercontext = context_user::instance($USER->id);
+            $filename = $record->defaultfilename ?? 'jupyternotebook.ipynb';
+
+            // Pick a random context id for specified user.
+            $record->package = file_get_unused_draft_itemid();
+
+            // Add actual file there.
+            $filerecord = ['component' => 'user', 'filearea' => 'draft',
+                    'contextid' => $usercontext->id, 'itemid' => $record->package,
+                    'filename' => $filename, 'filepath' => '/'];
+            $fs = get_file_storage();
+            $fs->create_file_from_string($filerecord, 'Test resource ' . $filename . ' file');
         }
 
         return parent::create_instance($record, (array)$options);

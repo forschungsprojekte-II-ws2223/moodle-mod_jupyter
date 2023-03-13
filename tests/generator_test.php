@@ -41,6 +41,10 @@ class generator_test extends \advanced_testcase {
         $records = $DB->get_records('jupyter', array('course' => $course->id), 'id');
         $this->assertEquals(1, count($records));
         $this->assertTrue(array_key_exists($jupyter->id, $records));
+        $this->assertEquals('JupyterInstanceName', $records[$jupyter->id]->name);
+        // $this->assertEquals('jupyternotebook.ipynb', $records[$jupyter->id]->package);
+
+        print_object($jupyter);
 
         $params = array('course' => $course->id, 'name' => 'Another jupyter');
         $jupyter = $this->getDataGenerator()->create_module('jupyter', $params);
