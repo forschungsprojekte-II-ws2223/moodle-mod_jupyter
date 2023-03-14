@@ -21,6 +21,7 @@ use ReflectionClass;
 
 /**
  * Test cases for error message creation in view.php if settings are not correct.
+ *
  * Depending on current user capabilities show error message:
  * Admin - heading and detailed info.
  * Non admin - only heading.
