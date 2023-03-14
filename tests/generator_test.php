@@ -30,26 +30,34 @@ class generator_test extends \advanced_testcase {
      * @return void
      */
     public function test_create_instance() {
-        global $DB;
+        global $DB, $SITE;
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        $course = $this->getDataGenerator()->create_course();
+        // There are 0 resources initially.
+        $this->assertEquals(0, $DB->count_records('jupyter'));
 
-        $this->assertFalse($DB->record_exists('jupyter', array('course' => $course->id)));
-        $jupyter = $this->getDataGenerator()->create_module('jupyter', array('course' => $course));
-        $records = $DB->get_records('jupyter', array('course' => $course->id), 'id');
-        $this->assertEquals(1, count($records));
-        $this->assertTrue(array_key_exists($jupyter->id, $records));
-        $this->assertEquals('JupyterInstanceName', $records[$jupyter->id]->name);
-        // $this->assertEquals('jupyternotebook.ipynb', $records[$jupyter->id]->package);
+        // Create generator.
+        $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
+        // Check if it is a jupyter generator.
+        $this->assertInstanceOf('mod_jupyter_generator', $generator);
+        // Check if corresponding mod is jupyter.
+        $this->assertEquals('jupyter', $generator->get_modulename());
 
-        print_object($jupyter);
+        // Create three instances in the site course.
+        $generator->create_instance(array('course' => $SITE->id));
+        $generator->create_instance(array('course' => $SITE->id));
+        $jupyter = $generator->create_instance(array('course' => $SITE->id));
+        $this->assertEquals(3, $DB->count_records('jupyter'));
 
-        $params = array('course' => $course->id, 'name' => 'Another jupyter');
-        $jupyter = $this->getDataGenerator()->create_module('jupyter', $params);
-        $records = $DB->get_records('jupyter', array('course' => $course->id), 'id');
-        $this->assertEquals(2, count($records));
-        $this->assertEquals('Another jupyter', $records[$jupyter->id]->name);
+        // Check the course-module is correct.
+        $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
+        $this->assertEquals($jupyter->id, $cm->instance);
+        $this->assertEquals('jupyter', $cm->modname);
+        $this->assertEquals($SITE->id, $cm->course);
+
+        // Check the context is correct.
+        $context = \context_module::instance($cm->id);
+        $this->assertEquals($jupyter->cmid, $context->instanceid);
     }
 }

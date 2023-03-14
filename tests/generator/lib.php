@@ -36,21 +36,10 @@ class mod_jupyter_generator extends testing_module_generator {
         require_once($CFG->dirroot . '/lib/resourcelib.php');
         $record = (object)(array)$record;
 
-        // Fill in optional values if not specified.
-        if (!isset($record->display)) {
-            $record->display = RESOURCELIB_DISPLAY_AUTO;
-        }
-        if (!isset($record->printintro)) {
-            $record->printintro = 0;
-        }
-        if (!isset($record->showsize)) {
-            $record->showsize = 0;
-        }
-        if (!isset($record->showtype)) {
-            $record->showtype = 0;
-        }
         if (!isset($record->name)) {
             $record->name = 'JupyterInstanceName';
+        }if (!isset($record->ass)) {
+            $record->ass = 'JupyterAss';
         }
 
         // The 'files' value corresponds to the draft file area ID. If not
@@ -72,7 +61,6 @@ class mod_jupyter_generator extends testing_module_generator {
             $fs = get_file_storage();
             $fs->create_file_from_string($filerecord, 'Test resource ' . $filename . ' file');
         }
-
         return parent::create_instance($record, (array)$options);
     }
 }
