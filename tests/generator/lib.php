@@ -38,10 +38,7 @@ class mod_jupyter_generator extends testing_module_generator {
 
         if (!isset($record->name)) {
             $record->name = 'JupyterInstanceName';
-        }if (!isset($record->ass)) {
-            $record->ass = 'JupyterAss';
         }
-
         // The 'files' value corresponds to the draft file area ID. If not
         // specified, create a default file.
         if (!isset($record->package)) {
