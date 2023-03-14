@@ -16,10 +16,9 @@
 
 namespace mod_jupyter;
 
-defined('MOODLE_INTERNAL') || die();
-
 use core\notification;
 use ReflectionClass;
+
 /**
  * Test cases for error message creation in view.php if settings are not correct.
  * Depending on current user capabilities show error message:
@@ -72,6 +71,7 @@ class error_handler_test extends \advanced_testcase {
         $this->assertEquals($propertymessage->getValue($notficationstack[1]), $expected);
         $this->assertEquals($propertymessagetype->getValue($notficationstack[1]), 'error');
     }
+
     /**
      * Test if error heading is created if user is no admin.
      * @covers \error_handler
