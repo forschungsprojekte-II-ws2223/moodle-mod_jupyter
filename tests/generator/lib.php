@@ -30,32 +30,27 @@ class mod_jupyter_generator extends testing_module_generator {
      * @return stdClass mod_jupyter_structure
      */
     public function create_instance($record = null, array $options = null) {
-        global $USER, $CFG;
+        global $USER, $CFG, $SITE;
         require_once($CFG->dirroot . '/lib/resourcelib.php');
         $record = (object)(array)$record;
 
         if (!isset($record->name)) {
             $record->name = 'JupyterInstanceName';
         }
-        // The 'files' value corresponds to the draft file area ID. If not
-        // specified, create a default file.
-        if (!isset($record->package)) {
-            if (empty($USER->username) || $USER->username === 'guest') {
-                throw new coding_exception('jupyter generator requires a current user');
-            }
-            $usercontext = context_user::instance($USER->id);
-            $filename = $record->defaultfilename ?? 'jupyternotebook.ipynb';
 
-            // Pick a random context id for specified user.
-            $record->package = file_get_unused_draft_itemid();
+        $content = 'abcd';
+        $filerecord = array(
+            'contextid' => $SITE->id,
+            'component' => 'mod_jupyter',
+            'filearea'  => 'package',
+            'itemid'    => $this->instancecount,
+            'filepath'  => '/',
+            'filename'  => 'testfile' . ($this->instancecount + 1) .'.ipynb',
+        );
 
-            // Add actual file there.
-            $filerecord = ['component' => 'user', 'filearea' => 'draft',
-                    'contextid' => $usercontext->id, 'itemid' => $record->package,
-                    'filename' => $filename, 'filepath' => '/'];
-            $fs = get_file_storage();
-            $fs->create_file_from_string($filerecord, 'Test resource ' . $filename . ' file');
-        }
+        $fs = get_file_storage();
+        $file = $fs->create_file_from_string($filerecord, $content);
+
         return parent::create_instance($record, (array)$options);
     }
 }

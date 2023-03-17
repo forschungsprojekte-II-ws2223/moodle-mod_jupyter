@@ -59,5 +59,15 @@ class generator_test extends \advanced_testcase {
         // Check the context is correct.
         $context = \context_module::instance($cm->id);
         $this->assertEquals($jupyter->cmid, $context->instanceid);
+
+        // Check that generated jupyter modules each contain a file.
+        $fs = get_file_storage();
+        $files = $fs->get_area_files($SITE->id, 'mod_jupyter', 'package', false, '', false);
+        $this->assertCount(3, $files);
+        $index = 1;
+        foreach ($files as $file) {
+            $this->assertEquals($file->get_filename(), 'testfile' . $index . '.ipynb');
+            $index++;
+        }
     }
 }
