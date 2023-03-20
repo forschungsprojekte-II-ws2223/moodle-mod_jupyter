@@ -16,6 +16,9 @@
 
 namespace mod_jupyter;
 
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
+
 /**
  * Test cases for jupyterhub_handler.
  *
@@ -27,6 +30,7 @@ class jupyterhub_handler_test extends \advanced_testcase {
     /**
      * Test constructor.
      * @covers \jupyterhub_handler
+     * @throws ConnectException
      * @return void
      */
     public function test_constructor() {
@@ -67,8 +71,16 @@ class jupyterhub_handler_test extends \advanced_testcase {
         $fs = get_file_storage();
         $files = $fs->get_area_files($SITE->id, 'mod_jupyter', 'package', 0, 'id', false);
         $this->assertCount(1, $files);
-        $notebookpath = $handler->get_notebook_path();
-        // Check $notebookpath correct.
-        $this->assertEquals($notebookpath, '/hub/user-redirect/lab/tree/work/testfile1.ipynb');
+        try {
+            // Check $notebookpath correct.
+            $notebookpath = $handler->get_notebook_path();
+            $this->assertEquals($notebookpath, '/hub/user-redirect/lab/tree/work/testfile1.ipynb');
+        } catch (\Throwable $th) {
+            // Connection to jupyterhub failing.
+            $message = $th->getMessage();
+            $code = $th->getCode();
+            $this->assertTrue(str_contains($message, 'cURL error 7'));
+            $this->assertEquals($code, 0);
+        }
     }
 }
