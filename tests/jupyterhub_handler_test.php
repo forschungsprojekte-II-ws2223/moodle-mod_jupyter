@@ -49,12 +49,13 @@ class jupyterhub_handler_test extends \advanced_testcase {
         $this->assertEquals(property_exists($handler, 'contextid'), true);
         $this->assertEquals(property_exists($handler, 'client'), true);
     }
-        /**
-         * Test if notebookpath gets returned correctly.
-         * @covers \jupyterhub_handler
-         * @throws ConnectException
-         * @return void
-         */
+
+    /**
+     * Test if notebookpath gets returned correctly.
+     * @covers \jupyterhub_handler
+     * @throws ConnectException
+     * @return void
+     */
     public function test_get_notebook_path() {
         global $USER, $OUTPUT, $CFG, $DB, $SITE, $moduleinstance, $modulecontext;
         $this->resetAfterTest();
@@ -66,10 +67,13 @@ class jupyterhub_handler_test extends \advanced_testcase {
         $modulecontext = \context_module::instance($cm->id);
         set_config('jupyterhub_url', 'http://127.0.0.1:8000', 'mod_jupyter');
         $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
+        $this->assertEquals($jupyterhuburl, 'http://127.0.0.1:8000');
         $user = mb_strtolower($USER->username, "UTF-8");
         $handler = new jupyterhub_handler($user, $SITE->id);
         $fs = get_file_storage();
         $files = $fs->get_area_files($SITE->id, 'mod_jupyter', 'package', 0, 'id', false);
+
+        // One file was created.
         $this->assertCount(1, $files);
         try {
             // Check $notebookpath correct.
@@ -83,12 +87,13 @@ class jupyterhub_handler_test extends \advanced_testcase {
             $this->assertEquals($code, 0);
         }
     }
-            /**
-             * Test handling of an empty url in the plugin settings
-             * @covers \jupyterhub_handler
-             * @expectedException InvalidArgumentException
-             * @return void
-             */
+
+    /**
+     * Test handling of an empty url in the plugin settings.
+     * @covers \jupyterhub_handler
+     * @throws InvalidArgumentException
+     * @return void
+     */
     public function test_empty_url() {
         global $USER, $OUTPUT, $CFG, $DB, $SITE, $moduleinstance, $modulecontext;
         $this->resetAfterTest();
