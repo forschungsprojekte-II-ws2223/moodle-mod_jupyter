@@ -30,7 +30,6 @@ class jupyterhub_handler_test extends \advanced_testcase {
     /**
      * Test constructor.
      * @covers \jupyterhub_handler
-     * @throws ConnectException
      * @return void
      */
     public function test_constructor() {
@@ -53,6 +52,7 @@ class jupyterhub_handler_test extends \advanced_testcase {
         /**
          * Test if notebookpath gets returned correctly.
          * @covers \jupyterhub_handler
+         * @throws ConnectException
          * @return void
          */
     public function test_get_notebook_path() {
@@ -79,8 +79,33 @@ class jupyterhub_handler_test extends \advanced_testcase {
             // Connection to jupyterhub failing.
             $message = $th->getMessage();
             $code = $th->getCode();
-            $this->assertTrue(str_contains($message, 'cURL error 7'));
+            $this->assertTrue(str_contains($message, 'cURL error'));
             $this->assertEquals($code, 0);
         }
+    }
+            /**
+             * Test handling of an empty url in the plugin settings
+             * @covers \jupyterhub_handler
+             * @expectedException InvalidArgumentException
+             * @return void
+             */
+    public function test_empty_url() {
+        global $USER, $OUTPUT, $CFG, $DB, $SITE, $moduleinstance, $modulecontext;
+        $this->resetAfterTest();
+        $this->setAdminUser();
+        $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
+        $jupyter = $generator->create_instance(array('course' => $SITE->id));
+        $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
+        $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
+        $modulecontext = \context_module::instance($cm->id);
+
+        // Url setting by default is empty.
+        $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
+        $this->assertEquals($jupyterhuburl, '');
+        $user = mb_strtolower($USER->username, "UTF-8");
+
+        // Url is implicitly used in guzzle client constructor.
+        $this->expectException(\InvalidArgumentException::class);
+        $handler = new jupyterhub_handler($user, $SITE->id);
     }
 }

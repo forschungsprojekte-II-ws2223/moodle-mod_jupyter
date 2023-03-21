@@ -34,7 +34,7 @@ class generator_test extends \advanced_testcase {
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        // There are 0 resources initially.
+        // There are 0 jupyter modules initially.
         $this->assertEquals(0, $DB->count_records('jupyter'));
 
         // Create generator.
@@ -50,13 +50,13 @@ class generator_test extends \advanced_testcase {
         $jupyter = $generator->create_instance(array('course' => $SITE->id));
         $this->assertEquals(3, $DB->count_records('jupyter'));
 
-        // Check the course-module is correct.
+        // Check if the course-module is correct.
         $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
         $this->assertEquals($jupyter->id, $cm->instance);
         $this->assertEquals('jupyter', $cm->modname);
         $this->assertEquals($SITE->id, $cm->course);
 
-        // Check the context is correct.
+        // Check if the context is correct.
         $context = \context_module::instance($cm->id);
         $this->assertEquals($jupyter->cmid, $context->instanceid);
 
