@@ -33,7 +33,6 @@ use GuzzleHttp\Exception\RequestException;
  */
 class jupyterhub_handler_test extends \advanced_testcase {
 
-    protected $url;
     /**
      * Test constructor.
      * @covers \jupyterhub_handler
@@ -138,9 +137,6 @@ class jupyterhub_handler_test extends \advanced_testcase {
         $this->setAdminUser();
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
         $jupyter = $generator->create_instance(array('course' => $SITE->id));
-        $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
-        $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
-        $modulecontext = \context_module::instance($cm->id);
 
         // Url setting is empty by default.
         set_config('jupyterhub_url', 'http://127.0.0.1:8000', 'mod_jupyter');
