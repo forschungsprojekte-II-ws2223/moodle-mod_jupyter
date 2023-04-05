@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Jupyter restore task that provides all the settings and steps to perform one complete restore of the activity.
+ * The task that provides a complete restore of mod_jupyter is defined here.
  *
  * @package   mod_jupyter
  * @copyright KIB3 StuPro SS2022 Development Team of the University of Stuttgart
@@ -27,14 +27,15 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/mod/jupyter/backup/moodle2/restore_jupyter_stepslib.php');
 
 /**
- * Class that provides all settings and steps for restoring the activity.
+ * Restore task for mod_jupyter.
  */
 class restore_jupyter_activity_task extends restore_activity_task {
+
     /**
-     * Definition of particular settings this activity can have.
+     * Defines particular settings that this activity can have.
      */
-    protected function define_my_settings() {
-        // No particular settings for this activity.
+    protected function define_my_settings(): void {
+        return;
     }
 
     /**
@@ -46,18 +47,23 @@ class restore_jupyter_activity_task extends restore_activity_task {
     }
 
     /**
-     * Definition of the contents in the activity that must be processed by the link decoder.
+     * Defines the contents in the activity that must be processed by the link decoder.
+     *
+     * @return array.
      */
     public static function define_decode_contents() {
         $contents = array();
 
+        // Define the contents.
         $contents[] = new restore_decode_content('jupyter', array('intro'), 'jupyter');
 
         return $contents;
     }
 
     /**
-     * Definition of the decoding rules for links belonging to the activity to be executed by the link decoder.
+     * Defines the decoding rules for links belonging to the activity to be executed by the link decoder.
+     *
+     * @return restore_decode_rule[].
      */
     public static function define_decode_rules() {
         $rules = array();
@@ -69,8 +75,11 @@ class restore_jupyter_activity_task extends restore_activity_task {
     }
 
     /**
-     * Definition of the restore log rules that will be applied by the 'restore_logs_processor' when restoring jupyter
-     * logs. It must return one array of 'restore_log_rule' objects.
+     * Defines the restore log rules that will be applied by the
+     * {@link restore_logs_processor} when restoring mod_h5pactivity logs. It
+     * must return one array of {@link restore_log_rule} objects.
+     *
+     * @return restore_log_rule[].
      */
     public static function define_restore_log_rules() {
         $rules = array();
