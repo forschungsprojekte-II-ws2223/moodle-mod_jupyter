@@ -16,6 +16,11 @@
 
 namespace mod_jupyter;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 
@@ -27,6 +32,8 @@ use GuzzleHttp\Exception\RequestException;
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class jupyterhub_handler_test extends \advanced_testcase {
+
+    protected $url;
     /**
      * Test constructor.
      * @covers \jupyterhub_handler
@@ -65,9 +72,11 @@ class jupyterhub_handler_test extends \advanced_testcase {
         $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
         $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
         $modulecontext = \context_module::instance($cm->id);
+
         set_config('jupyterhub_url', 'http://127.0.0.1:8000', 'mod_jupyter');
         $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
         $this->assertEquals($jupyterhuburl, 'http://127.0.0.1:8000');
+
         $user = mb_strtolower($USER->username, "UTF-8");
         $handler = new jupyterhub_handler($user, $SITE->id);
         $fs = get_file_storage();
@@ -75,21 +84,25 @@ class jupyterhub_handler_test extends \advanced_testcase {
 
         // One file was created.
         $this->assertCount(1, $files);
-        try {
-            // Check $notebookpath correct.
-            $notebookpath = $handler->get_notebook_path();
-            $this->assertEquals($notebookpath, '/hub/user-redirect/lab/tree/work/testfile1.ipynb');
-        } catch (\Throwable $th) {
-            // Connection to jupyterhub failing.
-            $message = $th->getMessage();
-            $code = $th->getCode();
-            $this->assertTrue(str_contains($message, 'cURL error'));
-            $this->assertEquals($code, 0);
-        }
+
+        // Setup mock handler.
+        $mock = new MockHandler([
+            new Response(200, [''], ''), // Response for check_jupyterhub_reachable().
+            new Response(200, [''], '{"server": "null"}'), // Response for check_user_status().
+            new Response(200, [''], '') // Response for check_notebook_status().
+        ]);
+
+        $handlerstack = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handlerstack]);
+        $handler->set_client($client);
+
+        // Check if $notebookpath is correct.
+        $notebookpath = $handler->get_notebook_path();
+        $this->assertEquals($notebookpath, '/hub/user-redirect/lab/tree/work/testfile1.ipynb');
     }
 
     /**
-     * Test handling of an empty url in the plugin settings.
+     * Test handling of an empty url in the plugin settings. If empty shoulf throw Exception.
      * @covers \jupyterhub_handler
      * @throws InvalidArgumentException
      * @return void
@@ -104,13 +117,38 @@ class jupyterhub_handler_test extends \advanced_testcase {
         $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
         $modulecontext = \context_module::instance($cm->id);
 
-        // Url setting by default is empty.
+        // Url setting is empty by default.
         $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
         $this->assertEquals($jupyterhuburl, '');
         $user = mb_strtolower($USER->username, "UTF-8");
 
         // Url is implicitly used in guzzle client constructor.
         $this->expectException(\InvalidArgumentException::class);
+        $handler = new jupyterhub_handler($user, $SITE->id);
+    }
+
+    /**
+     * Test handling of url in the plugin settings.
+     * @covers \jupyterhub_handler
+     * @return void
+     */
+    public function test_url() {
+        global $USER, $OUTPUT, $CFG, $DB, $SITE, $moduleinstance, $modulecontext;
+        $this->resetAfterTest();
+        $this->setAdminUser();
+        $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
+        $jupyter = $generator->create_instance(array('course' => $SITE->id));
+        $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
+        $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
+        $modulecontext = \context_module::instance($cm->id);
+
+        // Url setting is empty by default.
+        set_config('jupyterhub_url', 'http://127.0.0.1:8000', 'mod_jupyter');
+        $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
+        $this->assertEquals($jupyterhuburl, 'http://127.0.0.1:8000');
+        $user = mb_strtolower($USER->username, "UTF-8");
+
+        // Url is implicitly used in guzzle client constructor.
         $handler = new jupyterhub_handler($user, $SITE->id);
     }
 }
