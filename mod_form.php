@@ -49,6 +49,9 @@ class mod_jupyter_mod_form extends moodleform_mod {
         // Adding the standard "name" field.
         $mform->addElement('text', 'name', get_string('jupytername', 'mod_jupyter'), array('size' => '64'));
 
+        //
+        $mform->addElement('selectyesno', 'toggle_input', get_string('test', 'mod_jupyter'));
+
         // Adding file manager for jupyter notebook file.
         $mform->addElement('filemanager', 'packagefile', get_string('package', 'mod_jupyter'), null, [
             'accepted_types' => '.ipynb',
@@ -69,6 +72,17 @@ class mod_jupyter_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('name', 'jupytername', 'mod_jupyter');
+
+        // Adding fields for notebook git repository.
+        $mform->addElement('text', 'repourl', get_string('repourl', 'mod_jupyter'), array('size' => '64'));
+        $mform->addElement('text', 'branch', get_string('branch', 'mod_jupyter'), array('size' => '64'));
+        $mform->addElement('text', 'file', get_string('file', 'mod_jupyter'), array('size' => '64'));
+
+        // Adding the script for toggling between file manager and text input elements.
+        $mform->hideIf('repourl', 'toggle_input', 'eq', 1);
+        $mform->hideIf('branch', 'toggle_input', 'eq', 1);
+        $mform->hideIf('file', 'toggle_input', 'eq', 1);
+        $mform->hideIf('packagefile', 'toggle_input', 'eq', 0);
 
         // Adding the standard "intro" and "introformat" fields.
         $this->standard_intro_elements();
