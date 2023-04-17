@@ -70,6 +70,15 @@ class jupyterhub_handler {
     }
 
     /**
+     * Sets the private $client variable.
+     *
+     * @param Client $client guzzle http client
+     */
+    public function set_client($client) {
+        $this->client = $client;
+    }
+
+    /**
      * Returns the url to users notebook and notebook file.
      *
      * @return string
