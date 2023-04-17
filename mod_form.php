@@ -49,6 +49,9 @@ class mod_jupyter_mod_form extends moodleform_mod {
         // Adding the standard "name" field.
         $mform->addElement('text', 'name', get_string('jupytername', 'mod_jupyter'), array('size' => '64'));
 
+        // Content.
+        $mform->addElement('header', 'content', get_string('contentheader', 'jupyter'));
+
         // Adding file manager for jupyter notebook file.
         $mform->addElement('filemanager', 'packagefile', get_string('package', 'mod_jupyter'), null, [
             'accepted_types' => '.ipynb',
@@ -58,6 +61,7 @@ class mod_jupyter_mod_form extends moodleform_mod {
         ]);
         $mform->addHelpButton('packagefile', 'package', 'mod_jupyter');
         $mform->addRule('packagefile', null, 'required');
+        $mform->setExpanded('content');
 
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
@@ -92,5 +96,13 @@ class mod_jupyter_mod_form extends moodleform_mod {
         file_prepare_draft_area($draftitemid, $this->context->id, 'mod_jupyter',
             'package', 0, ['subdirs' => 0, 'maxfiles' => 1]);
         $defaultvalues['packagefile'] = $draftitemid;
+    }
+
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+
+        //...
+
+        return $errors;
     }
 }

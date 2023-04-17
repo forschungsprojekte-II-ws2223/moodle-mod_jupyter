@@ -125,3 +125,109 @@ function jupyter_set_mainfile(stdClass $data): void {
             0, ['subdirs' => 0, 'maxfiles' => 1]);
     }
 }
+
+/**
+ * Lists all browsable file areas
+ *
+ * @package  mod_jupyter
+ * @category files
+ * @param stdClass $course course object
+ * @param stdClass $cm course module object
+ * @param stdClass $context context object
+ * @return array
+ */
+function jupyter_get_file_areas($course, $cm, $context) {
+    $areas = array();
+    $areas['content'] = get_string('jupytercontent', 'jupyter');
+
+    return $areas;
+}
+
+
+/**
+ * Serves the jupyter files.
+ *
+ * @package  mod_jupyter
+ * @category files
+ * @param stdClass $course course object
+ * @param stdClass $cm course module
+ * @param stdClass $context context object
+ * @param string $filearea file area
+ * @param array $args extra arguments
+ * @param bool $forcedownload whether or not force download
+ * @param array $options additional options affecting the file serving
+ * @return bool false if file not found, does not return if found - just send the file
+ */
+function jupyter_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+    global $CFG, $DB;
+
+    if ($context->contextlevel != CONTEXT_MODULE) {
+        return false;
+    }
+
+    require_course_login($course, true, $cm);
+    if (!has_capability('mod/jupyter:view', $context)) {
+        return false;
+    }
+
+    if ($filearea !== 'content') {
+        // intro is handled automatically in pluginfile.php
+        return false;
+    }
+
+    array_shift($args); // ignore revision - designed to prevent caching problems only
+
+    $fs = get_file_storage();
+    $relativepath = implode('/', $args);
+    $fullpath = "/$context->id/mod_jupyter/content/0/$relativepath";
+    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+        return false;
+    }
+
+    // Set security posture for in-browser display.
+    if (!$forcedownload) {
+        header("Content-Security-Policy: default-src 'none'; img-src 'self'");
+    }
+
+    // Finally send the file.
+    send_stored_file($file, 0, 0, $forcedownload, $options);
+}
+
+
+/**
+ * Export jupyter resource contents
+ *
+ * @return array of file content
+ */
+function jupyter_export_contents($cm, $baseurl) {
+    global $CFG, $DB;
+    $contents = array();
+    $context = context_module::instance($cm->id);
+    $jupyter = $DB->get_record('jupyter', array('id'=>$cm->instance), '*', MUST_EXIST);
+
+    $fs = get_file_storage();
+    $files = $fs->get_area_files($context->id, 'mod_jupyter', 'content', 0, 'sortorder DESC, id ASC', false);
+
+    foreach ($files as $fileinfo) {
+        $file = array();
+        $file['type'] = 'file';
+        $file['filename']     = $fileinfo->get_filename();
+        $file['filepath']     = $fileinfo->get_filepath();
+        $file['filesize']     = $fileinfo->get_filesize();
+        $file['fileurl']      = file_encode_url("$CFG->wwwroot/" . $baseurl, '/'.$context->id.'/mod_jupyter/content/'.$jupyter->revision.$fileinfo->get_filepath().$fileinfo->get_filename(), true);
+        $file['timecreated']  = $fileinfo->get_timecreated();
+        $file['timemodified'] = $fileinfo->get_timemodified();
+        $file['sortorder']    = $fileinfo->get_sortorder();
+        $file['userid']       = $fileinfo->get_userid();
+        $file['author']       = $fileinfo->get_author();
+        $file['license']      = $fileinfo->get_license();
+        $file['mimetype']     = $fileinfo->get_mimetype();
+        $file['isexternalfile'] = $fileinfo->is_external_file();
+        if ($file['isexternalfile']) {
+            $file['repositorytype'] = $fileinfo->get_repository_type();
+        }
+        $contents[] = $file;
+    }
+
+    return $contents;
+}
