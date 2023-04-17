@@ -97,12 +97,4 @@ class mod_jupyter_mod_form extends moodleform_mod {
             'package', 0, ['subdirs' => 0, 'maxfiles' => 1]);
         $defaultvalues['packagefile'] = $draftitemid;
     }
-
-    public function validation($data, $files) {
-        $errors = parent::validation($data, $files);
-
-        //...
-
-        return $errors;
-    }
 }

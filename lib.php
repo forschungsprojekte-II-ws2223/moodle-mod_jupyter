@@ -171,16 +171,16 @@ function jupyter_pluginfile($course, $cm, $context, $filearea, $args, $forcedown
     }
 
     if ($filearea !== 'content') {
-        // intro is handled automatically in pluginfile.php
+        // Intro is handled automatically in pluginfile.php.
         return false;
     }
 
-    array_shift($args); // ignore revision - designed to prevent caching problems only
+    array_shift($args); // Ignore revision - designed to prevent caching problems only.
 
     $fs = get_file_storage();
     $relativepath = implode('/', $args);
     $fullpath = "/$context->id/mod_jupyter/content/0/$relativepath";
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) || $file->is_directory()) {
         return false;
     }
 
@@ -203,7 +203,7 @@ function jupyter_export_contents($cm, $baseurl) {
     global $CFG, $DB;
     $contents = array();
     $context = context_module::instance($cm->id);
-    $jupyter = $DB->get_record('jupyter', array('id'=>$cm->instance), '*', MUST_EXIST);
+    $jupyter = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
 
     $fs = get_file_storage();
     $files = $fs->get_area_files($context->id, 'mod_jupyter', 'content', 0, 'sortorder DESC, id ASC', false);
@@ -214,7 +214,8 @@ function jupyter_export_contents($cm, $baseurl) {
         $file['filename']     = $fileinfo->get_filename();
         $file['filepath']     = $fileinfo->get_filepath();
         $file['filesize']     = $fileinfo->get_filesize();
-        $file['fileurl']      = file_encode_url("$CFG->wwwroot/" . $baseurl, '/'.$context->id.'/mod_jupyter/content/'.$jupyter->revision.$fileinfo->get_filepath().$fileinfo->get_filename(), true);
+        $file['fileurl']      = file_encode_url("$CFG->wwwroot/" . $baseurl, '/'.$context->id.'/mod_jupyter/content/'.
+            $jupyter->revision.$fileinfo->get_filepath().$fileinfo->get_filename(), true);
         $file['timecreated']  = $fileinfo->get_timecreated();
         $file['timemodified'] = $fileinfo->get_timemodified();
         $file['sortorder']    = $fileinfo->get_sortorder();
