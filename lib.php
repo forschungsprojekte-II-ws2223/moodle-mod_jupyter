@@ -198,6 +198,8 @@ function jupyter_pluginfile($course, $cm, $context, $filearea, $args, $forcedown
  * Export jupyter resource contents
  *
  * @return array of file content
+ * @param stdClass $cm course module
+ * @param stdClass $baseurl
  */
 function jupyter_export_contents($cm, $baseurl) {
     global $CFG, $DB;
