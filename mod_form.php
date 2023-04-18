@@ -81,6 +81,45 @@ class mod_jupyter_mod_form extends moodleform_mod {
     }
 
     /**
+     * Enforce validation rules here
+     *
+     * @param array $data array of ("fieldname"=>value) of submitted data
+     * @param array $files array of uploaded files "element_name"=>tmp_file_path
+     * @return array
+     **/
+    public function validation($data, $files) {
+        global $USER;
+        $errors = parent::validation($data, $files);
+
+        if (empty($data['packagefile'])) {
+            $errors['packagefile'] = get_string('required');
+
+        } else {
+            $draftitemid = file_get_submitted_draft_itemid('packagefile');
+
+            file_prepare_draft_area($draftitemid, $this->context->id, 'mod_h5pactivity', 'packagefilecheck', null,
+                ['subdirs' => 0, 'maxfiles' => 1]);
+
+            // Get file from users draft area.
+            $usercontext = context_user::instance($USER->id);
+            $fs = get_file_storage();
+            $files = $fs->get_area_files($usercontext->id, 'user', 'draft', $draftitemid, 'id', false);
+
+            if (count($files) < 1) {
+                $errors['packagefile'] = get_string('required');
+                return $errors;
+            }
+            $file = reset($files);
+            if (!$file->is_external_file() && !empty($data['updatefreq'])) {
+                // Make sure updatefreq is not set if using normal local file.
+                $errors['updatefreq'] = get_string('updatefreq_error', 'mod_h5pactivity');
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
      * Enforce defaults here.
      *
      * @param array $defaultvalues From defaults
@@ -92,5 +131,17 @@ class mod_jupyter_mod_form extends moodleform_mod {
         file_prepare_draft_area($draftitemid, $this->context->id, 'mod_jupyter',
             'package', 0, ['subdirs' => 0, 'maxfiles' => 1]);
         $defaultvalues['packagefile'] = $draftitemid;
+    }
+
+    /**
+     * Allows modules to modify the data returned by form get_data().
+     * This method is also called in the bulk activity completion form.
+     *
+     * Only available on moodleform_mod.
+     *
+     * @param stdClass $data passed by reference
+     */
+    public function data_postprocessing($data) {
+        parent::data_postprocessing($data);
     }
 }
