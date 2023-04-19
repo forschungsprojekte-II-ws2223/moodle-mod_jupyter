@@ -127,7 +127,7 @@ class mod_jupyter_mod_form extends moodleform_mod {
      */
     public function data_preprocessing(&$defaultvalues) {
         // Load existing notebook file into file manager draft area.
-        $draftitemid = file_get_submitted_draft_itemid('packagefiele');
+        $draftitemid = file_get_submitted_draft_itemid('packagefile');
         file_prepare_draft_area($draftitemid, $this->context->id, 'mod_jupyter',
             'package', 0, ['subdirs' => 0, 'maxfiles' => 1]);
         $defaultvalues['packagefile'] = $draftitemid;

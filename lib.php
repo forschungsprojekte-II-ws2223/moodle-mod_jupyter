@@ -129,9 +129,6 @@ function jupyter_set_mainfile(stdClass $data): void {
 /**
  * Returns the lists of all browsable file areas within the given module context.
  *
- * The file area 'intro' for the activity introduction field is added automatically
- * by {@link file_browser::get_file_info_context_module()}.
- *
  * @param stdClass $course course object
  * @param stdClass $cm course module object
  * @param stdClass $context context object
