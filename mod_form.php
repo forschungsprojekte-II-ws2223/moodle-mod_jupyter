@@ -132,16 +132,4 @@ class mod_jupyter_mod_form extends moodleform_mod {
             'package', 0, ['subdirs' => 0, 'maxfiles' => 1]);
         $defaultvalues['packagefile'] = $draftitemid;
     }
-
-    /**
-     * Allows modules to modify the data returned by form get_data().
-     * This method is also called in the bulk activity completion form.
-     *
-     * Only available on moodleform_mod.
-     *
-     * @param stdClass $data passed by reference
-     */
-    public function data_postprocessing($data) {
-        parent::data_postprocessing($data);
-    }
 }

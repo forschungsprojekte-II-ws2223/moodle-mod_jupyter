@@ -171,7 +171,7 @@ function jupyter_get_file_info(file_browser $browser, array $areas, stdClass $co
 
         $urlbase = $CFG->wwwroot.'/pluginfile.php';
         if (!$storedfile = $fs->get_file($context->id, 'mod_jupyter', 'package', 0, $filepath, $filename)) {
-            if ($filepath === '/' and $filename === '.') {
+            if ($filepath === '/' && $filename === '.') {
                 $storedfile = new virtual_root_file($context->id, 'mod_jupyter', 'package', 0);
             } else {
                 // Not found.
