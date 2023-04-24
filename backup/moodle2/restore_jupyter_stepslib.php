@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * All the steps to restore mod_h5pactivity are defined here.
+ * All the steps to restore mod_jupyter are defined here.
  *
  * @package   mod_jupyter
  * @copyright KIB3 StuPro SS2022 Development Team of the University of Stuttgart
@@ -23,7 +23,7 @@
  */
 
 /**
- * Defines the structure step to restore one mod_h5pactivity activity.
+ * Defines the structure step to restore one mod_jupyter activity.
  */
 class restore_jupyter_activity_structure_step extends restore_activity_structure_step {
 
