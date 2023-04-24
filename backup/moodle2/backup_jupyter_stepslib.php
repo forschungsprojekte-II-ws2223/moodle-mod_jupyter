@@ -48,7 +48,7 @@ class backup_jupyter_activity_structure_step extends backup_activity_structure_s
         $root->set_source_table('jupyter', ['id' => backup::VAR_ACTIVITYID]);
 
         // Define file annotations.
-        $root->annotate_files('mod_jupyter', 'intro', null);    // This file area has no itemid.
+        4$root->annotate_files('mod_jupyter', 'intro', null);    // This file area has no itemid.
         $root->annotate_files('mod_jupyter', 'package', null);  // This file area has no itemid.
 
         return $this->prepare_activity_structure($root);
