@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines all the restore steps that will be used by the restore_choice_activity_task.
+ * All the steps to restore mod_jupyter are defined here.
  *
  * @package   mod_jupyter
  * @copyright KIB3 StuPro SS2022 Development Team of the University of Stuttgart
@@ -23,7 +23,7 @@
  */
 
 /**
- * Defines all steps for restoring up the activity.
+ * Defines the structure step to restore one mod_jupyter activity.
  */
 class restore_jupyter_activity_structure_step extends restore_activity_structure_step {
     /**
@@ -67,5 +67,6 @@ class restore_jupyter_activity_structure_step extends restore_activity_structure
      */
     protected function after_execute() {
         $this->add_related_files('mod_jupyter', 'intro', null);
+        $this->add_related_files('mod_jupyter', 'package', null);
     }
 }

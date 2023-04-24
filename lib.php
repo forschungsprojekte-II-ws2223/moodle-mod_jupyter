@@ -127,110 +127,96 @@ function jupyter_set_mainfile(stdClass $data): void {
 }
 
 /**
- * Lists all browsable file areas
+ * Returns the lists of all browsable file areas within the given module context.
  *
- * @package  mod_jupyter
- * @category files
  * @param stdClass $course course object
  * @param stdClass $cm course module object
  * @param stdClass $context context object
- * @return array
+ * @return string[] array of pair file area => human file area name
  */
-function jupyter_get_file_areas($course, $cm, $context) {
-    $areas = array();
-    $areas['content'] = get_string('jupytercontent', 'jupyter');
-
+function jupyter_get_file_areas(stdClass $course, stdClass $cm, stdClass $context): array {
+    $areas = [];
+    $areas['package'] = get_string('areapackage', 'mod_jupyter');
     return $areas;
 }
 
+/**
+ * File browsing support for data module.
+ *
+ * @param file_browser $browser
+ * @param array $areas
+ * @param stdClass $course
+ * @param stdClass $cm
+ * @param context $context
+ * @param string $filearea
+ * @param int|null $itemid
+ * @param string|null $filepath
+ * @param string|null $filename
+ * @return file_info_stored|null file_info_stored instance or null if not found
+ */
+function jupyter_get_file_info(file_browser $browser, array $areas, stdClass $course,
+            stdClass $cm, context $context, string $filearea, ?int $itemid = null,
+            ?string $filepath = null, ?string $filename = null): ?file_info_stored {
+    global $CFG;
+
+    if (!has_capability('moodle/course:managefiles', $context)) {
+        return null;
+    }
+
+    $fs = get_file_storage();
+
+    if ($filearea === 'package') {
+        $filepath = is_null($filepath) ? '/' : $filepath;
+        $filename = is_null($filename) ? '.' : $filename;
+
+        $urlbase = $CFG->wwwroot.'/pluginfile.php';
+        if (!$storedfile = $fs->get_file($context->id, 'mod_jupyter', 'package', 0, $filepath, $filename)) {
+            if ($filepath === '/' && $filename === '.') {
+                $storedfile = new virtual_root_file($context->id, 'mod_jupyter', 'package', 0);
+            } else {
+                // Not found.
+                return null;
+            }
+        }
+        return new file_info_stored($browser, $context, $storedfile, $urlbase, $areas[$filearea], false, true, false, false);
+    }
+    return null;
+}
 
 /**
- * Serves the jupyter files.
+ * Serves the files from the mod_jupyter file areas.
  *
- * @package  mod_jupyter
- * @category files
- * @param stdClass $course course object
- * @param stdClass $cm course module
- * @param stdClass $context context object
- * @param string $filearea file area
- * @param array $args extra arguments
- * @param bool $forcedownload whether or not force download
+ * @param mixed $course course or id of the course
+ * @param mixed $cm course module or id of the course module
+ * @param context $context
+ * @param string $filearea
+ * @param array $args
+ * @param bool $forcedownload
  * @param array $options additional options affecting the file serving
  * @return bool false if file not found, does not return if found - just send the file
  */
-function jupyter_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
-    global $CFG, $DB;
-
+function jupyter_pluginfile($course, $cm, context $context,
+            string $filearea, array $args, bool $forcedownload, array $options = []): bool {
     if ($context->contextlevel != CONTEXT_MODULE) {
         return false;
     }
 
-    require_course_login($course, true, $cm);
-    if (!has_capability('mod/jupyter:view', $context)) {
+    require_login($course, true, $cm);
+
+    $fullpath = '';
+
+    if ($filearea === 'package') {
+        $revision = (int)array_shift($args); // Prevents caching problems - ignored here.
+        $relativepath = implode('/', $args);
+        $fullpath = "/$context->id/mod_jupyter/package/0/$relativepath";
+    }
+    if (empty($fullpath)) {
         return false;
     }
-
-    if ($filearea !== 'content') {
-        // Intro is handled automatically in pluginfile.php.
-        return false;
-    }
-
-    array_shift($args); // Ignore revision - designed to prevent caching problems only.
-
     $fs = get_file_storage();
-    $relativepath = implode('/', $args);
-    $fullpath = "/$context->id/mod_jupyter/content/0/$relativepath";
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) || $file->is_directory()) {
+    $file = $fs->get_file_by_hash(sha1($fullpath));
+    if (empty($file)) {
         return false;
     }
-
-    // Set security posture for in-browser display.
-    if (!$forcedownload) {
-        header("Content-Security-Policy: default-src 'none'; img-src 'self'");
-    }
-
-    // Finally send the file.
-    send_stored_file($file, 0, 0, $forcedownload, $options);
-}
-
-
-/**
- * Export jupyter resource contents
- *
- * @return array of file content
- * @param stdClass $cm course module
- * @param stdClass $baseurl
- */
-function jupyter_export_contents($cm, $baseurl) {
-    global $CFG, $DB;
-    $contents = array();
-    $context = context_module::instance($cm->id);
-    $jupyter = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
-
-    $fs = get_file_storage();
-    $files = $fs->get_area_files($context->id, 'mod_jupyter', 'content', 0, 'sortorder DESC, id ASC', false);
-
-    foreach ($files as $fileinfo) {
-        $file = array();
-        $file['type'] = 'file';
-        $file['filename']     = $fileinfo->get_filename();
-        $file['filepath']     = $fileinfo->get_filepath();
-        $file['filesize']     = $fileinfo->get_filesize();
-        $file['fileurl']      = file_encode_url("$CFG->wwwroot/" . $baseurl, '/'.$context->id.'/mod_jupyter/content/'.
-            $jupyter->revision.$fileinfo->get_filepath().$fileinfo->get_filename(), true);
-        $file['timecreated']  = $fileinfo->get_timecreated();
-        $file['timemodified'] = $fileinfo->get_timemodified();
-        $file['sortorder']    = $fileinfo->get_sortorder();
-        $file['userid']       = $fileinfo->get_userid();
-        $file['author']       = $fileinfo->get_author();
-        $file['license']      = $fileinfo->get_license();
-        $file['mimetype']     = $fileinfo->get_mimetype();
-        $file['isexternalfile'] = $fileinfo->is_external_file();
-        if ($file['isexternalfile']) {
-            $file['repositorytype'] = $fileinfo->get_repository_type();
-        }
-        $contents[] = $file;
-    }
-
-    return $contents;
+    send_stored_file($file, $lifetime, 0, false, $options);
 }

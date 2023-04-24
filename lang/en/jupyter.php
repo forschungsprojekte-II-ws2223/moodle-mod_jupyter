@@ -38,6 +38,7 @@ $string['branch'] = 'Branch';
 $string['file'] = 'Notebook file to open';
 $string['package'] = 'Notebook file to open';
 $string['package_help'] = 'Add the notbook file that will be displayed in the activity here.';
+$string['areapackage'] = 'Package file';
 
 $string['jupyter:addinstance'] = 'Add a new Jupyter Notebook activity';
 $string['jupyter:view'] = 'View a Jupyter Notebook activity';
