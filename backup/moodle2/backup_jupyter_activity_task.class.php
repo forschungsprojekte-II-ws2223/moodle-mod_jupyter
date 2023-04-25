@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/mod/jupyter/backup/moodle2/backup_jupyter_stepslib.php');
 
 /**
- * The class provides all the settings and steps to perform one complete backup of mod_h5pactivity.
+ * The class provides all the settings and steps to perform one complete backup of mod_jupyter.
  */
 class backup_jupyter_activity_task extends backup_activity_task {
 
