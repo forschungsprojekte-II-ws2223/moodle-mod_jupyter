@@ -97,7 +97,7 @@ class mod_jupyter_mod_form extends moodleform_mod {
         } else {
             $draftitemid = file_get_submitted_draft_itemid('packagefile');
 
-            file_prepare_draft_area($draftitemid, $this->context->id, 'mod_h5pactivity', 'packagefilecheck', null,
+            file_prepare_draft_area($draftitemid, $this->context->id, 'mod_jupyter', 'packagefilecheck', null,
                 ['subdirs' => 0, 'maxfiles' => 1]);
 
             // Get file from users draft area.
@@ -112,7 +112,7 @@ class mod_jupyter_mod_form extends moodleform_mod {
             $file = reset($files);
             if (!$file->is_external_file() && !empty($data['updatefreq'])) {
                 // Make sure updatefreq is not set if using normal local file.
-                $errors['updatefreq'] = get_string('updatefreq_error', 'mod_h5pactivity');
+                $errors['updatefreq'] = get_string('updatefreq_error', 'mod_jupyter');
             }
         }
 

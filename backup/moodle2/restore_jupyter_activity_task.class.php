@@ -76,7 +76,7 @@ class restore_jupyter_activity_task extends restore_activity_task {
 
     /**
      * Defines the restore log rules that will be applied by the
-     * restore_logs_processor when restoring mod_h5pactivity logs. It
+     * restore_logs_processor when restoring mod_jupyter logs. It
      * must return one array of restore_log_rule objects.
      *
      * @return restore_log_rule[].
