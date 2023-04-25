@@ -39,6 +39,7 @@ $string['file'] = 'Zu öffnende Notebook-Datei';
 $string['package'] = 'Notebook-Datei';
 $string['package_help'] = 'Laden sie hier die Notebook Datei für die Aktivität hoch.';
 $string['areapackage'] = 'Package file';
+$string['contentheader'] = 'Inhalt';
 
 $string['jupyter:addinstance'] = 'Eine neue Jupyter-Aktivität hinzufügen';
 
