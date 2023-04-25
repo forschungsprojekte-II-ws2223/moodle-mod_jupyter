@@ -125,3 +125,98 @@ function jupyter_set_mainfile(stdClass $data): void {
             0, ['subdirs' => 0, 'maxfiles' => 1]);
     }
 }
+
+/**
+ * Returns the lists of all browsable file areas within the given module context.
+ *
+ * @param stdClass $course course object
+ * @param stdClass $cm course module object
+ * @param stdClass $context context object
+ * @return string[] array of pair file area => human file area name
+ */
+function jupyter_get_file_areas(stdClass $course, stdClass $cm, stdClass $context): array {
+    $areas = [];
+    $areas['package'] = get_string('areapackage', 'mod_jupyter');
+    return $areas;
+}
+
+/**
+ * File browsing support for data module.
+ *
+ * @param file_browser $browser
+ * @param array $areas
+ * @param stdClass $course
+ * @param stdClass $cm
+ * @param context $context
+ * @param string $filearea
+ * @param int|null $itemid
+ * @param string|null $filepath
+ * @param string|null $filename
+ * @return file_info_stored|null file_info_stored instance or null if not found
+ */
+function jupyter_get_file_info(file_browser $browser, array $areas, stdClass $course,
+            stdClass $cm, context $context, string $filearea, ?int $itemid = null,
+            ?string $filepath = null, ?string $filename = null): ?file_info_stored {
+    global $CFG;
+
+    if (!has_capability('moodle/course:managefiles', $context)) {
+        return null;
+    }
+
+    $fs = get_file_storage();
+
+    if ($filearea === 'package') {
+        $filepath = is_null($filepath) ? '/' : $filepath;
+        $filename = is_null($filename) ? '.' : $filename;
+
+        $urlbase = $CFG->wwwroot.'/pluginfile.php';
+        if (!$storedfile = $fs->get_file($context->id, 'mod_jupyter', 'package', 0, $filepath, $filename)) {
+            if ($filepath === '/' && $filename === '.') {
+                $storedfile = new virtual_root_file($context->id, 'mod_jupyter', 'package', 0);
+            } else {
+                // Not found.
+                return null;
+            }
+        }
+        return new file_info_stored($browser, $context, $storedfile, $urlbase, $areas[$filearea], false, true, false, false);
+    }
+    return null;
+}
+
+/**
+ * Serves the files from the mod_jupyter file areas.
+ *
+ * @param mixed $course course or id of the course
+ * @param mixed $cm course module or id of the course module
+ * @param context $context
+ * @param string $filearea
+ * @param array $args
+ * @param bool $forcedownload
+ * @param array $options additional options affecting the file serving
+ * @return bool false if file not found, does not return if found - just send the file
+ */
+function jupyter_pluginfile($course, $cm, context $context,
+            string $filearea, array $args, bool $forcedownload, array $options = []): bool {
+    if ($context->contextlevel != CONTEXT_MODULE) {
+        return false;
+    }
+
+    require_login($course, true, $cm);
+
+    $fullpath = '';
+
+    if ($filearea === 'package') {
+        $revision = (int)array_shift($args); // Prevents caching problems - ignored here.
+        $relativepath = implode('/', $args);
+        $fullpath = "/$context->id/mod_jupyter/package/0/$relativepath";
+    }
+    if (empty($fullpath)) {
+        return false;
+    }
+    $fs = get_file_storage();
+    $file = $fs->get_file_by_hash(sha1($fullpath));
+    if (empty($file)) {
+        return false;
+    }
+    send_stored_file($file, $lifetime, 0, false, $options);
+}
