@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines backup_folder_activity_task class.
+ * The task that provides all the steps to perform a complete backup is defined here.
  *
  * @package     mod_jupyter
  * @category    backup
@@ -29,39 +29,40 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/mod/jupyter/backup/moodle2/backup_jupyter_stepslib.php');
 
 /**
- * The class provides all the settings and steps to perform one complete backup of mod_jupyter.
+ * The class provides all the settings and steps to perform one complete backup of mod_h5pactivity.
  */
 class backup_jupyter_activity_task extends backup_activity_task {
 
     /**
-     * No specific settings for this activity
+     * Defines particular settings for the plugin.
      */
     protected function define_my_settings() {
+        return;
     }
 
     /**
-     * Defines a backup step to store the instance data in the folder.xml file
+     * Defines particular steps for the backup process.
      */
     protected function define_my_steps() {
         $this->add_step(new backup_jupyter_activity_structure_step('jupyter_structure', 'jupyter.xml'));
     }
 
     /**
-     * Encodes URLs to the index.php and view.php scripts
+     * Codes the transformations to perform in the activity in order to get transportable (encoded) links.
      *
-     * @param string $content some HTML text that eventually contains URLs to the activity instance scripts
-     * @return string the content with the URLs encoded
+     * @param string $content content to encode.
+     * @return string encoded string
      */
     public static function encode_content_links($content) {
         global $CFG;
 
         $base = preg_quote($CFG->wwwroot, "/");
 
-        // Link to the list.
+        // Link to the list of choices.
         $search = "/(" . $base . "\/mod\/jupyter\/index.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@JUPYTERINDEX*$2@$', $content);
 
-        // Link to Jupyter view by module id.
+        // Link to choice view by moduleid.
         $search = "/(" . $base . "\/mod\/jupyter\/view.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@JUPYTERVIEWBYID*$2@$', $content);
 

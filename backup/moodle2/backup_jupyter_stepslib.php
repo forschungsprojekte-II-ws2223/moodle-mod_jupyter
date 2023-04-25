@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Define all the backup steps that will be used by the backup_folder_activity_task.
+ * Backup steps for mod_jupyter are defined here.
  *
  * @package     mod_jupyter
  * @category    backup
@@ -24,30 +24,34 @@
  */
 
 /**
- * Defines the complete folder structure for backup, with file and id annotations.
+ * Define the complete structure for backup, with file and id annotations.
  */
 class backup_jupyter_activity_structure_step extends backup_activity_structure_step {
 
     /**
-     * Defines the structure of the backup file.
+     * Defines the structure of the resulting xml file.
      *
-     * @return mixed
+     * @return backup_nested_element The structure wrapped by the common 'activity' element.
      */
     protected function define_structure() {
+        $userinfo = $this->get_setting_value('userinfo');
 
-        // Define each element separated.
-        $jupyter = new backup_nested_element('jupyter', array('id'),
-            array('course', 'name', 'timecreated', 'timemodified', 'intro', 'introformat', 'repourl', 'branch', 'file'));
+        // Replace with the attributes and final elements that the element will handle.
+        $attributes = ['id'];
+        $finalelements = [
+            'name', 'timecreated', 'timemodified', 'intro', 'introformat',
+            'repourl', 'branch', 'file'
+        ];
+        $root = new backup_nested_element('jupyter', $attributes, $finalelements);
 
-        // Define sources.
-        $jupyter->set_source_table('jupyter', array('id' => backup::VAR_ACTIVITYID));
+        // Define the source tables for the elements.
+        $root->set_source_table('jupyter', ['id' => backup::VAR_ACTIVITYID]);
 
         // Define file annotations.
-        $jupyter->annotate_files('mod_jupyter', 'intro', null);
-        $jupyter->annotate_files('mod_jupyter', 'content', null);
+        $root->annotate_files('mod_jupyter', 'intro', null);    // This file area has no itemid.
+        $root->annotate_files('mod_jupyter', 'package', null);  // This file area has no itemid.
 
-        // Return the root element, wrapped into standard activity structure.
-        return $this->prepare_activity_structure($jupyter);
+        return $this->prepare_activity_structure($root);
 
     }
 }

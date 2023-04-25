@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * All the steps to restore mod_jupyter are defined here.
+ * All the steps to restore mod_h5pactivity are defined here.
  *
  * @package   mod_jupyter
  * @copyright KIB3 StuPro SS2022 Development Team of the University of Stuttgart
@@ -23,15 +23,17 @@
  */
 
 /**
- * Defines the structure step to restore one mod_jupyter activity.
+ * Defines the structure step to restore one mod_h5pactivity activity.
  */
 class restore_jupyter_activity_structure_step extends restore_activity_structure_step {
+
     /**
-     * Defines the standard activity structure containing all information from the backup file.
+     * Defines the structure to be restored.
      *
-     * @return mixed
+     * @return restore_path_element[].
      */
     protected function define_structure() {
+
         $paths = array();
 
         $paths[] = new restore_path_element('jupyter', '/activity/jupyter');
@@ -41,11 +43,9 @@ class restore_jupyter_activity_structure_step extends restore_activity_structure
     }
 
     /**
-     * Defines how to get all needed information from the backup file.
+     * Processes the jupyter restore data.
      *
-     * @param object $data
-     *
-     * @return void
+     * @param array $data Parsed element data.
      */
     protected function process_jupyter($data) {
         global $DB;
