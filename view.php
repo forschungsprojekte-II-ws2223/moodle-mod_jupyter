@@ -30,6 +30,7 @@ use core\notification;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
+use mod_jupyter\git_generator;
 use mod_jupyter\error_handler;
 use mod_jupyter\jupyterhub_handler;
 
@@ -70,6 +71,17 @@ $user = mb_strtolower($USER->username, "UTF-8"); // Create id with the user's un
 
 $handler = new jupyterhub_handler($user, $modulecontext->id);
 
+$repo = $moduleinstance->repourl;
+$branch = urlencode(trim($moduleinstance->branch));
+$file = urlencode(trim($moduleinstance->file));
+$name = $moduleinstance->name;
+$gitfilelink = \mod_jupyter\git_generator::gen_gitfilelink($repo, $file, $branch);
+
+// Check if the "repourl" field in the mod_form is empty.
+if ($repo == "") {
+    $gitreachable = false;
+}
+
 try {
     $notebookpath = $handler->get_notebook_path();
 
@@ -79,11 +91,20 @@ try {
         "exp" => time() + 15
     ], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
 
-    echo $OUTPUT->render_from_template('mod_jupyter/manage', [
-        'login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt,
-        'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
-        'description' => get_string('resetbuttoninfo', 'jupyter')
-    ]);
+    if ($gitreachable) {
+        echo $OUTPUT->render_from_template('mod_jupyter/manage', [
+            'login' => $jupyterhuburl . \mod_jupyter\git_generator::gen_gitpath($repo, $file, $branch) . "&auth_token=" . $jwt,
+            'name' => $name,
+            'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
+            'description' => get_string('resetbuttoninfo', 'jupyter')
+        ]);
+    } else {
+        echo $OUTPUT->render_from_template('mod_jupyter/manage', [
+            'login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt,
+            'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
+            'description' => get_string('resetbuttoninfo', 'jupyter')
+        ]);
+    }
 } catch (RequestException $e) {
     if ($e->hasResponse()) {
         notification::error("{$e->getResponse()->getBody()->getContents()}");

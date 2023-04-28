@@ -37,7 +37,9 @@ $string['repourl'] = 'Git Repository URL';
 $string['branch'] = 'Branch';
 $string['file'] = 'Notebook file to open';
 $string['package'] = 'Notebook file to open';
-$string['package_help'] = 'Add the notbook file that will be displayed in the activity here.';
+$string['package_help'] = 'Add the notebook file that will be displayed in the activity here.';
+$string['package_radio'] = 'File upload';
+$string['git_radio'] = 'Git Repository';
 
 $string['jupyter:addinstance'] = 'Add a new Jupyter Notebook activity';
 $string['jupyter:view'] = 'View a Jupyter Notebook activity';

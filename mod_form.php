@@ -49,8 +49,11 @@ class mod_jupyter_mod_form extends moodleform_mod {
         // Adding the standard "name" field.
         $mform->addElement('text', 'name', get_string('jupytername', 'mod_jupyter'), array('size' => '64'));
 
-        //
-        $mform->addElement('selectyesno', 'toggle_input', get_string('test', 'mod_jupyter'));
+        // Adding the radio button for switching between the filemanager and the git reository.
+        $radioarray = array();
+        $radioarray[] = $mform->createElement('radio', 'toggle_input', '', get_string('package_radio', 'mod_jupyter'), 0, '');
+        $radioarray[] = $mform->createElement('radio', 'toggle_input', '', get_string('git_radio', 'mod_jupyter'), 1, '');
+        $mform->addGroup($radioarray, 'radioar', '', array(' '), false);
 
         // Adding file manager for jupyter notebook file.
         $mform->addElement('filemanager', 'packagefile', get_string('package', 'mod_jupyter'), null, [
@@ -60,7 +63,6 @@ class mod_jupyter_mod_form extends moodleform_mod {
             'subdirs' => 0,
         ]);
         $mform->addHelpButton('packagefile', 'package', 'mod_jupyter');
-        $mform->addRule('packagefile', null, 'required');
 
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
@@ -78,11 +80,23 @@ class mod_jupyter_mod_form extends moodleform_mod {
         $mform->addElement('text', 'branch', get_string('branch', 'mod_jupyter'), array('size' => '64'));
         $mform->addElement('text', 'file', get_string('file', 'mod_jupyter'), array('size' => '64'));
 
-        // Adding the script for toggling between file manager and text input elements.
-        $mform->hideIf('repourl', 'toggle_input', 'eq', 1);
-        $mform->hideIf('branch', 'toggle_input', 'eq', 1);
-        $mform->hideIf('file', 'toggle_input', 'eq', 1);
-        $mform->hideIf('packagefile', 'toggle_input', 'eq', 0);
+        // Setting rules for the git input fields.
+        $urlregex = "/(^(https?:\/\/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\:?([0-9]{1,5})?$)"
+            . "|(^((https?:\/\/)|^(www\.))"
+            . "([a-zA-Z0-9\?\/\+\*\~\=\-\#\@\!\&\%\_\.]+\.[a-z]{2,4})(\/[a-zA-Z0-9\?\/\+\*\~\=\-\#\@\!\&\%\_]*)*$)/";
+
+        $mform->addRule('repourl', "Must be a valid git URL", 'regex', $urlregex, 'client');
+        $mform->addRule('repourl', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+
+        $mform->addRule('branch', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+
+        $mform->addRule('file', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+
+         // Adding the script for toggling between file manager and text input elements.
+        $mform->hideIf('repourl', 'toggle_input', 'eq', 0);
+        $mform->hideIf('branch', 'toggle_input', 'eq', 0);
+        $mform->hideIf('file', 'toggle_input', 'eq', 0);
+        $mform->hideIf('packagefile', 'toggle_input', 'eq', 1);
 
         // Adding the standard "intro" and "introformat" fields.
         $this->standard_intro_elements();
@@ -101,10 +115,12 @@ class mod_jupyter_mod_form extends moodleform_mod {
      * @return void
      */
     public function data_preprocessing(&$defaultvalues) {
+
         // Load existing notebook file into file manager draft area.
         $draftitemid = file_get_submitted_draft_itemid('packagefiele');
         file_prepare_draft_area($draftitemid, $this->context->id, 'mod_jupyter',
             'package', 0, ['subdirs' => 0, 'maxfiles' => 1]);
         $defaultvalues['packagefile'] = $draftitemid;
+
     }
 }
