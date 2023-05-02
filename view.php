@@ -80,11 +80,11 @@ $gitfilelink = \mod_jupyter\git_generator::gen_gitfilelink($repo, $file, $branch
 // Check if the "repourl" field in the mod_form is empty.
 if ($repo == "") {
     $gitreachable = false;
+} else {
+    $gitreachable = \mod_jupyter\availability_checker::check_url($gitfilelink)[0] === 200;
 }
 
 try {
-    $notebookpath = $handler->get_notebook_path();
-
     $jwt = JWT::encode([
         "name" => $user,
         "iat" => time(),
@@ -99,6 +99,8 @@ try {
             'description' => get_string('resetbuttoninfo', 'jupyter')
         ]);
     } else {
+        $notebookpath = $handler->get_notebook_path();
+
         echo $OUTPUT->render_from_template('mod_jupyter/manage', [
             'login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt,
             'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
