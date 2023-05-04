@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-/**
- * Jupyter web service class for submitting a notebook for autograding.
- *
- * @package     mod_jupyter
- * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_jupyter\external;
 
 use external_function_parameters;
@@ -29,6 +21,14 @@ use external_multiple_structure;
 use external_single_structure;
 use external_value;
 
+
+/**
+ * Jupyter web service class for submitting a notebook for autograding.
+ *
+ * @package     mod_jupyter
+ * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class submit_notebook extends \external_api {
 
     /**
