@@ -74,7 +74,7 @@ class jupyterhub_handler_test extends \advanced_testcase {
 
         set_config('jupyterhub_url', 'http://127.0.0.1:8000', 'mod_jupyter');
         $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
-        $this->assertEquals($jupyterhuburl, 'http://127.0.0.1:8000');
+        $this->assertEquals('http://127.0.0.1:8000', $jupyterhuburl);
 
         $user = mb_strtolower($USER->username, "UTF-8");
         $handler = new jupyterhub_handler($user, $SITE->id);
@@ -97,7 +97,7 @@ class jupyterhub_handler_test extends \advanced_testcase {
 
         // Check if $notebookpath is correct.
         $notebookpath = $handler->get_notebook_path();
-        $this->assertEquals($notebookpath, '/hub/user-redirect/lab/tree/work/testfile1.ipynb');
+        $this->assertEquals('/hub/user-redirect/lab/tree/work/testfile1.ipynb', $notebookpath);
     }
 
     /**
@@ -141,7 +141,7 @@ class jupyterhub_handler_test extends \advanced_testcase {
         // Url setting is empty by default.
         set_config('jupyterhub_url', 'http://127.0.0.1:8000', 'mod_jupyter');
         $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
-        $this->assertEquals($jupyterhuburl, 'http://127.0.0.1:8000');
+        $this->assertEquals('http://127.0.0.1:8000', $jupyterhuburl);
         $user = mb_strtolower($USER->username, "UTF-8");
 
         // Url is implicitly used in guzzle client constructor.
