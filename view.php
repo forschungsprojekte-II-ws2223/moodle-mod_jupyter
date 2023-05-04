@@ -61,8 +61,14 @@ $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
+$PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init');
+
 // User interface.
 $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
+
+// Mark as done after user views the course.
+$completion = new completion_info($course);
+$completion->set_module_viewed($cm);
 
 echo $OUTPUT->header();
 
@@ -93,10 +99,6 @@ try {
 } catch (ConnectException $e) {
     error_handler::show_error_message();
 }
-
-// Mark as done after user views the course.
-$completion = new completion_info($course);
-$completion->set_module_viewed($cm);
 
 echo $OUTPUT->footer();
 
