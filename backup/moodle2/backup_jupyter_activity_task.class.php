@@ -15,44 +15,43 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Backup task that provides all the settings and steps to perform one complete backup of the activity.
+ * The task that provides all the steps to perform a complete backup is defined here.
  *
- * @package   mod_jupyter
- * @copyright KIB3 StuPro SS2022 Development Team of the University of Stuttgart
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_jupyter
+ * @category    backup
+ * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/jupyter/backup/moodle2/backup_jupyter_stepslib.php');
-require_once($CFG->dirroot . '/mod/jupyter/backup/moodle2/backup_jupyter_settingslib.php');
 
 /**
- * Class that sets all steps to backup the activity.
+ * The class provides all the settings and steps to perform one complete backup of mod_jupyter.
  */
 class backup_jupyter_activity_task extends backup_activity_task {
 
     /**
-     * Definition of particular settings this activity can have.
+     * Defines particular settings for the plugin.
      */
     protected function define_my_settings() {
-        // No particular settings for this activity.
+        return;
     }
 
     /**
-     * Definition of particular steps this activity can have.
+     * Defines particular steps for the backup process.
      */
     protected function define_my_steps() {
         $this->add_step(new backup_jupyter_activity_structure_step('jupyter_structure', 'jupyter.xml'));
     }
 
     /**
-     * Transformations to perform in the activity in order to get transportable (encoded) links.
+     * Codes the transformations to perform in the activity in order to get transportable (encoded) links.
      *
-     * @param object $content
-     *
-     * @return array|string|string[]|null
+     * @param string $content content to encode.
+     * @return string encoded string
      */
     public static function encode_content_links($content) {
         global $CFG;

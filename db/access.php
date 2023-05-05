@@ -57,4 +57,13 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ],
     ],
+    // Can manage files in the jupyter plugin.
+    'mod/jupyter:managefiles' => [
+        'riskbitmask' => RISK_SPAM | RISK_XSS,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'editingteacher' => CAP_ALLOW
+        ]
+    ]
 ];

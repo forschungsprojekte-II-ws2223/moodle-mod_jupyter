@@ -70,6 +70,15 @@ class jupyterhub_handler {
     }
 
     /**
+     * Sets the private $client variable.
+     *
+     * @param Client $client guzzle http client
+     */
+    public function set_client($client) {
+        $this->client = $client;
+    }
+
+    /**
      * Returns the url to users notebook and notebook file.
      *
      * @return string
@@ -155,7 +164,7 @@ class jupyterhub_handler {
         $file = reset($files);
         $filename = $file->get_filename();
 
-        $route = "/user/{$this->user}/api/contents/work/{$filename}";
+        $route = "/user/{$this->user}/api/contents/{$filename}";
 
         // Check if file is already there.
         try {
@@ -172,6 +181,6 @@ class jupyterhub_handler {
             }
         }
 
-        return "/hub/user-redirect/lab/tree/work/{$filename}";
+        return "/hub/user-redirect/lab/tree/{$filename}";
     }
 }

@@ -37,9 +37,12 @@ $string['repourl'] = 'Git Repository URL';
 $string['branch'] = 'Branch';
 $string['file'] = 'Notebook file to open';
 $string['package'] = 'Notebook file to open';
+
 $string['package_help'] = 'Add the notebook file that will be displayed in the activity here.';
 $string['package_radio'] = 'File upload';
 $string['git_radio'] = 'Git Repository';
+$string['package_help'] = 'Add the notbook file that will be displayed in the activity here.';
+$string['areapackage'] = 'Notebook file';
 
 $string['jupyter:addinstance'] = 'Add a new Jupyter Notebook activity';
 $string['jupyter:view'] = 'View a Jupyter Notebook activity';
@@ -68,4 +71,3 @@ $string['jupyterhub_jwt_secret_desc'] = 'Add the JWT secret of your JupyterHub h
 // JupyterHub API Token.
 $string['jupyterhub_api_token'] = 'Jupyterhub API Token';
 $string['jupyterhub_api_token_desc'] = 'Add the API token of your JupyterHub here. <br><strong>Make sure your JupyterHub is using a secure 256-bit token!!!</strong>';
-

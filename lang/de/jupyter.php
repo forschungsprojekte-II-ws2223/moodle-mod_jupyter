@@ -37,9 +37,12 @@ $string['repourl'] = 'Git Repository URL';
 $string['branch'] = 'Branch';
 $string['file'] = 'Zu öffnende Notebook-Datei';
 $string['package'] = 'Notebook-Datei';
+
 $string['package_help'] = 'Laden sie hier die Notebook Datei für die Aktivität hoch.';
 $string['package_radio'] = 'Datei hochladen';
 $string['git_radio'] = 'Git Repository';
+$string['package_help'] = 'Laden sie hier die Notebook-Datei für die Aktivität hoch.';
+$string['areapackage'] = 'Notebook-Datei';
 
 $string['jupyter:addinstance'] = 'Eine neue Jupyter-Aktivität hinzufügen';
 
