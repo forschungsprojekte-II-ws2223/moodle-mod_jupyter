@@ -77,7 +77,7 @@ $file = urlencode(trim($moduleinstance->file));
 $name = $moduleinstance->name;
 $gitfilelink = \mod_jupyter\git_generator::gen_gitfilelink($repo, $file, $branch);
 
-// Check if the "repourl" field in the mod_form is empty.
+// Check if the "repourl" field in the mod_form is empty, otherwise check if repo is rachable.
 if ($repo == "") {
     $gitreachable = false;
 } else {

@@ -87,12 +87,10 @@ class mod_jupyter_mod_form extends moodleform_mod {
 
         $mform->addRule('repourl', "Must be a valid git URL", 'regex', $urlregex, 'client');
         $mform->addRule('repourl', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
-
         $mform->addRule('branch', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
-
         $mform->addRule('file', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-         // Adding the script for toggling between file manager and text input elements.
+        // Adding the script for toggling between file manager and text input elements.
         $mform->hideIf('repourl', 'toggle_input', 'eq', 0);
         $mform->hideIf('branch', 'toggle_input', 'eq', 0);
         $mform->hideIf('file', 'toggle_input', 'eq', 0);
