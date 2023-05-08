@@ -16,6 +16,7 @@
 
 namespace mod_jupyter\external;
 
+use mod_jupyter\jupyterhub_handler;
 use external_function_parameters;
 use external_multiple_structure;
 use external_single_structure;
@@ -30,31 +31,34 @@ use external_value;
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class submit_notebook extends \external_api {
-
     /**
      * Returns description of method parameters.
      * @return external_function_parameters
      */
     public static function execute_parameters() {
         return new external_function_parameters([
+            'user' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'unique user id'),
+            'contextid' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'module context id'),
         ]);
     }
 
     /**
      * Does stuff
      */
-    public static function execute() {
-        $response = [];
-        $response['result'] = true;
-        return $response;
+    public static function execute($user, $contextid) {
+        $handler = new jupyterhub_handler($user, $contextid);
+        $response = $handler->get_notebook();
+        $name = $response;
+        // echo $response;
+        // TODO Send notebookfile to autograder.
+        return $name;
     }
 
     /**
      * Returns description of return values.
-     * @return external_function_parameters
+     * @return external_single_structure
      */
     public static function execute_returns() {
-        return new external_value(
-        );
+        return new external_value(PARAM_TEXT, 'group enrol secret phrase');
     }
 }

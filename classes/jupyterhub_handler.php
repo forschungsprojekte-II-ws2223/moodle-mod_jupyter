@@ -183,4 +183,30 @@ class jupyterhub_handler {
 
         return "/hub/user-redirect/lab/tree/{$filename}";
     }
+
+    public function get_notebook() {
+        $fs = get_file_storage();
+        $files = $fs->get_area_files($this->contextid, 'mod_jupyter', 'package', 0, 'id', false);
+        $file = reset($files);
+        $filename = $file->get_filename();
+        $route = "/user/{$this->user}/api/contents/{$filename}";
+
+        try {
+            $response = $this->client->get($route, ['query' => ['type' => 'file', 'format' => 'base64', 'content' => '1']]);
+        } catch (ConnectException $e) {
+            $this->client = new Client([
+                'base_uri' => str_replace(
+                    '127.0.0.1',
+                    'host.docker.internal',
+                    get_config('mod_jupyter', 'jupyterhub_url')), // TODO: Check if moodle is actually running in docker!
+                'headers' => [
+                  'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
+                ]
+                  ]);
+                  $response = $this->client->get($route, ['query' => ['type' => 'file', 'format' => 'base64', 'content' => '1']]);
+        }
+
+        return $response->getBody();
+
+    }
 }

@@ -6,17 +6,17 @@ const Selectors = {
     },
 };
 
-export const init = () => {
+export const init = async ({ user, contextid }) => {
     document.addEventListener('click', e => {
         if (e.target.closest(Selectors.actions.showAlertButton)) {
             window.alert("Thank you for clicking on the button");
-            callSubmitNotebook();
+            callSubmitNotebook(user, contextid);
         }
     });
 };
 
-const callSubmitNotebook = async () => {
-    const response = await submitNotebook();
+const callSubmitNotebook = async (user, contextid) => {
+    const response = await submitNotebook(user, contextid);
     window.console.log(response);
 
 };

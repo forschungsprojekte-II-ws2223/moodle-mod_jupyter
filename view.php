@@ -61,8 +61,6 @@ $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
-$PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init');
-
 // User interface.
 $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
 
@@ -73,6 +71,8 @@ $completion->set_module_viewed($cm);
 echo $OUTPUT->header();
 
 $user = mb_strtolower($USER->username, "UTF-8"); // Create id with the user's unique username from Moodle.
+
+$PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init', [['user' => $user, 'contextid' => $modulecontext->id]]);
 
 $handler = new jupyterhub_handler($user, $modulecontext->id);
 
