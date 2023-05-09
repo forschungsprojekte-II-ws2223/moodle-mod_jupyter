@@ -184,6 +184,10 @@ class jupyterhub_handler {
         return "/hub/user-redirect/lab/tree/{$filename}";
     }
 
+    /**
+     * Get notebook file from user notebook server.
+     * @return
+     */
     public function get_notebook() {
         $fs = get_file_storage();
         $files = $fs->get_area_files($this->contextid, 'mod_jupyter', 'package', 0, 'id', false);

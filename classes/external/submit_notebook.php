@@ -43,22 +43,20 @@ class submit_notebook extends \external_api {
     }
 
     /**
-     * Does stuff
+     * Get notebookfile from notebook server and send it to autograding.
      */
     public static function execute($user, $contextid) {
         $handler = new jupyterhub_handler($user, $contextid);
         $response = $handler->get_notebook();
-        $name = $response;
-        // echo $response;
         // TODO Send notebookfile to autograder.
-        return $name;
+        return 'test';
     }
 
     /**
      * Returns description of return values.
-     * @return external_single_structure
+     * @return external_value
      */
     public static function execute_returns() {
-        return new external_value(PARAM_TEXT, 'group enrol secret phrase');
+        return new external_value(PARAM_TEXT, VALUE_REQUIRED, 'test value');
     }
 }
