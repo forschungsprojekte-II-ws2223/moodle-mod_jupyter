@@ -24,23 +24,18 @@ along with Moodle. If not, see
             <p id="description">
                 {{{description}}}
             </p>
-            <button id="iframe-reset-button" onclick="resetIFrame()">
+            <button id="iframe-reset-button" data-action="mod_jupyter/reset-notebook_button">
                 {{resetbuttontext}}
                 <img id="reset-icon" src="images/reset_icon.png" alt="reset icon">
             </button>
         </div>
         <div>
-            <button data-action="mod_jupyter/submit-notebook_button" class="btn btn-primary">Submit notebook</button>
+            <p>{{{submitbuttoninfo}}}</p>
+            <button data-action="mod_jupyter/submit-notebook_button"
+                class="btn btn-primary">{{submitbuttontext}}</button>
         </div>
     </div>
 </body>
-
-<script>
-    function resetIFrame() {
-        // note that most other implementations do not work with Chrome
-        document.getElementById('iframe').src += '';
-    }
-</script>
 
 <style>
     iframe {
