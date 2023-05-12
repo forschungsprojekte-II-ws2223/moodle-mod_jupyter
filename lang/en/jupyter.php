@@ -53,6 +53,9 @@ $string['instancesettingserror'] = '<strong>Cause:</strong> The provided Git Rep
 $string['resetbuttontext'] = 'Reset';
 $string['resetbuttoninfo'] = 'To get the original Notebook without losing progress, you can save your changes to a different file by clicking on <b>"File"</b> in the top left corner and then select <b>"Save Notebook As..."</b>. Afterwards,you need to <b>delete</b> the original file and click the <b>"Reset"</b> button.';
 
+$string['submitbuttontext'] = 'Submit notebook';
+$string['submitbuttoninfo'] = 'Submit the notebook for grading. The currently saved state will be submitted. The submission can always be changed using the same button, prior to the deadline, replacing the old submission.';
+
 // Admin plugin settings.
 // General.
 $string['generalconfig'] = 'General settings';

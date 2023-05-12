@@ -105,14 +105,14 @@ class jupyterhub_handler {
             }
         } catch (ConnectException $e) {
             $this->client = new Client([
-                'base_uri' => str_replace(
-                    '127.0.0.1',
-                    'host.docker.internal',
-                    get_config('mod_jupyter', 'jupyterhub_url')), // TODO: Check if moodle is actually running in docker!
-                'headers' => [
-                  'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
-                ]
-                  ]);
+            'base_uri' => str_replace(
+                '127.0.0.1',
+                'host.docker.internal',
+                get_config('mod_jupyter', 'jupyterhub_url')), // TODO: Check if moodle is actually running in docker!
+            'headers' => [
+              'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
+            ]
+              ]);
         }
     }
 
@@ -185,8 +185,10 @@ class jupyterhub_handler {
     }
 
     /**
-     * Get notebook file from user notebook server.
-     * @return
+     * Get notebook file from users notebook server.
+     *
+     * @throws ConnectException
+     * @return string return base64 encoded notebook.
      */
     public function get_notebook() {
         $fs = get_file_storage();
@@ -199,18 +201,78 @@ class jupyterhub_handler {
             $response = $this->client->get($route, ['query' => ['type' => 'file', 'format' => 'base64', 'content' => '1']]);
         } catch (ConnectException $e) {
             $this->client = new Client([
-                'base_uri' => str_replace(
-                    '127.0.0.1',
-                    'host.docker.internal',
-                    get_config('mod_jupyter', 'jupyterhub_url')), // TODO: Check if moodle is actually running in docker!
-                'headers' => [
-                  'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
-                ]
-                  ]);
-                  $response = $this->client->get($route, ['query' => ['type' => 'file', 'format' => 'base64', 'content' => '1']]);
+            'base_uri' => str_replace(
+                '127.0.0.1',
+                'host.docker.internal',
+                get_config('mod_jupyter', 'jupyterhub_url')), // TODO: Check if moodle is actually running in docker!
+            'headers' => [
+              'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
+            ]
+              ]);
+              $response = $this->client->get($route, ['query' => ['type' => 'file', 'format' => 'base64', 'content' => '1']]);
         }
+        $jsonresponsebody = json_decode($response->getBody());
+        return $jsonresponsebody->content;
+    }
 
-        return $response->getBody();
 
+    /**
+     * Reset notebook server by reuploading default notebookfile.
+     *
+     * @return string returns a link to the notebook file
+     * @throws RequestException
+     * @throws ConnectException
+     */
+    public function reset_notebook() {
+        $fs = get_file_storage();
+        $files = $fs->get_area_files($this->contextid, 'mod_jupyter', 'package', 0, 'id', false);
+        $file = reset($files);
+        $filename = $file->get_filename();
+
+        $route = "/user/{$this->user}/api/contents/{$filename}";
+
+        $this->client = new Client([
+            'base_uri' => str_replace(
+                '127.0.0.1',
+                'host.docker.internal',
+                get_config('mod_jupyter', 'jupyterhub_url')), // TODO: Check if moodle is actually running in docker!
+            'headers' => [
+              'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
+            ]
+              ]);
+
+        try {
+            $response = $this->client->get($route, ['query' => ['content' => '0']]);
+            if ($response->getStatusCode() == 200) {
+                $this->client->patch($route, ['json' => ['path' => '/'. date("Y-m-d-H-i-s", time()) . '_' . $filename]]);
+                $this->client->put($route, ['json' => [
+                    'type' => 'file',
+                    'format' => 'base64',
+                    'content' => base64_encode($file->get_content()),
+                    ]]);
+            }
+        } catch (RequestException $e) {
+            if ($e->hasResponse() && $e->getCode() == 404) {
+                $this->client->put($route, ['json' => [
+                'type' => 'file',
+                'format' => 'base64',
+                'content' => base64_encode($file->get_content()),
+                ]]);
+            } else {
+                throw $e;
+            }
+        }
+    }
+
+
+    /**
+     * Check if moodle runs in docker container/.dockerenv is present
+     *
+     * @return string returns a link to the notebook file
+     * @throws RequestException
+     * @throws ConnectException
+     */
+    private function running_in_container() {
+        return file_exists(dirname(__DIR__, 5) . '/.dockerenv');
     }
 }

@@ -49,6 +49,8 @@ $string['instancesettingserror'] = '<strong>Ursache:</strong> Die angegebene Git
 
 $string['resetbuttontext'] = 'Zurücksetzen';
 $string['resetbuttoninfo'] = 'Um das Notebook in den ursprünglichen Zustand zurückzusetzen, ohne den Fortschritt zu verlieren, können Sie Ihre Änderungen in einer anderen Datei speichern, indem Sie auf <b>"File"</b> in der oberen linken Ecke klicken und <b>"Notebook speichern als..."</b> auswählen. Danach muss das bisherige Notebook gelöscht werden und dann der <b>"Zurücksetzen"</b> Button geklickt werden';
+$string['submitbuttontext'] = 'Notebook abgeben';
+$string['submitbuttoninfo'] = 'Geben Sie das Notebook ab um eine Korrektur zu erhalten. Es wird immer der aktuell gespeicherte Stand des Notebooks abgegeben. Die Abgabe kann jederzeit vor Ablauf der Zeit über den selben Button geändert werden, wodurch die alte Abgabe ersetzt wird.';
 
 // Admin plugin settings.
 // General.

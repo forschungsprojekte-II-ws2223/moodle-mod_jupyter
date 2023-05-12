@@ -10,3 +10,11 @@ export const submitNotebook = (user, contextid) => fetchMany([{
         contextid
     },
 }])[0];
+
+export const resetNotebook = (user, contextid) => fetchMany([{
+    methodname: 'mod_jupyter_reset_notebook',
+    args: {
+        user,
+        contextid
+    },
+}])[0];

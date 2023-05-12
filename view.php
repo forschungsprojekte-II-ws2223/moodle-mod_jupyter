@@ -73,6 +73,7 @@ echo $OUTPUT->header();
 $user = mb_strtolower($USER->username, "UTF-8"); // Create id with the user's unique username from Moodle.
 
 $PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init', [['user' => $user, 'contextid' => $modulecontext->id]]);
+$PAGE->requires->js_call_amd('mod_jupyter/reset_notebook', 'init', [['user' => $user, 'contextid' => $modulecontext->id]]);
 
 $handler = new jupyterhub_handler($user, $modulecontext->id);
 
@@ -88,7 +89,9 @@ try {
     echo $OUTPUT->render_from_template('mod_jupyter/manage', [
         'login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt,
         'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
-        'description' => get_string('resetbuttoninfo', 'jupyter')
+        'description' => get_string('resetbuttoninfo', 'jupyter'),
+        'submitbuttontext' => get_string('submitbuttontext', 'jupyter'),
+        'submitbuttoninfo' => get_string('submitbuttoninfo', 'jupyter')
     ]);
 } catch (RequestException $e) {
     if ($e->hasResponse()) {
