@@ -44,6 +44,10 @@ class reset_notebook extends \external_api {
 
     /**
      * Rename any naming collisions and reupload the default notebook.
+     *
+     * @param $user unique user id
+     * @param $contextid contextid of activity instance
+     * @return string
      */
     public static function execute($user, $contextid) {
         $handler = new jupyterhub_handler($user, $contextid);
