@@ -58,8 +58,16 @@ class jupyterhub_handler {
      * @param int $contextid
      */
     public function __construct(string $user, int $contextid) {
+        $baseuri = get_config('mod_jupyter', 'jupyterhub_url');
+
+        // If moodle is running in a docker container we have to replace '127.0.0.1' and 'localhost' with 'host.docker.internal'.
+        // This is only relevant for local testing.
+        if (getenv('IS_CONTAINER') == 'yes') {
+            $baseuri = str_replace(['127.0.0.1', 'localhost'], 'host.docker.internal', $baseuri);
+        }
+
         $this->client = new Client([
-        'base_uri' => get_config('mod_jupyter', 'jupyterhub_url'), // TODO: Check if moodle is actually running in docker!
+        'base_uri' => $baseuri,
         'headers' => [
           'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
         ]
@@ -86,34 +94,9 @@ class jupyterhub_handler {
      * @throws RequestException
      */
     public function get_notebook_path() : string {
-        $this->check_jupyterhub_reachable();
         $this->check_user_status();
 
         return $this->check_notebook_status();
-    }
-
-    /**
-     * Check if jupyterhub is reachable
-     *
-     */
-    private function check_jupyterhub_reachable() {
-        try {
-            $res = $this->client->get("/");
-        } catch (RequestException $e) {
-            if (!($e->hasResponse() && $e->getCode() == 401)) {
-                throw $e;
-            }
-        } catch (ConnectException $e) {
-            $this->client = new Client([
-                'base_uri' => str_replace(
-                    '127.0.0.1',
-                    'host.docker.internal',
-                    get_config('mod_jupyter', 'jupyterhub_url')), // TODO: Check if moodle is actually running in docker!
-                'headers' => [
-                  'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
-                ]
-                  ]);
-        }
     }
 
     /**

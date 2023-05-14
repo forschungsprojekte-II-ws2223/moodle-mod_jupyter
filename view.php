@@ -73,18 +73,6 @@ $handler = new jupyterhub_handler($user, $modulecontext->id);
 $ghandler = new gradeservice_handler();
 
 try {
-    $ghandler->create_assignment($course->id, $modulecontext->id);
-} catch (RequestException $e) {
-    if ($e->hasResponse()) {
-        notification::error("{$e->getResponse()->getBody()->getContents()}");
-    } else {
-        notification::error("{$e->getCode()}: {$e->getMessage()}");
-    }
-} catch (ConnectException $e) {
-    notification::error("{$e->getCode()}: {$e->getMessage()}");
-}
-
-try {
     $notebookpath = $handler->get_notebook_path();
 
     $jwt = JWT::encode([
