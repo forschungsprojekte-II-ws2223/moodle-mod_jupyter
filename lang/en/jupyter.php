@@ -63,7 +63,7 @@ $string['jupyterhub_url'] = 'JupyterHub URL';
 $string['jupyterhub_url_desc'] = 'Add the URL of your JupyterHub here.<br>Must be a valid URL (e.g. https://yourjupyterhub.com).';
 // Gradeservice URL.
 $string['gradeservice_url'] = 'Gradeservice URL';
-$string['gradeservice_desc'] = 'Add the URL of your JupyterHub here.';
+$string['gradeservice_url_desc'] = 'Add the URL of your JupyterHub here.';
 // Jupyterhub JWT Token.
 $string['jupyterhub_jwt_secret'] = 'Jupyterhub JWT Secret';
 $string['jupyterhub_jwt_secret_desc'] = 'Add the JWT secret of your JupyterHub here.<br><strong>Make sure your JupyterHub is using a secure 256-bit secret!!!</strong>';
