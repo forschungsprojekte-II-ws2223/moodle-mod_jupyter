@@ -29,9 +29,7 @@ require($CFG->dirroot . '/mod/jupyter/vendor/autoload.php');
 
 use coding_exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Handles interaction with gradeservice api.
@@ -47,8 +45,16 @@ class gradeservice_handler {
      * Constructor
      */
     public function __construct() {
+        $baseuri = get_config('mod_jupyter', 'gradeservice_url');
+
+        // If moodle is running in a docker container we have to replace '127.0.0.1' and 'localhost' with 'host.docker.internal'.
+        // This is only relevant for local testing.
+        if (getenv('IS_CONTAINER') == 'yes') {
+            $baseuri = str_replace(['127.0.0.1', 'localhost'], 'host.docker.internal', $baseuri);
+        }
+
         $this->client = new Client([
-            'base_uri' => get_config('mod_jupyter', 'gradeservice_url'),
+            'base_uri' => $baseuri,
             // TODO: auth.
         ]);
     }
@@ -66,6 +72,7 @@ class gradeservice_handler {
         $fs = get_file_storage();
         $files = $fs->get_area_files($contextid, 'mod_jupyter', 'package', 0, 'id', false);
         $file = reset($files);
+        $filename = $file->get_filename();
 
         $route = "/{$courseid}/{$contextid}";
 
@@ -74,6 +81,7 @@ class gradeservice_handler {
                 [
                     'name' => 'file',
                     'contents' => $file->get_content(),
+                    'filename' => $filename,
                 ]
             ]
         ]);

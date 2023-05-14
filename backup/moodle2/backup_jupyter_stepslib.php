@@ -40,7 +40,6 @@ class backup_jupyter_activity_structure_step extends backup_activity_structure_s
         $attributes = ['id'];
         $finalelements = [
             'name', 'timecreated', 'timemodified', 'intro', 'introformat',
-            'repourl', 'branch', 'file'
         ];
         $root = new backup_nested_element('jupyter', $attributes, $finalelements);
 
