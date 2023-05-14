@@ -32,6 +32,7 @@ use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use mod_jupyter\error_handler;
 use mod_jupyter\jupyterhub_handler;
+use mod_jupyter\gradeservice_handler;
 
 // Moodle specific config.
 global $DB, $PAGE, $USER, $OUTPUT;
@@ -69,6 +70,19 @@ echo $OUTPUT->header();
 $user = mb_strtolower($USER->username, "UTF-8"); // Create id with the user's unique username from Moodle.
 
 $handler = new jupyterhub_handler($user, $modulecontext->id);
+$ghandler = new gradeservice_handler();
+
+try {
+    $ghandler->create_assignment($course->id, $modulecontext->id);
+} catch (RequestException $e) {
+    if ($e->hasResponse()) {
+        notification::error("{$e->getResponse()->getBody()->getContents()}");
+    } else {
+        notification::error("{$e->getCode()}: {$e->getMessage()}");
+    }
+} catch (ConnectException $e) {
+    notification::error("{$e->getCode()}: {$e->getMessage()}");
+}
 
 try {
     $notebookpath = $handler->get_notebook_path();
