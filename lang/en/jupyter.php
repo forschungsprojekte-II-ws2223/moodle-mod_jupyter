@@ -35,7 +35,6 @@ $string['jupytersettings'] = 'Standard settings';
 $string['jupyterfieldset'] = '';
 $string['package'] = 'Notebook file to open';
 $string['package_help'] = 'Add the notbook file that will be displayed in the activity here.';
-$string['areapackage'] = 'Notebook file';
 
 $string['jupyter:addinstance'] = 'Add a new Jupyter Notebook activity';
 $string['jupyter:view'] = 'View a Jupyter Notebook activity';

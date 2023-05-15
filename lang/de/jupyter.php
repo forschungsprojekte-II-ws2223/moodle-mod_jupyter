@@ -35,7 +35,6 @@ $string['jupytersettings'] = 'Standard Einstellungen';
 $string['jupyterfieldset'] = '';
 $string['package'] = 'Notebook-Datei';
 $string['package_help'] = 'Laden sie hier die Notebook-Datei für die Aktivität hoch.';
-$string['areapackage'] = 'Notebook-Datei';
 
 $string['jupyter:addinstance'] = 'Eine neue Jupyter-Aktivität hinzufügen';
 
