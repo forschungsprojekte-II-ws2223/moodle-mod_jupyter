@@ -24,7 +24,6 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
 $functions = [
     // The name of your web service function, as discussed above.
     'mod_jupyter_submit_notebook' => [
@@ -72,4 +71,30 @@ $functions = [
                 MOODLE_OFFICIAL_MOBILE_SERVICE,
             ]
         ],
+    ];
+
+$services = [
+    // The name of the service.
+    // This does not need to include the component name.
+    'JupyterHub' => [
+
+        // A list of external functions available in this service.
+        'functions' => [
+            'mod_jupyter_submit_notebook',
+            'mod_jupyter_reset_notebook',
+        ],
+
+        // If enabled, the Moodle administrator must link a user to this service from the Web UI.
+        'restrictedusers' => 0,
+
+        // Whether the service is enabled by default or not.
+        'enabled' => 1,
+
+        // Whether to allow file downloads.
+        'downloadfiles' => 0,
+
+        // Whether to allow file uploads.
+        'uploadfiles'  => 0,
+    ]
 ];
+
