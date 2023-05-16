@@ -10,7 +10,7 @@ export const init = async ({ user, contextid }) => {
     document.addEventListener('click', e => {
         if (e.target.closest(Selectors.actions.resetButton)) {
             callResetNotebook(user, contextid);
-            document.getElementById('iframe').src += '';
+            document.getElementById('iframe').src += '';//This is only for github supplied notebooks.
         }
     });
 };

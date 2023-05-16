@@ -19,21 +19,55 @@ along with Moodle. If not, see
 <body>
     <div align="center">
         <iframe id="iframe" src={{login}}></iframe>
+        <hr>
         <div id="description-wrapper">
             <div id="info">&#9432;</div>
             <p id="description">
-                {{{description}}}
+                {{#str}}resetmodalbody,mod_jupyter{{/str}}
             </p>
-            <button id="iframe-reset-button" data-action="mod_jupyter/reset-notebook_button">
-                {{resetbuttontext}}
-                <img id="reset-icon" src="images/reset_icon.png" alt="reset icon">
+            <button id="iframe-reset-button" data-toggle="modal" data-target="#resetModal">
+                {{#str}}resetbuttontext, mod_jupyter{{/str}}
+                <img id="reset-icon" src="pix/reset_icon.svg" alt="reset icon">
             </button>
         </div>
-        <div>
-            <p>{{{submitbuttoninfo}}}</p>
-            <button data-action="mod_jupyter/submit-notebook_button"
-                class="btn btn-primary">{{submitbuttontext}}</button>
+        <div class="card mb-2">
+            <div class="card-body">
+                <div class="d-flex">
+                    <button data-action="mod_jupyter/submit-notebook_button" class="btn btn-primary">
+                        {{#str}}submitbuttontext,
+                        mod_jupyter{{/str}}</button>
+                    <div class="modal fade" id="resetModal" tabindex="-1" role="dialog"
+                        aria-labelledby="resetModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="resetModalLabel">{{#str}}resetmodaltitle,
+                                        mod_jupyter{{/str}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    {{#str}}resetmodalbody,mod_jupyter{{/str}}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">{{#str}}resetmodalcancelbuttontext,mod_jupyter
+                                        {{/str}}</button>
+                                    <button type="button" class="btn btn-primary"
+                                        data-action="mod_jupyter/reset-notebook_button"
+                                        data-dismiss="modal">{{#str}}resetmodalresetbuttontext,
+                                        mod_jupyter{{/str}}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{#str}}submitbuttoninfo,
+                    mod_jupyter{{/str}}
+                </div>
+            </div>
         </div>
+        <hr data-element="mod_jupyter/submit-response">
     </div>
 </body>
 
@@ -99,11 +133,12 @@ along with Moodle. If not, see
         width: 1rem;
         height: 1rem;
         transition: all 0.4s ease-in-out;
+        fill: #ffffff;
     }
 
     #iframe-reset-button:hover #reset-icon,
     #iframe-reset-button:focus #reset-icon {
-        transform: rotate(360deg) scale(1.2);
+        transform: rotate(-360deg) scale(1.2);
     }
 
     #info {
