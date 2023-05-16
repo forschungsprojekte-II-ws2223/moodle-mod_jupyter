@@ -43,7 +43,6 @@ $string['jupyter:addinstance'] = 'Add a new Jupyter Notebook activity';
 $string['jupyter:view'] = 'View a Jupyter Notebook activity';
 $string['jupyter:viewerrordetails'] = 'View extended information on errors occurring in the Jupyter Notebook activity';
 
-
 $string['errorheading'] = '<strong>Error</strong><br>Sorry, your Jupyter Notebook (<i>"{$a->instancename}"</i>) could not be loaded due to a connection issue.';
 
 $string['adminsettingserror'] = '<strong>Cause:</strong> The provided URL (<i>"{$a->url}"</i>) is not available or does not lead to a JupyterHub.<br>Check the <i>Admin Settings</i> and make sure the URL matches the URL of your JupyterHub.';
@@ -51,10 +50,15 @@ $string['adminsettingserror'] = '<strong>Cause:</strong> The provided URL (<i>"{
 $string['instancesettingserror'] = '<strong>Cause:</strong> The provided Git Repository URL (<i>"{$a->url}"</i>) is not available or does not lead to a Jupyter Notebook file.<br>Check the <i>Activity Settings</i>  and make sure <i>Git Repository URL</i>, <i>Branch</i> and <i>Notebook file to open</i> are set correctly.';
 
 $string['resetbuttontext'] = 'Reset';
+$string['resetmodalresetbuttontext'] = 'Reset';
+$string['resetmodalcancelbuttontext'] = 'Cancel';
+$string['resetmodaltitle'] = 'Do you want to reset?';
+$string['resetmodalbody'] = 'You will loose all progress in the current notebook! This option is best suited if you made changes, that broke the functionality of the notebook and you need to start over.';
 $string['resetbuttoninfo'] = 'To get the original Notebook without losing progress, you can save your changes to a different file by clicking on <b>"File"</b> in the top left corner and then select <b>"Save Notebook As..."</b>. Afterwards,you need to <b>delete</b> the original file and click the <b>"Reset"</b> button.';
 
 $string['submitbuttontext'] = 'Submit notebook';
 $string['submitbuttoninfo'] = 'Submit the notebook for grading. The currently saved state will be submitted. The submission can always be changed using the same button, prior to the deadline, replacing the old submission.';
+$string['submitsuccessnotification'] = 'Your notebook has been submitted';
 
 // Admin plugin settings.
 // General.

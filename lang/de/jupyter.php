@@ -39,7 +39,9 @@ $string['file'] = 'Zu öffnende Notebook-Datei';
 $string['package'] = 'Notebook-Datei';
 $string['package_help'] = 'Laden sie hier die Notebook Datei für die Aktivität hoch.';
 
-$string['jupyter:addinstance'] = 'Eine neue Jupyter-Aktivität hinzufügen';
+$string['jupyter:addinstance'] = 'Eine neue Jupyter-Aktivität hinzufüge.n';
+$string['jupyter:view'] = 'Jupyter Notebook anzeigen lassen.';
+$string['jupyter:viewerrordetails'] = 'Zusätzliche Details zu Fehlern im Jupyter Notebook anzeigen lassen.';
 
 $string['errorheading'] = '<strong>Error</strong><br>Entschuldiguen Sie, Ihr Jupyter Notebook (<i>"{$a->instancename}"</i>) konnte nicht geladen werden.<br>Bitte versuchen Sie, einen Administrator zu kontaktieren.';
 
@@ -48,9 +50,15 @@ $string['adminsettingserror'] = '<strong>Ursache:</strong> Die angegebene URL (<
 $string['instancesettingserror'] = '<strong>Ursache:</strong> Die angegebene Git Repository URL (<i>"{$a->url}"</i>) ist nicht verfügbar or führt nicht zu einer Jupyter-Notebook-Datei.<br>Prüfen Sie bitte die <i>Aktivitäts Einstellungen</i>  stellen Sie sicher, dass <i>Git Repository URL</i>, <i>Branch</i> und <i>Zu öffnende Notebook-Datei</i> korrekt eingetragen wurden.';
 
 $string['resetbuttontext'] = 'Zurücksetzen';
+$string['resetmodalresetbuttontext'] = 'Zurücksetzen';
+$string['resetmodalcancelbuttontext'] = 'Abbrechen';
+$string['resetmodaltitle'] = 'Wollen sie Zurücksetzen?';
+$string['resetmodalbody'] = 'Sämtlicher Fortschritt geht verloren! Diese Option ist dafür gedacht das Notebook wieder herzustellen, nachdem es durch Änderungen nicht mehr Funktionsfähig ist.';
 $string['resetbuttoninfo'] = 'Um das Notebook in den ursprünglichen Zustand zurückzusetzen, ohne den Fortschritt zu verlieren, können Sie Ihre Änderungen in einer anderen Datei speichern, indem Sie auf <b>"File"</b> in der oberen linken Ecke klicken und <b>"Notebook speichern als..."</b> auswählen. Danach muss das bisherige Notebook gelöscht werden und dann der <b>"Zurücksetzen"</b> Button geklickt werden';
+
 $string['submitbuttontext'] = 'Notebook abgeben';
 $string['submitbuttoninfo'] = 'Geben Sie das Notebook ab um eine Korrektur zu erhalten. Es wird immer der aktuell gespeicherte Stand des Notebooks abgegeben. Die Abgabe kann jederzeit vor Ablauf der Zeit über den selben Button geändert werden, wodurch die alte Abgabe ersetzt wird.';
+$string['submitsuccessnotification'] = 'Ihr Notebook wurde abgegeben.';
 
 // Admin plugin settings.
 // General.
