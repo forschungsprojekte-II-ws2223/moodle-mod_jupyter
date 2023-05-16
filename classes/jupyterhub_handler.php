@@ -143,7 +143,7 @@ class jupyterhub_handler {
      */
     private function check_notebook_status() : string {
         $fs = get_file_storage();
-        $files = $fs->get_area_files($this->contextid, 'mod_jupyter', 'package', 0, 'id', false);
+        $files = $fs->get_area_files($this->contextid, 'mod_jupyter', 'assignment', 0, 'id', false);
         $file = reset($files);
         $filename = $file->get_filename();
 

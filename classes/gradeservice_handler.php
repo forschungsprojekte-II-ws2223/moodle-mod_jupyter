@@ -64,19 +64,25 @@ class gradeservice_handler {
      *
      * @param int $courseid
      * @param int $contextid
+     * @param string $token
      * @return void
      * @throws coding_exception
      * @throws GuzzleException
      */
-    public function create_assignment(int $courseid, int $contextid) : void {
+    public function create_assignment(int $courseid, int $contextid, int $instanceid, string $token) : void {
+        global $DB;
+
         $fs = get_file_storage();
         $files = $fs->get_area_files($contextid, 'mod_jupyter', 'package', 0, 'id', false);
         $file = reset($files);
         $filename = $file->get_filename();
 
-        $route = "/{$courseid}/{$contextid}";
+        $route = "/{$courseid}/{$instanceid}";
 
-        $this->client->request("POST", $route, [
+        $res = $this->client->request("POST", $route, [
+            'headers' => [
+                'Authorization' => $token,
+            ],
             'multipart' => [
                 [
                     'name' => 'file',
@@ -85,5 +91,19 @@ class gradeservice_handler {
                 ]
             ]
         ]);
+
+        $file = base64_decode(json_decode($res->getBody(), true)[$filename]);
+
+        $fs->delete_area_files($contextid, 'mod_jupyter', 'assignment');
+        $fileinfo = array(
+            'contextid' => $contextid,
+            'component' => 'mod_jupyter',
+            'filearea' => 'assignment',
+            'itemid' => 0,
+            'filepath' => '/',
+            'filename' => $filename
+        );
+        $fs->create_file_from_string($fileinfo, $file);
+        $DB->set_field('jupyter', 'assignment', $filename, ['id' => $instanceid, 'course' => $courseid]);
     }
 }

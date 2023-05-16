@@ -72,8 +72,14 @@ $user = mb_strtolower($USER->username, "UTF-8"); // Create id with the user's un
 $handler = new jupyterhub_handler($user, $modulecontext->id);
 $ghandler = new gradeservice_handler();
 
+$jwt = JWT::encode([
+    "name" => $user,
+    "iat" => time(),
+    "exp" => time() + 15
+], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
+
 try {
-    $ghandler->create_assignment($course->id, $modulecontext->id);
+    $ghandler->create_assignment($course->id, $modulecontext->id, $moduleinstance->id, $jwt);
 } catch (RequestException $e) {
     notification::error("{$e->getCode()}: {$e->getMessage()}");
 } catch (ConnectException $e) {
@@ -82,12 +88,6 @@ try {
 
 try {
     $notebookpath = $handler->get_notebook_path();
-
-    $jwt = JWT::encode([
-        "name" => $user,
-        "iat" => time(),
-        "exp" => time() + 15
-    ], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
 
     echo $OUTPUT->render_from_template('mod_jupyter/manage', [
         'login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt,
