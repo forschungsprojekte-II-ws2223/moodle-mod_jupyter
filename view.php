@@ -87,11 +87,7 @@ try {
     ], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
 
     echo $OUTPUT->render_from_template('mod_jupyter/manage', [
-        'login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt,
-        'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
-        'description' => get_string('resetbuttoninfo', 'jupyter'),
-        'submitbuttontext' => get_string('submitbuttontext', 'jupyter'),
-        'submitbuttoninfo' => get_string('submitbuttoninfo', 'jupyter')
+        'login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt
     ]);
 } catch (RequestException $e) {
     if ($e->hasResponse()) {
