@@ -63,45 +63,61 @@ $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
 // User interface.
-$jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
-
 echo $OUTPUT->header();
 
 $user = mb_strtolower($USER->username, "UTF-8"); // Create id with the user's unique username from Moodle.
+$jwt = JWT::encode(["name" => $user], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
 
-$handler = new jupyterhub_handler($user, $modulecontext->id);
-$ghandler = new gradeservice_handler();
+$assignment = $moduleinstance->assignment;
 
-$jwt = JWT::encode([
-    "name" => $user,
-    "iat" => time(),
-    "exp" => time() + 15
-], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
-
-try {
-    $ghandler->create_assignment($course->id, $modulecontext->id, $moduleinstance->id, $jwt);
-} catch (RequestException $e) {
-    notification::error("{$e->getCode()}: {$e->getMessage()}");
-} catch (ConnectException $e) {
-    notification::error("{$e->getCode()}: {$e->getMessage()}");
+if ($assignment == null) {
+    try {
+        $handler = new gradeservice_handler();
+        $assignment = $handler->create_assignment(
+            $course->id,
+            $modulecontext->id,
+            $moduleinstance->id,
+            $jwt
+        );
+    } catch (RequestException $e) {
+        if ($e->hasResponse()) {
+            $msg = "{$e->getResponse()->getBody()->getContents()}";
+        } else {
+            $msg = "{$e->getCode()}: {$e->getMessage()}";
+        }
+        error_handler::gradeservice_connect_err($msg, $modulecontext);
+    } catch (ConnectException $e) {
+        error_handler::gradeservice_connect_err("{$e->getCode()}: {$e->getMessage()}", $modulecontext);
+    }
 }
 
-try {
-    $notebookpath = $handler->get_notebook_path();
+if ($assignment != null) {
+    try {
+        $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
+        $handler = new jupyterhub_handler();
+        $notebookpath = $handler->get_notebook_path(
+            $user,
+            $modulecontext->id,
+            $course->id,
+            $moduleinstance->id,
+            $assignment
+        );
 
-    echo $OUTPUT->render_from_template('mod_jupyter/manage', [
-        'login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt,
-        'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
-        'description' => get_string('resetbuttoninfo', 'jupyter')
-    ]);
-} catch (RequestException $e) {
-    if ($e->hasResponse()) {
-        notification::error("{$e->getResponse()->getBody()->getContents()}");
-    } else {
-        notification::error("{$e->getCode()}: {$e->getMessage()}");
+        echo $OUTPUT->render_from_template('mod_jupyter/manage', [
+            'login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt,
+            'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
+            'description' => get_string('resetbuttoninfo', 'jupyter')
+        ]);
+    } catch (RequestException $e) {
+        if ($e->hasResponse()) {
+            $msg = "{$e->getResponse()->getBody()->getContents()}";
+        } else {
+            $msg = "{$e->getCode()}: {$e->getMessage()}";
+        }
+        error_handler::jupyter_resp_err($msg, $modulecontext);
+    } catch (ConnectException $e) {
+        error_handler::jupyter_connect_err("{$e->getCode()}: {$e->getMessage()}", $modulecontext);
     }
-} catch (ConnectException $e) {
-    error_handler::show_error_message();
 }
 
 // Mark as done after user views the course.

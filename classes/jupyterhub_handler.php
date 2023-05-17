@@ -45,19 +45,13 @@ class jupyterhub_handler {
     /** @var Client guzzle http client */
     private $client;
 
-    /** @var string username */
-    private string $user;
-
-    /** @var int contextid needed to get file for activity */
-    private int $contextid;
-
     /**
      * Constructor.
      *
      * @param string $user
      * @param int $contextid
      */
-    public function __construct(string $user, int $contextid) {
+    public function __construct() {
         $baseuri = get_config('mod_jupyter', 'jupyterhub_url');
 
         // If moodle is running in a docker container we have to replace '127.0.0.1' and 'localhost' with 'host.docker.internal'.
@@ -72,9 +66,6 @@ class jupyterhub_handler {
           'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
         ]
           ]);
-
-        $this->user = $user;
-        $this->contextid = $contextid;
     }
 
     /**
@@ -93,10 +84,35 @@ class jupyterhub_handler {
      * @throws ConnectException
      * @throws RequestException
      */
-    public function get_notebook_path() : string {
-        $this->check_user_status();
+    public function get_notebook_path(string $user, int $contextid, int $courseid, int $instanceid, string $filename) : string {
+        $this->check_user_status($user);
 
-        return $this->check_notebook_status();
+        $route = "/user/{$user}/api/contents";
+
+        try {
+            // Check if file is already there.
+            $this->client->get("{$route}/{$courseid}/{$instanceid}/{$filename}", ['query' => ['content' => '0']]);
+        } catch (RequestException $e) {
+            if ($e->hasResponse() && $e->getCode() == 404) {
+                $fs = get_file_storage();
+                $files = $fs->get_area_files($contextid, 'mod_jupyter', 'assignment', 0, 'id', false);
+                $file = reset($files);
+
+                // Jupyter api doesnt support creating directorys recursively so we have to it like this.
+                $this->client->put("{$route}/{$courseid}", ['json' => ['type' => 'directory']]);
+                $this->client->put("{$route}/{$courseid}/{$instanceid}", ['json' => ['type' => 'directory']]);
+
+                $this->client->put("{$route}/{$courseid}/{$instanceid}/{$filename}", ['json' => [
+                'type' => 'file',
+                'format' => 'base64',
+                'content' => base64_encode($file->get_content()),
+                ]]);
+            } else {
+                throw $e;
+            }
+        }
+
+        return "/hub/user-redirect/lab/tree/{$courseid}/{$instanceid}/{$filename}";
     }
 
     /**
@@ -106,8 +122,8 @@ class jupyterhub_handler {
      * @throws ConnectException
      * @throws RequestException
      */
-    private function check_user_status() {
-        $route = "/hub/api/users/{$this->user}";
+    private function check_user_status($user) {
+        $route = "/hub/api/users/{$user}";
         // Check if user exists.
         try {
             $res = $this->client->get($route);
@@ -124,46 +140,6 @@ class jupyterhub_handler {
         // Spawn users server if not running.
         if (json_decode($res->getBody(), true)["server"] == null) {
             $res = $this->client->post($route . "/server");
-            /** //phpcs:ignore moodle.Commenting.InlineComment.DocBlock
-             * Should return 201 created.
-             * Could also return 202 accepted which means server is started asynchronous.
-             * We would have to wait for the server to be ready then using progress api.
-             * Example: http://jupyterhub.readthedocs.io/en/stable/reference/server-api.html
-             * TODO: handle 202.
-             */
         }
-    }
-
-    /**
-     * Check if notebook exists on users server already. If not upload it to the users server.
-     *
-     * @return string returns a link to the notebook file
-     * @throws RequestException
-     * @throws ConnectException
-     */
-    private function check_notebook_status() : string {
-        $fs = get_file_storage();
-        $files = $fs->get_area_files($this->contextid, 'mod_jupyter', 'assignment', 0, 'id', false);
-        $file = reset($files);
-        $filename = $file->get_filename();
-
-        $route = "/user/{$this->user}/api/contents/{$filename}";
-
-        // Check if file is already there.
-        try {
-            $this->client->get($route, ['query' => ['content' => '0']]);
-        } catch (RequestException $e) {
-            if ($e->hasResponse() && $e->getCode() == 404) {
-                $this->client->put($route, ['json' => [
-                'type' => 'file',
-                'format' => 'base64',
-                'content' => base64_encode($file->get_content()),
-                ]]);
-            } else {
-                throw $e;
-            }
-        }
-
-        return "/hub/user-redirect/lab/tree/{$filename}";
     }
 }

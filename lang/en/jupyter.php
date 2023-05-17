@@ -40,29 +40,27 @@ $string['jupyter:addinstance'] = 'Add a new Jupyter Notebook activity';
 $string['jupyter:view'] = 'View a Jupyter Notebook activity';
 $string['jupyter:viewerrordetails'] = 'View extended information on errors occurring in the Jupyter Notebook activity';
 
-
-$string['errorheading'] = '<strong>Error</strong><br>Sorry, your Jupyter Notebook (<i>"{$a->instancename}"</i>) could not be loaded due to a connection issue.';
-
-$string['adminsettingserror'] = '<strong>Cause:</strong> The provided URL (<i>"{$a->url}"</i>) is not available or does not lead to a JupyterHub.<br>Check the <i>Admin Settings</i> and make sure the URL matches the URL of your JupyterHub.';
-
-$string['instancesettingserror'] = '<strong>Cause:</strong> The provided Git Repository URL (<i>"{$a->url}"</i>) is not available or does not lead to a Jupyter Notebook file.<br>Check the <i>Activity Settings</i>  and make sure <i>Git Repository URL</i>, <i>Branch</i> and <i>Notebook file to open</i> are set correctly.';
-
 $string['resetbuttontext'] = 'Reset';
 $string['resetbuttoninfo'] = 'To get the original Notebook without losing progress, you can save your changes to a different file by clicking on <b>"File"</b> in the top left corner and then select <b>"Save Notebook As..."</b>. Afterwards,you need to <b>delete</b> the original file and click the <b>"Reset"</b> button.';
 
-// Admin plugin settings.
-// General.
+// Jupyterhub Errors.
+$string['notebook_err'] = '<strong>Error: Jupyter Notebook failed to load.</strong><br>Sorry, we were unable to load your Jupyter Notebook. Please try reloading the page to resolve the problem. If the error persists, please contact your teacher or administrator for further assistance/';
+$string['jupyter_connecterr'] = '<strong>Error: Jupyter Notebook failed to load.</strong><br>Sorry, the Jupyter Notebook could not be loaded due to a connection issue. Please try reloading the page to resolve the problem. If the error persists, please contact your teacher or administrator for further assistance.';
+$string['jupyter_connecterr_admin'] = '<strong>Error: Could not connect to JupyterHub at (<i>"{$a->url}"</i>).</strong><br>Make sure your JupyterHub is running and available under the provided url.<br>You an change the JupyterHub URL in the plugin\'s admin settings page.<br>Message: "{$a->msg}"';
+
+// Gradeservice Errors.
+$string['assignment_err'] = '<strong><';
+$string['assignment_err_admin'] = 'TODO';
+$string['gradeservice_connecterr_admin'] = '<strong>Error: Could not connect to Gradeservice API at (<i>"{$a->url}"</i>).</strong><br>Make sure the Gradeservice API is running and available under the provided URL.<br>You an change the Gradeservice URL in the plugin\'s admin settings page.<br>Message: "{$a->msg}"';
+
+// Plugin admin settings.
 $string['generalconfig'] = 'General settings';
 $string['generalconfig_desc'] = 'Settings required to reach the JupyterHub this plugin uses.';
-// Jupyterhub URL.
 $string['jupyterhub_url'] = 'JupyterHub URL';
 $string['jupyterhub_url_desc'] = 'Add the URL of your JupyterHub here.<br>Must be a valid URL (e.g. https://yourjupyterhub.com).';
-// Gradeservice URL.
 $string['gradeservice_url'] = 'Gradeservice URL';
 $string['gradeservice_url_desc'] = 'Add the URL of your JupyterHub here.';
-// Jupyterhub JWT Token.
 $string['jupyterhub_jwt_secret'] = 'Jupyterhub JWT Secret';
 $string['jupyterhub_jwt_secret_desc'] = 'Add the JWT secret of your JupyterHub here.<br><strong>Make sure your JupyterHub is using a secure 256-bit secret!!!</strong>';
-// JupyterHub API Token.
 $string['jupyterhub_api_token'] = 'Jupyterhub API Token';
 $string['jupyterhub_api_token_desc'] = 'Add the API token of your JupyterHub here. <br><strong>Make sure your JupyterHub is using a secure 256-bit token!!!</strong>';

@@ -47,15 +47,12 @@ class gradeservice_handler {
     public function __construct() {
         $baseuri = get_config('mod_jupyter', 'gradeservice_url');
 
-        // If moodle is running in a docker container we have to replace '127.0.0.1' and 'localhost' with 'host.docker.internal'.
-        // This is only relevant for local testing.
         if (getenv('IS_CONTAINER') == 'yes') {
             $baseuri = str_replace(['127.0.0.1', 'localhost'], 'host.docker.internal', $baseuri);
         }
 
         $this->client = new Client([
             'base_uri' => $baseuri,
-            // TODO: auth.
         ]);
     }
 
@@ -69,7 +66,7 @@ class gradeservice_handler {
      * @throws coding_exception
      * @throws GuzzleException
      */
-    public function create_assignment(int $courseid, int $contextid, int $instanceid, string $token) : void {
+    public function create_assignment(int $courseid, int $contextid, int $instanceid, string $token) : string {
         global $DB;
 
         $fs = get_file_storage();
@@ -105,5 +102,7 @@ class gradeservice_handler {
         );
         $fs->create_file_from_string($fileinfo, $file);
         $DB->set_field('jupyter', 'assignment', $filename, ['id' => $instanceid, 'course' => $courseid]);
+
+        return $filename;
     }
 }
