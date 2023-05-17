@@ -26,7 +26,6 @@ require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require(__DIR__ . '/vendor/autoload.php');
 
-use core\notification;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;

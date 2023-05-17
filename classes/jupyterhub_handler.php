@@ -119,11 +119,11 @@ class jupyterhub_handler {
 
     /**
      * Check if user exists and spawn server
-     * @param $user username
+     * @param string $user current user's username
      * @throws ConnectException
      * @throws RequestException
      */
-    private function check_user_status($user) {
+    private function check_user_status(string $user) {
         $route = "/hub/api/users/{$user}";
         // Check if user exists.
         try {
