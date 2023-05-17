@@ -59,14 +59,15 @@ class gradeservice_handler {
     /**
      * Create an assignment.
      *
-     * @param int $courseid
-     * @param int $contextid
-     * @param string $token
-     * @return void
+     * @param int $contextid activity context id
+     * @param int $courseid id of the moodle course
+     * @param int $instanceid activity instance id
+     * @param string $token authorization token
+     * @return string filename of the created assignment
      * @throws coding_exception
      * @throws GuzzleException
      */
-    public function create_assignment(int $courseid, int $contextid, int $instanceid, string $token) : string {
+    public function create_assignment(int $contextid, int $courseid,  int $instanceid, string $token) : string {
         global $DB;
 
         $fs = get_file_storage();

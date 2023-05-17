@@ -47,9 +47,6 @@ class jupyterhub_handler {
 
     /**
      * Constructor.
-     *
-     * @param string $user
-     * @param int $contextid
      */
     public function __construct() {
         $baseuri = get_config('mod_jupyter', 'jupyterhub_url');
@@ -80,7 +77,12 @@ class jupyterhub_handler {
     /**
      * Returns the url to users notebook and notebook file.
      *
-     * @return string
+     * @param string $user current user's username
+     * @param int $contextid activity context id
+     * @param int $courseid id of the moodle course
+     * @param int $instanceid activity instance id
+     * @param string $filename notebook filename
+     * @return string path to file on jupyterhub server
      * @throws ConnectException
      * @throws RequestException
      */
@@ -117,8 +119,7 @@ class jupyterhub_handler {
 
     /**
      * Check if user exists and spawn server
-     *
-     * @return void
+     * @param $user username
      * @throws ConnectException
      * @throws RequestException
      */

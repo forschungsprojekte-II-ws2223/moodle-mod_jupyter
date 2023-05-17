@@ -38,7 +38,6 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: ${{ matrix.extensions }}
           ini-values: max_input_vars=5000
-          # none to use phpdbg fallback. Specify pcov (Moodle 3.10 and up) or xdebug to use them instead.
           coverage: none
 
       - name: Initialise moodle-plugin-ci
@@ -61,13 +60,11 @@ jobs:
           MOODLE_BRANCH: ${{ matrix.moodle-branch }}
           IGNORE_PATHS: 'vendor'
 
-      # lint stage
       - name: PHP Lint
         if: ${{ always() }}
         run: moodle-plugin-ci phplint jupyter
 
       - name: PHP Copy/Paste Detector
-        #continue-on-error: true # This step will show errors but will not fail
         if: ${{ always() }}
         run: moodle-plugin-ci phpcpd jupyter
 
@@ -75,9 +72,7 @@ jobs:
         if: ${{ always() }}
         run: moodle-plugin-ci savepoints jupyter
 
-      # test stage
       - name: PHP Mess Detector
-        #continue-on-error: true # This step will show errors but will not fail
         if: ${{ always() }}
         run: moodle-plugin-ci phpmd
 
@@ -100,44 +95,3 @@ jobs:
       - name: PHPUnit tests
         if: ${{ always() }}
         run: moodle-plugin-ci phpunit
-
-  release:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - uses: actions/checkout@v2
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-      - name: Install dependencies
-        run: |
-          composer install -o -q
-      - name: Zip Folder
-        run: zip -r ${{ github.event.repository.name }}.zip . -x ".git/*" ".github/*" "phpcs.xml" "composer.json" "composer.lock" ".gitignore"
-
-      - name: Release
-        id: create-new-release
-        uses: actions/create-release@v1
-        with:
-          tag_name: v0.${{ github.run_number }}
-          release_name: Release v0.${{ github.run_number }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Github
-      - name:
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create-new-release.outputs.upload_url }}
-          asset_path: ./${{ github.event.repository.name }}.zip
-          asset_name: ${{ github.event.repository.name }}-v0.${{ github.run_number }}.zip
-          asset_content_type: application/zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Github
-

@@ -35,6 +35,8 @@ use core\notification;
 class error_handler {
     /**
      * Shows error message for jupyterhub connection error.
+     * @param string $msg error message
+     * @param context_module $modulecontext plugin module context
      */
     public static function jupyter_connect_err(string $msg, context_module $modulecontext) {
         if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
@@ -47,6 +49,11 @@ class error_handler {
         }
     }
 
+    /**
+     * Shows error message for jupyterhub response error.
+     * @param string $msg error message
+     * @param context_module $modulecontext plugin module context
+     */
     public static function jupyter_resp_err(string $msg, context_module $modulecontext) {
         if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
             notification::error(get_string('jupyter_connecterr_admin', 'jupyter', [
@@ -60,6 +67,8 @@ class error_handler {
 
     /**
      * Shows error message for gradeservice connection error.
+     * @param string $msg error message
+     * @param context_module $modulecontext plugin module context
      */
     public static function gradeservice_connect_err(string $msg, context_module $modulecontext) {
         if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
@@ -72,6 +81,11 @@ class error_handler {
         }
     }
 
+    /**
+     * Shows error message for gradeservice response error.
+     * @param string $msg error message
+     * @param context_module $modulecontext plugin module context
+     */
     public static function gradeservice_resp_err(string $msg, context_module $modulecontext) {
         if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
             notification::error(get_string('gradeservice_connecterr_admin', 'jupyter', [
