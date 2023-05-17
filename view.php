@@ -63,6 +63,8 @@ $PAGE->set_context($modulecontext);
 
 // User interface.
 echo $OUTPUT->header();
+// Starting point.
+echo $OUTPUT->render_from_template('mod_jupyter/loading', []);
 
 $user = mb_strtolower($USER->username, "UTF-8");
 $jwt = JWT::encode(["name" => $user], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
@@ -102,11 +104,11 @@ if ($assignment != null) {
             $assignment
         );
 
-        echo $OUTPUT->render_from_template('mod_jupyter/manage', [
-            'login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt,
-            'resetbuttontext' => get_string('resetbuttontext', 'jupyter'),
-            'description' => get_string('resetbuttoninfo', 'jupyter')
-        ]);
+        $PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init', [['user' => $user, 'contextid' => $modulecontext->id]]);
+        $PAGE->requires->js_call_amd('mod_jupyter/reset_notebook', 'init', [['user' => $user, 'contextid' => $modulecontext->id]]);
+        $PAGE->requires->js_call_amd('mod_jupyter/startup', 'init',
+        [['login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt]]);
+
     } catch (RequestException $e) {
         if ($e->hasResponse()) {
             $msg = "{$e->getResponse()->getBody()->getContents()}";
@@ -119,11 +121,4 @@ if ($assignment != null) {
     }
 }
 
-// Mark as done after user views the course.
-$completion = new completion_info($course);
-$completion->set_module_viewed($cm);
-
 echo $OUTPUT->footer();
-
-
-

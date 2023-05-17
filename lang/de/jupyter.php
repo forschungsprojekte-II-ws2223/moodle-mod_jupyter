@@ -40,8 +40,31 @@ $string['jupyter:addinstance'] = 'Eine neue Jupyter Notbook Aktivität hinzufüg
 $string['jupyter:view'] = 'Eine Jupyter Notebook Aktivität anzeigen';
 $string['jupyter:viewerrordetails'] = 'Anzeige erweiterter Informationen zu Fehlern, die in der Jupyter Notebook Aktivität auftreten';
 
+// Reset button.
 $string['resetbuttontext'] = 'Zurücksetzen';
+$string['resetmodalresetbuttontext'] = 'Zurücksetzen';
+$string['resetmodalcancelbuttontext'] = 'Abbrechen';
+$string['resetmodaltitle'] = 'Wollen sie Zurücksetzen?';
+$string['resetmodalbody'] = 'Sämtlicher Fortschritt geht verloren! Diese Option ist dafür gedacht das Notebook wieder herzustellen, nachdem es durch Änderungen nicht mehr Funktionsfähig ist.';
 $string['resetbuttoninfo'] = 'Um das Notebook in den ursprünglichen Zustand zurückzusetzen, ohne den Fortschritt zu verlieren, können Sie Ihre Änderungen in einer anderen Datei speichern, indem Sie auf <b>"File"</b> in der oberen linken Ecke klicken und <b>"Notebook speichern als..."</b> auswählen. Danach muss das bisherige Notebook gelöscht werden und dann der <b>"Zurücksetzen"</b> Button geklickt werden';
+
+// Assignment submission.
+$string['submitbuttontext'] = 'Notebook abgeben';
+$string['submitbuttoninfo'] = 'Geben Sie das Notebook ab um eine Korrektur zu erhalten. Es wird immer der aktuell gespeicherte Stand des Notebooks abgegeben. Die Abgabe kann jederzeit vor Ablauf der Zeit über den selben Button geändert werden, wodurch die alte Abgabe ersetzt wird.';
+$string['submitsuccessnotification'] = 'Ihr Notebook wurde abgegeben.';
+
+// Plugin admin settings.
+// General.
+$string['generalconfig'] = 'Allgemeine Einstellungen';
+$string['generalconfig_desc'] = 'Notwendige Einstellungen, um das JupyterHub zu erreichen, das von dem Plugin verwendet wird.';
+$string['jupyterhub_url'] = 'JupyterHub URL';
+$string['jupyterhub_url_desc'] = 'Fügen Sie hier die URL Ihres JupyterHub ein.<br>Muss eine gültige URL sein (z. B. https://yourjupyterhub.com).';
+$string['gradeservice_url'] = 'Gradeservice URL';
+$string['gradeservice_url_desc'] = 'Fügen Sie hier die URL der Gradeservie API ein.';
+$string['jupyterhub_jwt_secret'] = 'Jupyterhub JWT Secret';
+$string['jupyterhub_jwt_secret_desc'] = 'Fügen Sie hier das JWT-Geheimnis Ihres JupyterHub ein. <br><strong>Stellen Sie sicher, dass Ihr JupyterHub ein sicheres 256-Bit-Geheimnis verwendet!!!</strong>';
+$string['jupyterhub_api_token'] = 'Jupyterhub API Token';
+$string['jupyterhub_api_token_desc'] = 'Fügen Sie hier den API Token Ihres JupyterHub ein. <br><strong>Stellen Sie sicher, dass Ihr JupyterHub einen sicheren 256-Bit-Token verwendet!!!</strong>';
 
 // Jupyterhub Errors.
 $string['jupyter_resp_err'] = '<strong>Error: Jupyter Notebook konnte nicht geladen werden.</strong><br>Entschuldiguen Sie, Ihr Jupyter Notebook konnte nicht geladen werden.<br>Bitte versuchen Sie, die Seite neu zu laden, um das Problem zu beheben. Wenn der Fehler weiterhin besteht, wenden Sie sich bitte an Ihren Lehrer oder Administrator, um das Problem zu lösen.';
@@ -54,15 +77,3 @@ $string['gradeservice_resp_err'] = '<strong>Error: Jupyter Notebook konnte nicht
 $string['gradeservice_resp_err_admin'] = '<strong>Error: Gradeservice API konnte das Assignment nicht erstellen.<br>Überprüfen Sie die bereitgestellte Notebook Datei auf Fehler und laden Sie diese erneut hoch.<br>Message: "{$a->msg}"';
 $string['gradeservice_connect_err'] = '<strong>Error: Jupyter Notebook konnte nicht geladen werden</strong><br>Entschuldiguen Sie, Ihr Jupyter Notebook konnte aufgrund eines Verbindungsproblems nicht geladen werden.<br>Bitte versuchen Sie, die Seite neu zu laden, um das Problem zu beheben. Wenn der Fehler weiterhin besteht, wenden Sie sich bitte an Ihren Lehrer oder Administrator, um das Problem zu lösen.';
 $string['gradeservice_connect_err_admin'] = '<strong>Error: Konnte keine Verbindung zur Gradeservie API unter der URL (<i>"{$a->url}"</i>) herstellen.</strong><br>Stellen Sie sicher, dass die Gradeservice API läuft und unter der angegebenen URL verfügbar ist.<br>Sie können die Gradeservice URL in den Verwaltungseinstellungen des Plugins ändern.<br>Message: "{$a->msg}"';
-
-// Plugin admin settings.
-$string['generalconfig'] = 'Allgemeine Einstellungen';
-$string['generalconfig_desc'] = 'Notwendige Einstellungen, um das JupyterHub zu erreichen, das von dem Plugin verwendet wird.';
-$string['jupyterhub_url'] = 'JupyterHub URL';
-$string['jupyterhub_url_desc'] = 'Fügen Sie hier die URL Ihres JupyterHub ein.<br>Muss eine gültige URL sein (z. B. https://yourjupyterhub.com).';
-$string['gradeservice_url'] = 'Gradeservice URL';
-$string['gradeservice_url_desc'] = 'Fügen Sie hier die URL der Gradeservie API ein.';
-$string['jupyterhub_jwt_secret'] = 'Jupyterhub JWT Secret';
-$string['jupyterhub_jwt_secret_desc'] = 'Fügen Sie hier das JWT-Geheimnis Ihres JupyterHub ein. <br><strong>Stellen Sie sicher, dass Ihr JupyterHub ein sicheres 256-Bit-Geheimnis verwendet!!!</strong>';
-$string['jupyterhub_api_token'] = 'Jupyterhub API Token';
-$string['jupyterhub_api_token_desc'] = 'Fügen Sie hier den API Token Ihres JupyterHub ein. <br><strong>Stellen Sie sicher, dass Ihr JupyterHub einen sicheren 256-Bit-Token verwendet!!!</strong>';
