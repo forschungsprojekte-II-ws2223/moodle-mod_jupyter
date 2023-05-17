@@ -24,6 +24,7 @@
 
 namespace mod_jupyter;
 
+use context_module;
 use core\notification;
 
 /**
@@ -33,15 +34,66 @@ use core\notification;
  */
 class error_handler {
     /**
-     * Shows different error messages depending on cause of error (instance/admin settings).
+     * Shows error message for jupyterhub connection error.
+     * @param string $msg error message
+     * @param context_module $modulecontext plugin module context
      */
-    public static function show_error_message() {
-        global $jupyterhuburl, $moduleinstance, $modulecontext;
-        notification::error(get_string('errorheading', 'jupyter', ['instancename' => $moduleinstance->name]));
-
+    public static function jupyter_connect_err(string $msg, context_module $modulecontext) {
         if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
-                notification::error(get_string('adminsettingserror', 'jupyter', ['url' => $jupyterhuburl]));
+                notification::error(get_string('jupyter_connect_err_admin', 'jupyter', [
+                    'url' => get_config('mod_jupyter', 'jupyterhub_url'),
+                    'msg' => $msg
+                ]));
+        } else {
+            notification::error(get_string('jupyter_connect_err', 'jupyter'));
         }
     }
 
+    /**
+     * Shows error message for jupyterhub response error.
+     * @param string $msg error message
+     * @param context_module $modulecontext plugin module context
+     */
+    public static function jupyter_resp_err(string $msg, context_module $modulecontext) {
+        if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
+            notification::error(get_string('jupyter_resp_err_admin', 'jupyter', [
+                'url' => get_config('mod_jupyter', 'jupyterhub_url'),
+                'msg' => $msg
+            ]));
+        } else {
+            notification::error(get_string('jupyter_resp_err', 'jupyter'));
+        }
+    }
+
+    /**
+     * Shows error message for gradeservice connection error.
+     * @param string $msg error message
+     * @param context_module $modulecontext plugin module context
+     */
+    public static function gradeservice_connect_err(string $msg, context_module $modulecontext) {
+        if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
+            notification::error(get_string('gradeservice_connect_err_admin', 'jupyter', [
+                'url' => get_config('mod_jupyter', 'gradeservice_url'),
+                'msg' => $msg
+            ]));
+        } else {
+            notification::error(get_string('gradeservice_connect_err', 'jupyter'));
+        }
+    }
+
+    /**
+     * Shows error message for gradeservice response error.
+     * @param string $msg error message
+     * @param context_module $modulecontext plugin module context
+     */
+    public static function gradeservice_resp_err(string $msg, context_module $modulecontext) {
+        if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
+            notification::error(get_string('gradeservice_resp_err_admin', 'jupyter', [
+                'url' => get_config('mod_jupyter', 'gradeservice_url'),
+                'msg' => $msg
+            ]));
+        } else {
+            notification::error(get_string('gradeservice_resp_err', 'jupyter'));
+        }
+    }
 }
