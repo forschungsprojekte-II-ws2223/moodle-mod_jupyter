@@ -76,7 +76,7 @@ $PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init', [['user' => 
 $PAGE->requires->js_call_amd('mod_jupyter/reset_notebook', 'init', [['user' => $user, 'contextid' => $modulecontext->id]]);
 
 $handler = new jupyterhub_handler($user, $modulecontext->id);
-
+echo $OUTPUT->render_from_template('mod_jupyter/loading', []);
 try {
     $notebookpath = $handler->get_notebook_path();
 
@@ -86,9 +86,9 @@ try {
         "exp" => time() + 15
     ], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
 
-    echo $OUTPUT->render_from_template('mod_jupyter/manage', [
-        'login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt
-    ]);
+    $PAGE->requires->js_call_amd('mod_jupyter/startup', 'init',
+    [['login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt]]);
+
 } catch (RequestException $e) {
     if ($e->hasResponse()) {
         notification::error("{$e->getResponse()->getBody()->getContents()}");
@@ -100,6 +100,3 @@ try {
 }
 
 echo $OUTPUT->footer();
-
-
-

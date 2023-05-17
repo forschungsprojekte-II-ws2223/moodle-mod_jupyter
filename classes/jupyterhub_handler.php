@@ -244,7 +244,7 @@ class jupyterhub_handler {
         try {
             $response = $this->client->get($route, ['query' => ['content' => '0']]);
             if ($response->getStatusCode() == 200) {
-                $this->client->patch($route, ['json' => ['path' => '/'. date("Y-m-d-H-i-s", time()) . '_' . $filename]]);
+                $this->client->patch($route, ['json' => ['path' => '/'. '_' . date("Y-m-d-H-i-s", time()) . '_' . $filename]]);
                 $this->client->put($route, ['json' => [
                     'type' => 'file',
                     'format' => 'base64',
@@ -262,17 +262,5 @@ class jupyterhub_handler {
                 throw $e;
             }
         }
-    }
-
-
-    /**
-     * Check if moodle runs in docker container/.dockerenv is present
-     *
-     * @return string returns a link to the notebook file
-     * @throws RequestException
-     * @throws ConnectException
-     */
-    private function running_in_container() {
-        return file_exists(dirname(__DIR__, 5) . '/.dockerenv');
     }
 }

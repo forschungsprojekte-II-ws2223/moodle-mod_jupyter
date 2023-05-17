@@ -50,6 +50,14 @@ class submit_notebook extends \external_api {
      * @return tbd
      */
     public static function execute($user, $contextid) {
+        [
+            'user' => $user,
+            'contextid' => $contextid,
+        ] = self::validate_parameters(self::execute_parameters(), [
+            'user' => $user,
+            'contextid' => $contextid,
+        ]);
+
         $handler = new jupyterhub_handler($user, $contextid);
         $notebookfile = $handler->get_notebook();
         // TODO Send notebookfile to autograder.
