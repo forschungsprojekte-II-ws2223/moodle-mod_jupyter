@@ -64,7 +64,7 @@ $PAGE->set_context($modulecontext);
 // User interface.
 echo $OUTPUT->header();
 
-$user = mb_strtolower($USER->username, "UTF-8"); // Create id with the user's unique username from Moodle.
+$user = mb_strtolower($USER->username, "UTF-8");
 $jwt = JWT::encode(["name" => $user], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
 
 $assignment = $moduleinstance->assignment;
@@ -84,7 +84,7 @@ if ($assignment == null) {
         } else {
             $msg = "{$e->getCode()}: {$e->getMessage()}";
         }
-        error_handler::gradeservice_connect_err($msg, $modulecontext);
+        error_handler::gradeservice_resp_err($msg, $modulecontext);
     } catch (ConnectException $e) {
         error_handler::gradeservice_connect_err("{$e->getCode()}: {$e->getMessage()}", $modulecontext);
     }
