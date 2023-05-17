@@ -143,4 +143,43 @@ class jupyterhub_handler {
             $res = $this->client->post($route . "/server");
         }
     }
+
+    /**
+     * Reset notebook server by reuploading default notebookfile.
+     * @param string $user current user's username
+     * @param int $contextid activity context id
+     * @throws RequestException
+     * @throws ConnectException
+     */
+    public function reset_notebook(string $user, int $contextid) {
+        return;
+        // $fs = get_file_storage();
+        // $files = $fs->get_area_files($contextid, 'mod_jupyter', 'package', 0, 'id', false);
+        // $file = reset($files);
+        // $filename = $file->get_filename();
+
+        // $route = "/user/{$user}/api/contents";
+
+        // try {
+        // $response = $this->client->get($route, ['query' => ['content' => '0']]);
+        // if ($response->getStatusCode() == 200) {
+        // $this->client->patch($route, ['json' => ['path' => '/'. '_' . date("Y-m-d-H-i-s", time()) . '_' . $filename]]);
+        // $this->client->put($route, ['json' => [
+        // 'type' => 'file',
+        // 'format' => 'base64',
+        // 'content' => base64_encode($file->get_content()),
+        // ]]);
+        // }
+        // } catch (RequestException $e) {
+        // if ($e->hasResponse() && $e->getCode() == 404) {
+        // $this->client->put($route, ['json' => [
+        // 'type' => 'file',
+        // 'format' => 'base64',
+        // 'content' => base64_encode($file->get_content()),
+        // ]]);
+        // } else {
+        // throw $e;
+        // }
+        // }
+    }
 }
