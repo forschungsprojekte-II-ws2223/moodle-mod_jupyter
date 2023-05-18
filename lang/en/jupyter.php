@@ -46,11 +46,11 @@ $string['resetmodalresetbuttontext'] = 'Reset';
 $string['resetmodalcancelbuttontext'] = 'Cancel';
 $string['resetmodaltitle'] = 'Do you want to reset?';
 $string['resetmodalbody'] = 'You will loose all progress in the current notebook! This option is best suited if you made changes, that broke the functionality of the notebook and you need to start over.';
-$string['resetbuttoninfo'] = 'To get the original Notebook without losing progress, you can save your changes to a different file by clicking on <b>"File"</b> in the top left corner and then select <b>"Save Notebook As..."</b>. Afterwards,you need to <b>delete</b> the original file and click the <b>"Reset"</b> button.';
+$string['resetbuttoninfo'] = 'Reset the notebook to its initial state.<br>Your current progress will be saved in a different file and you can copy the parts that you want to keep over.';
 
 // Assignment submission.
 $string['submitbuttontext'] = 'Submit notebook';
-$string['submitbuttoninfo'] = 'Submit the notebook for grading. The currently saved state will be submitted. The submission can always be changed using the same button, prior to the deadline, replacing the old submission.';
+$string['submitbuttoninfo'] = 'Submit the notebook for grading. The currently saved state will be submitted.<br>The submission can always be changed, prior to the deadline, replacing your old submission.';
 $string['submitsuccessnotification'] = 'Your notebook has been submitted';
 
 // Plugin admin settings.
