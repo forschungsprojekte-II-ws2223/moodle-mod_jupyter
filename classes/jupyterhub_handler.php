@@ -161,7 +161,7 @@ class jupyterhub_handler {
 
         try {
                 $this->client->patch($route, ['json' => [
-                    'path' => "_{$courseid}/{$instanceid}/" . date('Y-m-d-H:i:s', time()) . "_{$filename}"
+                    'path' => "{$courseid}/{$instanceid}/" . date('Y-m-d-H:i:s', time()) . "_{$filename}"
                 ]]);
                 $this->client->put($route, ['json' => [
                     'type' => 'file',

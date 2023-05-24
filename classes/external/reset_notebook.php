@@ -47,10 +47,10 @@ class reset_notebook extends \external_api {
     /**
      * Rename any naming collisions and reupload the default notebook.
      *
-     * @param $user unique user id
-     * @param $contextid contextid of activity instance
-     * @param $courseid course id
-     * @param $instanceid :)
+     * @param string $user current user's username
+     * @param int $contextid contextid of activity instance
+     * @param int $courseid course id
+     * @param int $instanceid :)
      * @return string
      */
     public static function execute($user, $contextid, $courseid, $instanceid) {

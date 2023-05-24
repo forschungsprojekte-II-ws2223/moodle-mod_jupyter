@@ -45,8 +45,8 @@ class submit_notebook extends \external_api {
     /**
      * Get notebookfile from notebook server and send it to autograding.
      *
-     * @param $user unique user id
-     * @param $contextid contextid of activity instance
+     * @param string $user unique user id
+     * @param int $contextid contextid of activity instance
      * @return tbd
      */
     public static function execute($user, $contextid) {
