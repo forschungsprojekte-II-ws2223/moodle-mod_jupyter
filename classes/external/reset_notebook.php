@@ -39,6 +39,8 @@ class reset_notebook extends \external_api {
         return new external_function_parameters([
             'user' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'unique user id'),
             'contextid' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'module context id'),
+            'courseid' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'module course id'),
+            'instanceid' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'module instance id')
         ]);
     }
 
@@ -49,9 +51,9 @@ class reset_notebook extends \external_api {
      * @param $contextid contextid of activity instance
      * @return string
      */
-    public static function execute($user, $contextid) {
+    public static function execute($user, $contextid, $courseid, $instanceid) {
         $handler = new jupyterhub_handler();
-        $handler->reset_notebook($user, $contextid);
+        $handler->reset_notebook($user, $contextid, $courseid, $instanceid);
         return 'notebook reset';
     }
 

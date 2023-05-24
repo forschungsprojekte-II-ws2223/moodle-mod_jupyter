@@ -105,9 +105,9 @@ class jupyterhub_handler {
                 $this->client->put("{$route}/{$courseid}/{$instanceid}", ['json' => ['type' => 'directory']]);
 
                 $this->client->put("{$route}/{$courseid}/{$instanceid}/{$filename}", ['json' => [
-                'type' => 'file',
-                'format' => 'base64',
-                'content' => base64_encode($file->get_content()),
+                    'type' => 'file',
+                    'format' => 'base64',
+                    'content' => base64_encode($file->get_content()),
                 ]]);
             } else {
                 throw $e;
@@ -151,35 +151,33 @@ class jupyterhub_handler {
      * @throws RequestException
      * @throws ConnectException
      */
-    public function reset_notebook(string $user, int $contextid) {
-        return;
-        // $fs = get_file_storage();
-        // $files = $fs->get_area_files($contextid, 'mod_jupyter', 'package', 0, 'id', false);
-        // $file = reset($files);
-        // $filename = $file->get_filename();
+    public function reset_notebook(string $user, int $contextid, int $courseid, int $instanceid) {
+        $fs = get_file_storage();
+        $files = $fs->get_area_files($contextid, 'mod_jupyter', 'assignment', 0, 'id', false);
+        $file = reset($files);
+        $filename = $file->get_filename();
 
-        // $route = "/user/{$user}/api/contents";
+        $route = "/user/{$user}/api/contents/{$courseid}/{$instanceid}/{$filename}";
 
-        // try {
-        // $response = $this->client->get($route, ['query' => ['content' => '0']]);
-        // if ($response->getStatusCode() == 200) {
-        // $this->client->patch($route, ['json' => ['path' => '/'. '_' . date("Y-m-d-H-i-s", time()) . '_' . $filename]]);
-        // $this->client->put($route, ['json' => [
-        // 'type' => 'file',
-        // 'format' => 'base64',
-        // 'content' => base64_encode($file->get_content()),
-        // ]]);
-        // }
-        // } catch (RequestException $e) {
-        // if ($e->hasResponse() && $e->getCode() == 404) {
-        // $this->client->put($route, ['json' => [
-        // 'type' => 'file',
-        // 'format' => 'base64',
-        // 'content' => base64_encode($file->get_content()),
-        // ]]);
-        // } else {
-        // throw $e;
-        // }
-        // }
+        try {
+                $this->client->patch($route, ['json' => [
+                    'path' => "_{$courseid}/{$instanceid}/" . date('Y-m-d-H:i:s', time()) . "_{$filename}"
+                ]]);
+                $this->client->put($route, ['json' => [
+                    'type' => 'file',
+                    'format' => 'base64',
+                    'content' => base64_encode($file->get_content()),
+                ]]);
+        } catch (RequestException $e) {
+            if ($e->hasResponse() && $e->getCode() == 404) {
+                $this->client->put($route, ['json' => [
+                    'type' => 'file',
+                    'format' => 'base64',
+                    'content' => base64_encode($file->get_content()),
+                ]]);
+            } else {
+                throw $e;
+            }
+        }
     }
 }

@@ -1,17 +1,25 @@
-import { call as fetchMany } from 'core/ajax';
+import { call as fetchMany } from "core/ajax";
 
-export const submitNotebook = (user, contextid) => fetchMany([{
-    methodname: 'mod_jupyter_submit_notebook',
-    args: {
+export const submitNotebook = (user, contextid) =>
+  fetchMany([
+    {
+      methodname: "mod_jupyter_submit_notebook",
+      args: {
         user,
-        contextid
+        contextid,
+      },
     },
-}])[0];
+  ])[0];
 
-export const resetNotebook = (user, contextid) => fetchMany([{
-    methodname: 'mod_jupyter_reset_notebook',
-    args: {
+export const resetNotebook = (user, contextid, courseid, instanceid) =>
+  fetchMany([
+    {
+      methodname: "mod_jupyter_reset_notebook",
+      args: {
         user,
-        contextid
+        contextid,
+        courseid,
+        instanceid,
+      },
     },
-}])[0];
+  ])[0];

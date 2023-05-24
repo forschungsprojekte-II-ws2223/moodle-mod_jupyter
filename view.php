@@ -105,7 +105,13 @@ if ($assignment != null) {
         );
 
         $PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init', [['user' => $user, 'contextid' => $modulecontext->id]]);
-        $PAGE->requires->js_call_amd('mod_jupyter/reset_notebook', 'init', [['user' => $user, 'contextid' => $modulecontext->id]]);
+        $PAGE->requires->js_call_amd('mod_jupyter/reset_notebook', 'init', [[
+            'user' => $user,
+            'contextid' => $modulecontext->id,
+            'courseid' => $course->id,
+            'instanceid' => $moduleinstance->id
+            ]]
+        );
         $PAGE->requires->js_call_amd('mod_jupyter/startup', 'init',
         [['login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt]]);
 
