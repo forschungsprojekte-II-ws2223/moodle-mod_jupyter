@@ -18,8 +18,6 @@ namespace mod_jupyter\external;
 
 use mod_jupyter\jupyterhub_handler;
 use external_function_parameters;
-use external_multiple_structure;
-use external_single_structure;
 use external_value;
 
 
@@ -49,7 +47,7 @@ class submit_notebook extends \external_api {
      * @param int $contextid contextid of activity instance
      * @return tbd
      */
-    public static function execute($user, $contextid) {
+    public static function execute(string $user, string $contextid) {
         [
             'user' => $user,
             'contextid' => $contextid,
