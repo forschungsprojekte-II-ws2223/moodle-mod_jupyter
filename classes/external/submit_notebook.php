@@ -45,7 +45,6 @@ class submit_notebook extends \external_api {
      *
      * @param string $user unique user id
      * @param int $contextid contextid of activity instance
-     * @return tbd
      */
     public static function execute(string $user, string $contextid) {
         [
@@ -59,7 +58,6 @@ class submit_notebook extends \external_api {
         $handler = new jupyterhub_handler($user, $contextid);
         $notebookfile = $handler->get_notebook();
         // TODO Send notebookfile to autograder.
-        return $notebookfile;
     }
 
     /**

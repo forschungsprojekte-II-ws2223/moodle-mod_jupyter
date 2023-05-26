@@ -148,6 +148,9 @@ class jupyterhub_handler {
      * Reset notebook server by reuploading default notebookfile.
      * @param string $user current user's username
      * @param int $contextid activity context id
+     * @param int $courseid id of the moodle course
+     * @param int $instanceid activity instance id
+     * @param string $filename notebook filename
      * @throws RequestException
      * @throws ConnectException
      */
