@@ -150,7 +150,6 @@ class jupyterhub_handler {
      * @param int $contextid activity context id
      * @param int $courseid id of the moodle course
      * @param int $instanceid activity instance id
-     * @param string $filename notebook filename
      * @throws RequestException
      * @throws ConnectException
      */

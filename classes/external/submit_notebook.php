@@ -46,7 +46,7 @@ class submit_notebook extends \external_api {
      * @param string $user unique user id
      * @param int $contextid contextid of activity instance
      */
-    public static function execute(string $user, string $contextid) {
+    public static function execute(string $user, int $contextid) {
         [
             'user' => $user,
             'contextid' => $contextid,
