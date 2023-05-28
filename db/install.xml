@@ -34,12 +34,5 @@
         <KEY NAME="jupyterid" TYPE="foreign" FIELDS="jupyterid" REFTABLE="jupyter" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <!-- <TABLE NAME="jupyter_grades">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="quiz" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Foreign key references jupyter.id."/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Foreign key references user.id."/>
-      </FIELDS>
-    </TABLE> -->
   </TABLES>
 </XMLDB>
