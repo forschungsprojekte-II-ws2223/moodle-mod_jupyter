@@ -75,9 +75,9 @@ if ($assignment == null) {
     try {
         $handler = new gradeservice_handler();
         $assignment = $handler->create_assignment(
+            $moduleinstance,
             $modulecontext->id,
             $course->id,
-            $moduleinstance->id,
             $jwt
         );
     } catch (RequestException $e) {

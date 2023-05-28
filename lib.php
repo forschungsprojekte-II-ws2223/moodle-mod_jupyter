@@ -31,6 +31,7 @@
 function jupyter_supports($feature) {
     switch ($feature) {
         case FEATURE_MOD_INTRO:
+            return true;
         case FEATURE_BACKUP_MOODLE2:
             return true;
         case FEATURE_COMPLETION_TRACKS_VIEWS:
@@ -53,7 +54,7 @@ function jupyter_supports($feature) {
  * @param mod_jupyter_mod_form $mform The form.
  * @return int The id of the newly inserted record.
  */
-function jupyter_add_instance($data, $mform = null): int {
+function jupyter_add_instance($data): int {
     global $DB;
 
     $data->timecreated = time();
@@ -64,6 +65,8 @@ function jupyter_add_instance($data, $mform = null): int {
 
     $DB->set_field('course_modules', 'instance', $data->id, ['id' => $cmid]);
     jupyter_set_mainfile($data);
+
+    // jupyter_grade_item_update($data);
 
     return $data->id;
 }
@@ -124,4 +127,107 @@ function jupyter_set_mainfile(stdClass $data): void {
         file_save_draft_area_files($data->packagefile, $context->id, 'mod_jupyter', 'package',
             0, ['subdirs' => 0, 'maxfiles' => 1]);
     }
+}
+
+/**
+ * Is a given scale used by the instance of mod_jupyter?
+ *
+ * This function returns if a scale is being used by one mod_jupyter
+ * if it has support for grading and scales.
+ *
+ * @param int $moduleinstanceid ID of an instance of this module.
+ * @param int $scaleid ID of the scale.
+ * @return bool True if the scale is used by the given mod_jupyter instance.
+ */
+function jupyter_scale_used($moduleinstanceid, $scaleid) {
+    global $DB;
+
+    if ($scaleid && $DB->record_exists('mod_jupyter', array('id' => $moduleinstanceid, 'grade' => -$scaleid))) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Checks if scale is being used by any instance of mod_jupyter.
+ *
+ * This is used to find out if scale used anywhere.
+ *
+ * @param int $scaleid ID of the scale.
+ * @return bool True if the scale is used by any mod_jupyter instance.
+ */
+function jupyter_scale_used_anywhere($scaleid) {
+    global $DB;
+
+    if ($scaleid && $DB->record_exists('mod_jupyter', array('grade' => -$scaleid))) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Creates or updates grade item for the given mod_jupyter instance.
+ *
+ * Needed by {@see grade_update_mod_grades()}.
+ *
+ * @param stdClass $moduleinstance Instance object with extra cmidnumber and modname property.
+ * @param bool $reset Reset grades in the gradebook.
+ * @return void.
+ */
+function jupyter_grade_item_update($moduleinstance, $reset=false) {
+    global $CFG;
+    require_once($CFG->libdir.'/gradelib.php');
+
+    $item = array();
+    $item['itemname'] = clean_param($moduleinstance->name, PARAM_NOTAGS);
+    $item['gradetype'] = GRADE_TYPE_VALUE;
+
+    if ($moduleinstance->grade > 0) {
+        $item['gradetype'] = GRADE_TYPE_VALUE;
+        $item['grademax']  = $moduleinstance->grade;
+        $item['grademin']  = 0;
+    } else if ($moduleinstance->grade < 0) {
+        $item['gradetype'] = GRADE_TYPE_SCALE;
+        $item['scaleid']   = -$moduleinstance->grade;
+    } else {
+        $item['gradetype'] = GRADE_TYPE_NONE;
+    }
+    if ($reset) {
+        $item['reset'] = true;
+    }
+
+    grade_update('/mod/jupyter', $moduleinstance->course, 'mod', 'jupyter', $moduleinstance->id, 0, null, $item);
+}
+
+/**
+ * Delete grade item for given mod_jupyter instance.
+ *
+ * @param stdClass $moduleinstance Instance object.
+ * @return grade_item.
+ */
+function jupyter_grade_item_delete($moduleinstance) {
+    global $CFG;
+    require_once($CFG->libdir.'/gradelib.php');
+
+    return grade_update('/mod/jupyter', $moduleinstance->course, 'mod', 'mod_jupyter',
+                        $moduleinstance->id, 0, null, array('deleted' => 1));
+}
+
+/**
+ * Update mod_jupyter grades in the gradebook.
+ *
+ * Needed by {@see grade_update_mod_grades()}.
+ *
+ * @param stdClass $moduleinstance Instance object with extra cmidnumber and modname property.
+ * @param int $userid Update grade of specific user only, 0 means all participants.
+ */
+function jupyter_update_grades($moduleinstance, $userid = 0) {
+    global $CFG, $DB;
+    require_once($CFG->libdir.'/gradelib.php');
+
+    // Populate array of grade objects indexed by userid.
+    $grades = array();
+    grade_update('/mod/jupyter', $moduleinstance->course, 'mod', 'jupyter', $moduleinstance->id, 0, $grades);
 }

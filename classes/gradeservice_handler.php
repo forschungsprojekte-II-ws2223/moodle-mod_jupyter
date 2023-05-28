@@ -30,6 +30,7 @@ require($CFG->dirroot . '/mod/jupyter/vendor/autoload.php');
 use coding_exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use stdClass;
 
 /**
  * Handles interaction with gradeservice api.
@@ -59,6 +60,7 @@ class gradeservice_handler {
     /**
      * Create an assignment.
      *
+     * @param stdClass $moduleinstance
      * @param int $contextid activity context id
      * @param int $courseid id of the moodle course
      * @param int $instanceid activity instance id
@@ -67,7 +69,7 @@ class gradeservice_handler {
      * @throws coding_exception
      * @throws GuzzleException
      */
-    public function create_assignment(int $contextid, int $courseid,  int $instanceid, string $token) : string {
+    public function create_assignment(stdClass $moduleinstance, int $contextid, int $courseid, string $token) : string {
         global $DB;
 
         $fs = get_file_storage();
@@ -75,7 +77,7 @@ class gradeservice_handler {
         $file = reset($files);
         $filename = $file->get_filename();
 
-        $route = "/{$courseid}/{$instanceid}";
+        $route = "/{$courseid}/{$moduleinstance->id}";
 
         $res = $this->client->request("POST", $route, [
             'headers' => [
@@ -90,7 +92,8 @@ class gradeservice_handler {
             ]
         ]);
 
-        $file = base64_decode(json_decode($res->getBody(), true)[$filename]);
+        $res = json_decode($res->getBody(), true);
+        $file = base64_decode($res[$filename]);
 
         $fs->delete_area_files($contextid, 'mod_jupyter', 'assignment');
         $fileinfo = array(
@@ -102,7 +105,20 @@ class gradeservice_handler {
             'filename' => $filename
         );
         $fs->create_file_from_string($fileinfo, $file);
-        $DB->set_field('jupyter', 'assignment', $filename, ['id' => $instanceid, 'course' => $courseid]);
+        $DB->set_field('jupyter', 'assignment', $filename, ['id' => $moduleinstance->id, 'course' => $courseid]);
+
+        $points = array();
+        for ($i = 0; $i < count($res['points']); $i++) {
+            $points[] = array(
+                "jupyterid" => $moduleinstance->id,
+                "point" => $i + 1,
+                "maxpoints" => $res['points'][$i]
+            );
+        }
+        $DB->insert_records('jupyter_questions', $points);
+
+        $moduleinstance->grade = $res['total'];
+        jupyter_grade_item_update($moduleinstance);
 
         return $filename;
     }

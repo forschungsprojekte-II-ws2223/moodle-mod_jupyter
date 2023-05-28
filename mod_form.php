@@ -73,6 +73,9 @@ class mod_jupyter_mod_form extends moodleform_mod {
         // Adding the standard "intro" and "introformat" fields.
         $this->standard_intro_elements();
 
+        // // Add standard grading elements.
+        // $this->standard_grading_coursemodule_elements();
+
         // Add standard elements.
         $this->standard_coursemodule_elements();
 
