@@ -51,7 +51,6 @@ class restore_jupyter_activity_structure_step extends restore_activity_structure
         global $DB;
 
         $data = (object) $data;
-        $oldid = $data->id;
         $data->course = $this->get_courseid();
 
         // Insert the jupyter record.

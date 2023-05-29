@@ -105,7 +105,8 @@ class gradeservice_handler {
         $moduleinstance->assignment = $filename;
 
         $points = array();
-        for ($i = 0; $i < count($res['points']); $i++) {
+        $len  = count($res['points']);
+        for ($i = 0; $i < $len; $i++) {
             $points[] = array(
                 "jupyterid" => $moduleinstance->id,
                 "point" => $i + 1,
