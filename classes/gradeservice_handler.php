@@ -106,7 +106,7 @@ class gradeservice_handler {
             'filename' => $filename
         );
         $fs->create_file_from_string($fileinfo, $file);
-        $DB->set_field('jupyter', 'assignment', $filename, ['id' => $moduleinstance->id, 'course' => $courseid]);
+        $moduleinstance->assignment = $filename;
 
         $points = array();
         for ($i = 0; $i < count($res['points']); $i++) {
@@ -117,8 +117,9 @@ class gradeservice_handler {
             );
         }
         $DB->insert_records('jupyter_questions', $points);
-
         $moduleinstance->grade = $res['total'];
+
+        $DB->update_record('jupyter', $moduleinstance);
         jupyter_grade_item_update($moduleinstance);
 
         return $filename;
