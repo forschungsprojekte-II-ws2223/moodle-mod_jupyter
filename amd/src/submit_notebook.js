@@ -18,7 +18,7 @@ const Selectors = {
     },
 };
 
-export const init = async ({ user, contextid }) => {
+export const init = async ({ user, courseid, instanceid, filename, token }) => {
     getString('submitsuccessnotification', 'mod_jupyter')
         .then(str => {
             context.message = str;
@@ -27,7 +27,7 @@ export const init = async ({ user, contextid }) => {
 
     document.addEventListener('click', e => {
         if (e.target.closest(Selectors.actions.submitButton)) {
-            callSubmitNotebook(user, contextid);
+            callSubmitNotebook(user, courseid, instanceid, filename, token);
 
             // This will call the function to load and render our template.
             Templates.renderForPromise('core/notification_info', context)
@@ -44,8 +44,8 @@ export const init = async ({ user, contextid }) => {
     });
 };
 
-const callSubmitNotebook = async (user, contextid) => {
-    const response = await submitNotebook(user, contextid);
+const callSubmitNotebook = async (user, courseid, instanceid, filename, token) => {
+    const response = await submitNotebook(user, courseid, instanceid, filename, token);
     window.console.log(response);
-    return response;
+    //return response;
 };

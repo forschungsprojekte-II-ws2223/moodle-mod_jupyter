@@ -30,6 +30,7 @@ require($CFG->dirroot . '/mod/jupyter/vendor/autoload.php');
 use coding_exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use mod_jupyter\jupyterhub_handler;
 use stdClass;
 
 /**
@@ -122,4 +123,36 @@ class gradeservice_handler {
 
         return $filename;
     }
+
+
+    /**
+     * Submit an assignment.
+     * @param string $user user name of the student that submitted the file
+     * @param int $courseid ID of the Moodle course
+     * @param int $instanceid ID of the activity instance
+     * @param string $filename name of the submitted notebook file
+     * @param string $token Gradeservice authorization JWT
+     */
+    public function submit_assignment(string $user, int $courseid, int $instanceid, string $filename, string $token) {
+        $route = "/{$courseid}/{$instanceid}/{$user}";
+
+        $handler = new jupyterhub_handler();
+        $file = $handler->get_notebook($user, $courseid, $instanceid, $filename);
+
+        $res = $this->client->request("POST", $route, [
+            'headers' => [
+                'Authorization' => $token,
+            ],
+            'multipart' => [
+                [
+                    'name' => 'file',
+                    'contents' => $file,
+                    'filename' => $filename,
+                ]
+            ]
+        ]);
+        $res = json_decode($res->getBody(), true);
+        return $res;
+    }
+
 }

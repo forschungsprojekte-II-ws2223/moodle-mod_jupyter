@@ -104,7 +104,14 @@ if ($assignment != null) {
             $assignment
         );
 
-        $PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init', [['user' => $user, 'contextid' => $modulecontext->id]]);
+        $PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init', [[
+            'user' => $user,
+            'courseid' => $course->id,
+            'instanceid' => $moduleinstance->id,
+            'filename' => $assignment,
+            'token' => $jwt
+            ]]
+        );
         $PAGE->requires->js_call_amd('mod_jupyter/reset_notebook', 'init', [[
             'user' => $user,
             'contextid' => $modulecontext->id,

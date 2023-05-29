@@ -182,4 +182,25 @@ class jupyterhub_handler {
             }
         }
     }
+
+    /**
+     * Return the notebook file associated to the given parameters.
+     * @param string $user user name of the owner of the notebook
+     * @param courseid $courseid ID of the Moodle course
+     * @param instanceid $instanceid ID of the activity instance
+     * @param filename $filename name of the notebook file
+     */
+    public function get_notebook(string $user, int $courseid, int $instanceid, string $filename) {
+        $route = "/user/{$user}/api/contents/{$courseid}/{$instanceid}/{$filename}";
+
+        $res = $this->client->get($route,
+        ['query' => [
+            'content' => '1',
+            'format' => 'base64',
+            'type' => 'file'
+            ]
+        ]);
+        $res = json_decode($res->getBody(), true);
+        return base64_decode($res['content']);
+    }
 }
