@@ -22,7 +22,7 @@
         <KEY NAME="fk_course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="jupyter_questions">
+    <TABLE NAME="jupyter_questions" COMMENT="jupyter assignment questions">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="jupyterid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
