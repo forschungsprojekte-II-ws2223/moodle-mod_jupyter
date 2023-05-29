@@ -50,11 +50,11 @@ function jupyter_supports($feature) {
  * in mod_form.php) this function will create a new instance and return the id
  * number of the instance.
  *
- * @param object $data An object from the form.
+ * @param stdClass $data An object from the form.
  * @param mod_jupyter_mod_form $mform The form.
  * @return int The id of the newly inserted record.
  */
-function jupyter_add_instance($data): int {
+function jupyter_add_instance(stdClass $data): int {
     global $DB;
 
     $data->timecreated = time();
@@ -75,11 +75,11 @@ function jupyter_add_instance($data): int {
  * Given an object containing all the necessary data (defined in mod_form.php),
  * this function will update an existing instance with new data.
  *
- * @param object $data An object from the form in mod_form.php.
+ * @param stdClass $data An object from the form in mod_form.php.
  * @param mod_jupyter_mod_form $mform The form.
  * @return bool True if successful, false otherwise.
  */
-function jupyter_update_instance($data) {
+function jupyter_update_instance(stdClass $data) {
     global $DB;
 
     $data->timemodified = time();
@@ -96,7 +96,7 @@ function jupyter_update_instance($data) {
  * @param int $id Id of the module instance.
  * @return bool True if successful, false on failure.
  */
-function jupyter_delete_instance($id) {
+function jupyter_delete_instance(int $id) {
     global $DB;
 
     $exists = $DB->get_record('jupyter', array('id' => $id));

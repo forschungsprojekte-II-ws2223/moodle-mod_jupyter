@@ -63,14 +63,11 @@ class gradeservice_handler {
      *
      * @param stdClass $moduleinstance
      * @param int $contextid activity context id
-     * @param int $courseid id of the moodle course
-     * @param int $instanceid activity instance id
+     * @param string $token jwt
      * @param string $token authorization token
      * @return string filename of the created assignment
-     * @throws coding_exception
-     * @throws GuzzleException
      */
-    public function create_assignment(stdClass $moduleinstance, int $contextid, int $courseid, string $token) : string {
+    public function create_assignment(stdClass $moduleinstance, int $contextid, string $token) : string {
         global $DB;
 
         $fs = get_file_storage();
@@ -78,7 +75,7 @@ class gradeservice_handler {
         $file = reset($files);
         $filename = $file->get_filename();
 
-        $route = "/{$courseid}/{$moduleinstance->id}";
+        $route = "/{$moduleinstance->course}/{$moduleinstance->id}";
 
         $res = $this->client->request("POST", $route, [
             'headers' => [

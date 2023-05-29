@@ -186,7 +186,7 @@ class jupyterhub_handler {
     /**
      * Return the notebook file associated to the given parameters.
      * @param string $user user name of the owner of the notebook
-     * @param string $courseid activity course id
+     * @param int $courseid activity course id
      * @param int $instanceid activity instance id
      * @param string $filename notebook file name
      * @return string returns the decoded notebook file contents
