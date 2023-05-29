@@ -186,9 +186,12 @@ class jupyterhub_handler {
     /**
      * Return the notebook file associated to the given parameters.
      * @param string $user user name of the owner of the notebook
-     * @param courseid $courseid ID of the Moodle course
-     * @param instanceid $instanceid ID of the activity instance
-     * @param filename $filename name of the notebook file
+     * @param int $courseid activity course id
+     * @param int $instanceid activity instance id
+     * @param string $filename notebook file name
+     * @return string returns the decoded notebook file contents
+     * @throws RequestException
+     * @throws ConnectException
      */
     public function get_notebook(string $user, int $courseid, int $instanceid, string $filename) {
         $route = "/user/{$user}/api/contents/{$courseid}/{$instanceid}/{$filename}";

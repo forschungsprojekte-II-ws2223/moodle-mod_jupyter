@@ -51,8 +51,6 @@ class jupyterhub_handler_test extends \advanced_testcase {
         $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
         $user = mb_strtolower($USER->username, "UTF-8");
         $handler = new jupyterhub_handler($user, $modulecontext->id);
-        $this->assertEquals(property_exists($handler, 'user'), true);
-        $this->assertEquals(property_exists($handler, 'contextid'), true);
         $this->assertEquals(property_exists($handler, 'client'), true);
     }
 
@@ -80,14 +78,17 @@ class jupyterhub_handler_test extends \advanced_testcase {
         $handler = new jupyterhub_handler($user, $SITE->id);
         $fs = get_file_storage();
         $files = $fs->get_area_files($SITE->id, 'mod_jupyter', 'package', 0, 'id', false);
+        $fs = get_file_storage();
+        $file = reset($files);
+        $filename = $file->get_filename();
 
         // One file was created.
         $this->assertCount(1, $files);
 
         // Setup mock handler.
         $mock = new MockHandler([
-            new Response(200, [''], ''), // Response for check_jupyterhub_reachable().
             new Response(200, [''], '{"server": "null"}'), // Response for check_user_status().
+            new Response(200, [''], ''), // Response for check_jupyterhub_reachable().
             new Response(200, [''], '') // Response for check_notebook_status().
         ]);
 
@@ -96,12 +97,13 @@ class jupyterhub_handler_test extends \advanced_testcase {
         $handler->set_client($client);
 
         // Check if $notebookpath is correct.
-        $notebookpath = $handler->get_notebook_path();
-        $this->assertEquals('/hub/user-redirect/lab/tree/testfile1.ipynb', $notebookpath);
+        $notebookpath = $handler->get_notebook_path($user, $modulecontext->id, $SITE->id, $moduleinstance->id, $filename);
+        $this->assertEquals('/hub/user-redirect/lab/tree/' . $SITE->id . '/' .
+        $moduleinstance->id . '/testfile1.ipynb', $notebookpath);
     }
 
     /**
-     * Test handling of an empty url in the plugin settings. If empty shoulf throw Exception.
+     * Test handling of an empty url in the plugin settings. If empty should throw Exception.
      * @covers \jupyterhub_handler
      * @throws InvalidArgumentException
      * @return void

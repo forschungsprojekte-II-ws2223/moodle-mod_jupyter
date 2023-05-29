@@ -50,11 +50,10 @@ function jupyter_supports($feature) {
  * in mod_form.php) this function will create a new instance and return the id
  * number of the instance.
  *
- * @param object $data An object from the form.
- * @param mod_jupyter_mod_form $mform The form.
+ * @param stdClass $data An object from the form.
  * @return int The id of the newly inserted record.
  */
-function jupyter_add_instance($data): int {
+function jupyter_add_instance(stdClass $data): int {
     global $DB;
 
     $data->timecreated = time();
@@ -66,8 +65,6 @@ function jupyter_add_instance($data): int {
     $DB->set_field('course_modules', 'instance', $data->id, ['id' => $cmid]);
     jupyter_set_mainfile($data);
 
-    // jupyter_grade_item_update($data);
-
     return $data->id;
 }
 
@@ -77,11 +74,10 @@ function jupyter_add_instance($data): int {
  * Given an object containing all the necessary data (defined in mod_form.php),
  * this function will update an existing instance with new data.
  *
- * @param object $data An object from the form in mod_form.php.
- * @param mod_jupyter_mod_form $mform The form.
+ * @param stdClass $data An object from the form in mod_form.php.
  * @return bool True if successful, false otherwise.
  */
-function jupyter_update_instance($data, $mform = null) {
+function jupyter_update_instance(stdClass $data) {
     global $DB;
 
     $data->timemodified = time();
@@ -98,7 +94,7 @@ function jupyter_update_instance($data, $mform = null) {
  * @param int $id Id of the module instance.
  * @return bool True if successful, false on failure.
  */
-function jupyter_delete_instance($id) {
+function jupyter_delete_instance(int $id) {
     global $DB;
 
     $exists = $DB->get_record('jupyter', array('id' => $id));
@@ -126,44 +122,6 @@ function jupyter_set_mainfile(stdClass $data): void {
         $fs->delete_area_files($context->id, 'mod_jupyter', 'package');
         file_save_draft_area_files($data->packagefile, $context->id, 'mod_jupyter', 'package',
             0, ['subdirs' => 0, 'maxfiles' => 1]);
-    }
-}
-
-/**
- * Is a given scale used by the instance of mod_jupyter?
- *
- * This function returns if a scale is being used by one mod_jupyter
- * if it has support for grading and scales.
- *
- * @param int $moduleinstanceid ID of an instance of this module.
- * @param int $scaleid ID of the scale.
- * @return bool True if the scale is used by the given mod_jupyter instance.
- */
-function jupyter_scale_used($moduleinstanceid, $scaleid) {
-    global $DB;
-
-    if ($scaleid && $DB->record_exists('mod_jupyter', array('id' => $moduleinstanceid, 'grade' => -$scaleid))) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-/**
- * Checks if scale is being used by any instance of mod_jupyter.
- *
- * This is used to find out if scale used anywhere.
- *
- * @param int $scaleid ID of the scale.
- * @return bool True if the scale is used by any mod_jupyter instance.
- */
-function jupyter_scale_used_anywhere($scaleid) {
-    global $DB;
-
-    if ($scaleid && $DB->record_exists('mod_jupyter', array('grade' => -$scaleid))) {
-        return true;
-    } else {
-        return false;
     }
 }
 

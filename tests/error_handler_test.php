@@ -16,7 +16,6 @@
 
 namespace mod_jupyter;
 
-use core\notification;
 use ReflectionClass;
 
 /**
@@ -32,68 +31,19 @@ use ReflectionClass;
  */
 class error_handler_test extends \advanced_testcase {
     /**
-     * Test if two errors (heading and details) are created if user is an admin.
+     * Test if jupyter connect error is created with additional information when user is admin.
      * @covers \error_handler
      * @return void
      */
-    public function test_error_is_created_admin() {
-        global $OUTPUT, $CFG, $DB, $SITE, $moduleinstance, $modulecontext;
-        $this->resetAfterTest();
-        $this->setAdminUser();
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
-        $jupyter = $generator->create_instance(array('course' => $SITE->id));
-        $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
-        $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
-        $modulecontext = \context_module::instance($cm->id);
-        $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
-        error_handler::show_error_message();
+    public function test_jupyter_connect_err() {
+        global $modulecontext;
+        $this->setup_test(true);
+        // Create error notification.
+        error_handler::jupyter_connect_err('errortext', $modulecontext);
 
         // Get all notifications.
         $notficationstack = \core\notification::fetch();
-        // Two errors are created since jupyterhub is not running (header and detailed info).
-        $this->assertEquals(count($notficationstack), 2);
-
-        // Use reflection to access protected properties for testing purpose only.
-        $reflection = new ReflectionClass($notficationstack[0]);
-        $propertymessage = $reflection->getProperty('message');
-        $propertymessagetype = $reflection->getProperty('messagetype');
-        $propertymessage->setAccessible(true);
-        $propertymessagetype->setAccessible(true);
-        $expected = get_string('errorheading', 'jupyter', ['instancename' => $moduleinstance->name]);
-        $this->assertEquals($propertymessage->getValue($notficationstack[0]), $expected);
-        $this->assertEquals($propertymessagetype->getValue($notficationstack[0]), 'error');
-
-        $reflection = new ReflectionClass($notficationstack[1]);
-        $propertymessage = $reflection->getProperty('message');
-        $propertymessagetype = $reflection->getProperty('messagetype');
-        $propertymessage->setAccessible(true);
-        $propertymessagetype->setAccessible(true);
-        $expected = get_string('adminsettingserror', 'jupyter', ['url' => $jupyterhuburl]);
-        $this->assertEquals($propertymessage->getValue($notficationstack[1]), $expected);
-        $this->assertEquals($propertymessagetype->getValue($notficationstack[1]), 'error');
-    }
-
-    /**
-     * Test if error heading is created if user is no admin.
-     * @covers \error_handler
-     * @return void
-     */
-    public function test_error_is_created_noadmin() {
-        global $OUTPUT, $CFG, $DB, $SITE, $moduleinstance, $modulecontext;
-        $this->resetAfterTest();
-        $user = $this->getDataGenerator()->create_user();
-        $this->setUser($user);
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
-        $jupyter = $generator->create_instance(array('course' => $SITE->id));
-        $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
-        $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
-        $modulecontext = \context_module::instance($cm->id);
-        $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
-        error_handler::show_error_message();
-
-        // Get all notifications.
-        $notficationstack = \core\notification::fetch();
-        // Only one error is created since jupyterhub is not running (only header).
+        // One notification should be on the stack.
         $this->assertEquals(count($notficationstack), 1);
 
         // Use reflection to access protected properties for testing purpose only.
@@ -102,8 +52,238 @@ class error_handler_test extends \advanced_testcase {
         $propertymessagetype = $reflection->getProperty('messagetype');
         $propertymessage->setAccessible(true);
         $propertymessagetype->setAccessible(true);
-        $expected = get_string('errorheading', 'jupyter', ['instancename' => $moduleinstance->name]);
+        // Additional information in error message expected.
+        $expected = get_string('jupyter_connect_err_admin', 'jupyter', [
+            'url' => get_config('mod_jupyter', 'jupyterhub_url'),
+            'msg' => 'errortext'
+        ]);
+        // Check if provided type and message are correct.
         $this->assertEquals($propertymessage->getValue($notficationstack[0]), $expected);
         $this->assertEquals($propertymessagetype->getValue($notficationstack[0]), 'error');
+    }
+    /**
+     * Test if jupyter connect error is created without additional information when user is no admin.
+     * @covers \error_handler
+     * @return void
+     */
+    public function test_jupyter_connect_err_no_admin() {
+        global $modulecontext;
+        $this->setup_test(false);
+        // Create error notification.
+        error_handler::jupyter_connect_err('errortext', $modulecontext);
+
+        // Get all notifications.
+        $notficationstack = \core\notification::fetch();
+        // One notification should be on the stack.
+        $this->assertEquals(count($notficationstack), 1);
+
+        // Use reflection to access protected properties for testing purpose only.
+        $reflection = new ReflectionClass($notficationstack[0]);
+        $propertymessage = $reflection->getProperty('message');
+        $propertymessagetype = $reflection->getProperty('messagetype');
+        $propertymessage->setAccessible(true);
+        $propertymessagetype->setAccessible(true);
+        // Simple error message expected.
+        $expected = get_string('jupyter_connect_err', 'jupyter');
+        // Check if provided type and message are correct.
+        $this->assertEquals($propertymessage->getValue($notficationstack[0]), $expected);
+        $this->assertEquals($propertymessagetype->getValue($notficationstack[0]), 'error');
+    }
+
+    /**
+     * Test if jupyter connect error is created with additional information when user is admin.
+     * @covers \error_handler
+     * @return void
+     */
+    public function test_jupyter_resp_err() {
+        global $modulecontext;
+        $this->setup_test(true);
+        // Create error notification.
+        error_handler::jupyter_resp_err('errortext', $modulecontext);
+
+        // Get all notifications.
+        $notficationstack = \core\notification::fetch();
+        // One notification should be on the stack.
+        $this->assertEquals(count($notficationstack), 1);
+
+        // Use reflection to access protected properties for testing purpose only.
+        $reflection = new ReflectionClass($notficationstack[0]);
+        $propertymessage = $reflection->getProperty('message');
+        $propertymessagetype = $reflection->getProperty('messagetype');
+        $propertymessage->setAccessible(true);
+        $propertymessagetype->setAccessible(true);
+        // Additional information in error message expected.
+        $expected = get_string('jupyter_resp_err_admin', 'jupyter', [
+            'url' => get_config('mod_jupyter', 'jupyterhub_url'),
+            'msg' => 'errortext'
+        ]);
+        // Check if provided type and message are correct.
+        $this->assertEquals($propertymessage->getValue($notficationstack[0]), $expected);
+        $this->assertEquals($propertymessagetype->getValue($notficationstack[0]), 'error');
+    }
+    /**
+     * Test if jupyter connect error is created without additional information when user is no admin.
+     * @covers \error_handler
+     * @return void
+     */
+    public function test_jupyter_resp_err_no_admin() {
+        global $modulecontext;
+        $this->setup_test(false);
+        // Create error notification.
+        error_handler::jupyter_resp_err('errortext', $modulecontext);
+
+        // Get all notifications.
+        $notficationstack = \core\notification::fetch();
+        // One notification should be on the stack.
+        $this->assertEquals(count($notficationstack), 1);
+
+        // Use reflection to access protected properties for testing purpose only.
+        $reflection = new ReflectionClass($notficationstack[0]);
+        $propertymessage = $reflection->getProperty('message');
+        $propertymessagetype = $reflection->getProperty('messagetype');
+        $propertymessage->setAccessible(true);
+        $propertymessagetype->setAccessible(true);
+        // Simple error message expected.
+        $expected = get_string('jupyter_resp_err', 'jupyter');
+        // Check if provided type and message are correct.
+        $this->assertEquals($propertymessage->getValue($notficationstack[0]), $expected);
+        $this->assertEquals($propertymessagetype->getValue($notficationstack[0]), 'error');
+    }
+
+
+    /**
+     * Test if gradeservice connect error is created with additional information when user is admin.
+     * @covers \error_handler
+     * @return void
+     */
+    public function test_gradeservice_connect_err() {
+        global $modulecontext;
+        $this->setup_test(true);
+        // Create error notification.
+        error_handler::gradeservice_connect_err('errortext', $modulecontext);
+
+        // Get all notifications.
+        $notficationstack = \core\notification::fetch();
+        // One notification should be on the stack.
+        $this->assertEquals(count($notficationstack), 1);
+
+        // Use reflection to access protected properties for testing purpose only.
+        $reflection = new ReflectionClass($notficationstack[0]);
+        $propertymessage = $reflection->getProperty('message');
+        $propertymessagetype = $reflection->getProperty('messagetype');
+        $propertymessage->setAccessible(true);
+        $propertymessagetype->setAccessible(true);
+        // Additional information in error message expected.
+        $expected = get_string('gradeservice_connect_err_admin', 'jupyter', [
+            'url' => get_config('mod_jupyter', 'jupyterhub_url'),
+            'msg' => 'errortext'
+        ]);
+        // Check if provided type and message are correct.
+        $this->assertEquals($propertymessage->getValue($notficationstack[0]), $expected);
+        $this->assertEquals($propertymessagetype->getValue($notficationstack[0]), 'error');
+    }
+    /**
+     * Test if gradeservice connect error is created without additional information when user is no admin.
+     * @covers \error_handler
+     * @return void
+     */
+    public function test_gradeservice_connect_err_no_admin() {
+        global $modulecontext;
+        $this->setup_test(false);
+        // Create error notification.
+        error_handler::gradeservice_connect_err('errortext', $modulecontext);
+
+        // Get all notifications.
+        $notficationstack = \core\notification::fetch();
+        // One notification should be on the stack.
+        $this->assertEquals(count($notficationstack), 1);
+
+        // Use reflection to access protected properties for testing purpose only.
+        $reflection = new ReflectionClass($notficationstack[0]);
+        $propertymessage = $reflection->getProperty('message');
+        $propertymessagetype = $reflection->getProperty('messagetype');
+        $propertymessage->setAccessible(true);
+        $propertymessagetype->setAccessible(true);
+        // Simple error message expected.
+        $expected = get_string('gradeservice_connect_err', 'jupyter');
+        // Check if provided type and message are correct.
+        $this->assertEquals($propertymessage->getValue($notficationstack[0]), $expected);
+        $this->assertEquals($propertymessagetype->getValue($notficationstack[0]), 'error');
+    }
+
+    /**
+     * Test if gradeservice connect error is created with additional information when user is admin.
+     * @covers \error_handler
+     * @return void
+     */
+    public function test_gradeservice_resp_err() {
+        global $modulecontext;
+        $this->setup_test(true);
+        // Create error notification.
+        error_handler::gradeservice_resp_err('errortext', $modulecontext);
+
+        // Get all notifications.
+        $notficationstack = \core\notification::fetch();
+        // One notification should be on the stack.
+        $this->assertEquals(count($notficationstack), 1);
+
+        // Use reflection to access protected properties for testing purpose only.
+        $reflection = new ReflectionClass($notficationstack[0]);
+        $propertymessage = $reflection->getProperty('message');
+        $propertymessagetype = $reflection->getProperty('messagetype');
+        $propertymessage->setAccessible(true);
+        $propertymessagetype->setAccessible(true);
+        // Additional information in error message expected.
+        $expected = get_string('gradeservice_resp_err_admin', 'jupyter', [
+            'url' => get_config('mod_jupyter', 'jupyterhub_url'),
+            'msg' => 'errortext'
+        ]);
+        // Check if provided type and message are correct.
+        $this->assertEquals($propertymessage->getValue($notficationstack[0]), $expected);
+        $this->assertEquals($propertymessagetype->getValue($notficationstack[0]), 'error');
+    }
+    /**
+     * Test if gradeservice response error is created without additional information when user is no admin.
+     * @covers \error_handler
+     * @return void
+     */
+    public function test_gradeservice_resp_err_no_admin() {
+        global $modulecontext;
+        $this->setup_test(false);
+        // Create error notification.
+        error_handler::gradeservice_resp_err('errortext', $modulecontext);
+
+        // Get all notifications.
+        $notficationstack = \core\notification::fetch();
+        // One notification should be on the stack.
+        $this->assertEquals(count($notficationstack), 1);
+
+        // Use reflection to access protected properties for testing purpose only.
+        $reflection = new ReflectionClass($notficationstack[0]);
+        $propertymessage = $reflection->getProperty('message');
+        $propertymessagetype = $reflection->getProperty('messagetype');
+        $propertymessage->setAccessible(true);
+        $propertymessagetype->setAccessible(true);
+        // Simple error message expected.
+        $expected = get_string('gradeservice_resp_err', 'jupyter');
+        // Check if provided type and message are correct.
+        $this->assertEquals($propertymessage->getValue($notficationstack[0]), $expected);
+        $this->assertEquals($propertymessagetype->getValue($notficationstack[0]), 'error');
+    }
+
+    private function setup_test(bool $admin) {
+        global $DB, $SITE, $moduleinstance, $modulecontext;
+        $this->resetAfterTest();
+        if ($admin) {
+            $this->setAdminUser();
+        } else {
+            $user = $this->getDataGenerator()->create_user();
+            $this->setUser($user);
+        }
+        $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
+        $jupyter = $generator->create_instance(array('course' => $SITE->id));
+        $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
+        $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
+        $modulecontext = \context_module::instance($cm->id);
     }
 }

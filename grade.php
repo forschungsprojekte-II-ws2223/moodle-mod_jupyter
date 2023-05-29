@@ -15,11 +15,14 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Redirect the user to the appropiate submission related page.
+ * Handles interaction with jupyter api.
+ *
+ * Reference for the used jupyterhub and jupyterlab api's:
+ * https://jupyterhub.readthedocs.io/en/stable/reference/rest-api.html
+ * https://jupyter-server.readthedocs.io/en/latest/developers/rest-api.html
  *
  * @package     mod_jupyter
- * @category    grade
- * @copyright   2023 Your Name <you@example.com>
+ * @copyright   KIB3 StuPro SS2022 Development Team of the University of Stuttgart
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
