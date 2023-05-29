@@ -51,7 +51,6 @@ function jupyter_supports($feature) {
  * number of the instance.
  *
  * @param stdClass $data An object from the form.
- * @param mod_jupyter_mod_form $mform The form.
  * @return int The id of the newly inserted record.
  */
 function jupyter_add_instance(stdClass $data): int {
@@ -76,7 +75,6 @@ function jupyter_add_instance(stdClass $data): int {
  * this function will update an existing instance with new data.
  *
  * @param stdClass $data An object from the form in mod_form.php.
- * @param mod_jupyter_mod_form $mform The form.
  * @return bool True if successful, false otherwise.
  */
 function jupyter_update_instance(stdClass $data) {

@@ -36,14 +36,8 @@ class error_handler_test extends \advanced_testcase {
      * @return void
      */
     public function test_jupyter_connect_err() {
-        global $DB, $SITE, $moduleinstance, $modulecontext;
-        $this->resetAfterTest();
-        $this->setAdminUser();
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
-        $jupyter = $generator->create_instance(array('course' => $SITE->id));
-        $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
-        $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
-        $modulecontext = \context_module::instance($cm->id);
+        global $modulecontext;
+        $this->setup_test();
         // Create error notification.
         error_handler::jupyter_connect_err('errortext', $modulecontext);
 
@@ -73,15 +67,8 @@ class error_handler_test extends \advanced_testcase {
      * @return void
      */
     public function test_jupyter_connect_err_no_admin() {
-        global $DB, $SITE, $moduleinstance, $modulecontext;
-        $this->resetAfterTest();
-        $user = $this->getDataGenerator()->create_user();
-        $this->setUser($user);
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
-        $jupyter = $generator->create_instance(array('course' => $SITE->id));
-        $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
-        $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
-        $modulecontext = \context_module::instance($cm->id);
+        global $modulecontext;
+        $this->setup_test();
         // Create error notification.
         error_handler::jupyter_connect_err('errortext', $modulecontext);
 
@@ -109,14 +96,8 @@ class error_handler_test extends \advanced_testcase {
      * @return void
      */
     public function test_jupyter_resp_err() {
-        global $DB, $SITE, $moduleinstance, $modulecontext;
-        $this->resetAfterTest();
-        $this->setAdminUser();
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
-        $jupyter = $generator->create_instance(array('course' => $SITE->id));
-        $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
-        $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
-        $modulecontext = \context_module::instance($cm->id);
+        global $modulecontext;
+        $this->setup_test();
         // Create error notification.
         error_handler::jupyter_resp_err('errortext', $modulecontext);
 
@@ -146,15 +127,8 @@ class error_handler_test extends \advanced_testcase {
      * @return void
      */
     public function test_jupyter_resp_err_no_admin() {
-        global $DB, $SITE, $moduleinstance, $modulecontext;
-        $this->resetAfterTest();
-        $user = $this->getDataGenerator()->create_user();
-        $this->setUser($user);
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
-        $jupyter = $generator->create_instance(array('course' => $SITE->id));
-        $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
-        $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
-        $modulecontext = \context_module::instance($cm->id);
+        global $modulecontext;
+        $this->setup_test();
         // Create error notification.
         error_handler::jupyter_resp_err('errortext', $modulecontext);
 
@@ -183,14 +157,8 @@ class error_handler_test extends \advanced_testcase {
      * @return void
      */
     public function test_gradeservice_connect_err() {
-        global $DB, $SITE, $moduleinstance, $modulecontext;
-        $this->resetAfterTest();
-        $this->setAdminUser();
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
-        $jupyter = $generator->create_instance(array('course' => $SITE->id));
-        $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
-        $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
-        $modulecontext = \context_module::instance($cm->id);
+        global $modulecontext;
+        $this->setup_test();
         // Create error notification.
         error_handler::gradeservice_connect_err('errortext', $modulecontext);
 
@@ -220,15 +188,8 @@ class error_handler_test extends \advanced_testcase {
      * @return void
      */
     public function test_gradeservice_connect_err_no_admin() {
-        global $DB, $SITE, $moduleinstance, $modulecontext;
-        $this->resetAfterTest();
-        $user = $this->getDataGenerator()->create_user();
-        $this->setUser($user);
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
-        $jupyter = $generator->create_instance(array('course' => $SITE->id));
-        $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
-        $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
-        $modulecontext = \context_module::instance($cm->id);
+        global $modulecontext;
+        $this->setup_test();
         // Create error notification.
         error_handler::gradeservice_connect_err('errortext', $modulecontext);
 
@@ -256,14 +217,8 @@ class error_handler_test extends \advanced_testcase {
      * @return void
      */
     public function test_gradeservice_resp_err() {
-        global $DB, $SITE, $moduleinstance, $modulecontext;
-        $this->resetAfterTest();
-        $this->setAdminUser();
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
-        $jupyter = $generator->create_instance(array('course' => $SITE->id));
-        $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
-        $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
-        $modulecontext = \context_module::instance($cm->id);
+        global $modulecontext;
+        $this->setup_test();
         // Create error notification.
         error_handler::gradeservice_resp_err('errortext', $modulecontext);
 
@@ -295,14 +250,6 @@ class error_handler_test extends \advanced_testcase {
     public function test_gradeservice_resp_err_no_admin() {
         global $modulecontext;
         $this->setup_test();
-        // $this->resetAfterTest();
-        // $user = $this->getDataGenerator()->create_user();
-        // $this->setUser($user);
-        // $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
-        // $jupyter = $generator->create_instance(array('course' => $SITE->id));
-        // $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
-        // $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
-        // $modulecontext = \context_module::instance($cm->id);
         // Create error notification.
         error_handler::gradeservice_resp_err('errortext', $modulecontext);
 

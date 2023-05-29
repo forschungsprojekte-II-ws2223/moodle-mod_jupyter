@@ -63,7 +63,6 @@ class gradeservice_handler {
      *
      * @param stdClass $moduleinstance
      * @param int $contextid activity context id
-     * @param string $token jwt
      * @param string $token authorization token
      * @return string filename of the created assignment
      */
