@@ -294,6 +294,7 @@ class error_handler_test extends \advanced_testcase {
      */
     public function test_gradeservice_resp_err_no_admin() {
         global $modulecontext;
+        $this->setup_test();
         // $this->resetAfterTest();
         // $user = $this->getDataGenerator()->create_user();
         // $this->setUser($user);
@@ -323,7 +324,7 @@ class error_handler_test extends \advanced_testcase {
         $this->assertEquals($propertymessagetype->getValue($notficationstack[0]), 'error');
     }
 
-    private function setup() {
+    private function setup_test() {
         global $DB, $SITE, $moduleinstance, $modulecontext;
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
