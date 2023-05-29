@@ -274,11 +274,12 @@ class error_handler_test extends \advanced_testcase {
     private function setup_test(bool $admin) {
         global $DB, $SITE, $moduleinstance, $modulecontext;
         $this->resetAfterTest();
-        $user = $this->getDataGenerator()->create_user();
         if ($admin) {
             $this->setAdminUser();
+        } else {
+            $user = $this->getDataGenerator()->create_user();
+            $this->setUser($user);
         }
-        $this->setUser($user);
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
         $jupyter = $generator->create_instance(array('course' => $SITE->id));
         $cm = get_coursemodule_from_instance('jupyter', $jupyter->id);
