@@ -30,6 +30,8 @@ require($CFG->dirroot . '/mod/jupyter/vendor/autoload.php');
 use coding_exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use mod_jupyter\jupyterhub_handler;
+use stdClass;
 
 /**
  * Handles interaction with gradeservice api.
@@ -59,15 +61,12 @@ class gradeservice_handler {
     /**
      * Create an assignment.
      *
+     * @param stdClass $moduleinstance
      * @param int $contextid activity context id
-     * @param int $courseid id of the moodle course
-     * @param int $instanceid activity instance id
      * @param string $token authorization token
      * @return string filename of the created assignment
-     * @throws coding_exception
-     * @throws GuzzleException
      */
-    public function create_assignment(int $contextid, int $courseid,  int $instanceid, string $token) : string {
+    public function create_assignment(stdClass $moduleinstance, int $contextid, string $token) : string {
         global $DB;
 
         $fs = get_file_storage();
@@ -75,7 +74,7 @@ class gradeservice_handler {
         $file = reset($files);
         $filename = $file->get_filename();
 
-        $route = "/{$courseid}/{$instanceid}";
+        $route = "/{$moduleinstance->course}/{$moduleinstance->id}";
 
         $res = $this->client->request("POST", $route, [
             'headers' => [
@@ -90,7 +89,8 @@ class gradeservice_handler {
             ]
         ]);
 
-        $file = base64_decode(json_decode($res->getBody(), true)[$filename]);
+        $res = json_decode($res->getBody(), true);
+        $file = base64_decode($res[$filename]);
 
         $fs->delete_area_files($contextid, 'mod_jupyter', 'assignment');
         $fileinfo = array(
@@ -102,8 +102,55 @@ class gradeservice_handler {
             'filename' => $filename
         );
         $fs->create_file_from_string($fileinfo, $file);
-        $DB->set_field('jupyter', 'assignment', $filename, ['id' => $instanceid, 'course' => $courseid]);
+        $moduleinstance->assignment = $filename;
+
+        $points = array();
+        $len  = count($res['points']);
+        for ($i = 0; $i < $len; $i++) {
+            $points[] = array(
+                "jupyterid" => $moduleinstance->id,
+                "point" => $i + 1,
+                "maxpoints" => $res['points'][$i]
+            );
+        }
+        $DB->insert_records('jupyter_questions', $points);
+        $moduleinstance->grade = $res['total'];
+
+        $DB->update_record('jupyter', $moduleinstance);
+        jupyter_grade_item_update($moduleinstance);
 
         return $filename;
     }
+
+
+    /**
+     * Submit an assignment.
+     * @param string $user user name of the student that submitted the file
+     * @param int $courseid ID of the Moodle course
+     * @param int $instanceid ID of the activity instance
+     * @param string $filename name of the submitted notebook file
+     * @param string $token Gradeservice authorization JWT
+     */
+    public function submit_assignment(string $user, int $courseid, int $instanceid, string $filename, string $token) {
+        $route = "/{$courseid}/{$instanceid}/{$user}";
+
+        $handler = new jupyterhub_handler();
+        $file = $handler->get_notebook($user, $courseid, $instanceid, $filename);
+
+        $res = $this->client->request("POST", $route, [
+            'headers' => [
+                'Authorization' => $token,
+            ],
+            'multipart' => [
+                [
+                    'name' => 'file',
+                    'contents' => $file,
+                    'filename' => $filename,
+                ]
+            ]
+        ]);
+        $res = json_decode($res->getBody(), true);
+        return $res;
+    }
+
 }

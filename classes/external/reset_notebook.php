@@ -53,7 +53,7 @@ class reset_notebook extends \external_api {
      * @param int $instanceid :)
      * @return string
      */
-    public static function execute($user, $contextid, $courseid, $instanceid) {
+    public static function execute(string $user, int $contextid, int $courseid, int $instanceid) {
         $handler = new jupyterhub_handler();
         $handler->reset_notebook($user, $contextid, $courseid, $instanceid);
         return 'notebook reset';

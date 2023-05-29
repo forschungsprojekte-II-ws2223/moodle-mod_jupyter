@@ -16,10 +16,8 @@
 
 namespace mod_jupyter\external;
 
-use mod_jupyter\jupyterhub_handler;
+use mod_jupyter\gradeservice_handler;
 use external_function_parameters;
-use external_multiple_structure;
-use external_single_structure;
 use external_value;
 
 
@@ -38,30 +36,30 @@ class submit_notebook extends \external_api {
     public static function execute_parameters() {
         return new external_function_parameters([
             'user' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'unique user id'),
-            'contextid' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'module context id'),
+            'courseid' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'module course id'),
+            'instanceid' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'module instance id'),
+            'filename' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'notebook file name'),
+            'token' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'Gradeservice JWT')
         ]);
     }
 
     /**
      * Get notebookfile from notebook server and send it to autograding.
      *
-     * @param string $user unique user id
-     * @param int $contextid contextid of activity instance
-     * @return tbd
+     * @param string $user user name of the student that submitted the file
+     * @param int $courseid ID of the Moodle course
+     * @param int $instanceid ID of the activity instance
+     * @param string $filename name of the submitted notebook file
+     * @param string $token Gradeservice authorization JWT
      */
-    public static function execute($user, $contextid) {
-        [
-            'user' => $user,
-            'contextid' => $contextid,
-        ] = self::validate_parameters(self::execute_parameters(), [
-            'user' => $user,
-            'contextid' => $contextid,
-        ]);
+    public static function execute(string $user, int $courseid, int $instanceid, string $filename, string $token) {
+        $handler = new gradeservice_handler();
+        $points = $handler->submit_assignment($user, $courseid, $instanceid, $filename, $token);
 
-        $handler = new jupyterhub_handler($user, $contextid);
-        $notebookfile = $handler->get_notebook();
-        // TODO Send notebookfile to autograder.
-        return $notebookfile;
+        // Log points to console (delete later or alternatively log just confirmation).
+        return implode(", ", $points);
+
+        // TODO: Put points into Moodle DB.
     }
 
     /**

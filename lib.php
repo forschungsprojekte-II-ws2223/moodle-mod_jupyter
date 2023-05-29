@@ -31,6 +31,7 @@
 function jupyter_supports($feature) {
     switch ($feature) {
         case FEATURE_MOD_INTRO:
+            return true;
         case FEATURE_BACKUP_MOODLE2:
             return true;
         case FEATURE_COMPLETION_TRACKS_VIEWS:
@@ -49,11 +50,10 @@ function jupyter_supports($feature) {
  * in mod_form.php) this function will create a new instance and return the id
  * number of the instance.
  *
- * @param object $data An object from the form.
- * @param mod_jupyter_mod_form $mform The form.
+ * @param stdClass $data An object from the form.
  * @return int The id of the newly inserted record.
  */
-function jupyter_add_instance($data, $mform = null): int {
+function jupyter_add_instance(stdClass $data): int {
     global $DB;
 
     $data->timecreated = time();
@@ -74,11 +74,10 @@ function jupyter_add_instance($data, $mform = null): int {
  * Given an object containing all the necessary data (defined in mod_form.php),
  * this function will update an existing instance with new data.
  *
- * @param object $data An object from the form in mod_form.php.
- * @param mod_jupyter_mod_form $mform The form.
+ * @param stdClass $data An object from the form in mod_form.php.
  * @return bool True if successful, false otherwise.
  */
-function jupyter_update_instance($data, $mform = null) {
+function jupyter_update_instance(stdClass $data) {
     global $DB;
 
     $data->timemodified = time();
@@ -95,7 +94,7 @@ function jupyter_update_instance($data, $mform = null) {
  * @param int $id Id of the module instance.
  * @return bool True if successful, false on failure.
  */
-function jupyter_delete_instance($id) {
+function jupyter_delete_instance(int $id) {
     global $DB;
 
     $exists = $DB->get_record('jupyter', array('id' => $id));
@@ -124,4 +123,69 @@ function jupyter_set_mainfile(stdClass $data): void {
         file_save_draft_area_files($data->packagefile, $context->id, 'mod_jupyter', 'package',
             0, ['subdirs' => 0, 'maxfiles' => 1]);
     }
+}
+
+/**
+ * Creates or updates grade item for the given mod_jupyter instance.
+ *
+ * Needed by {@see grade_update_mod_grades()}.
+ *
+ * @param stdClass $moduleinstance Instance object with extra cmidnumber and modname property.
+ * @param bool $reset Reset grades in the gradebook.
+ * @return void.
+ */
+function jupyter_grade_item_update($moduleinstance, $reset=false) {
+    global $CFG;
+    require_once($CFG->libdir.'/gradelib.php');
+
+    $item = array();
+    $item['itemname'] = clean_param($moduleinstance->name, PARAM_NOTAGS);
+    $item['gradetype'] = GRADE_TYPE_VALUE;
+
+    if ($moduleinstance->grade > 0) {
+        $item['gradetype'] = GRADE_TYPE_VALUE;
+        $item['grademax']  = $moduleinstance->grade;
+        $item['grademin']  = 0;
+    } else if ($moduleinstance->grade < 0) {
+        $item['gradetype'] = GRADE_TYPE_SCALE;
+        $item['scaleid']   = -$moduleinstance->grade;
+    } else {
+        $item['gradetype'] = GRADE_TYPE_NONE;
+    }
+    if ($reset) {
+        $item['reset'] = true;
+    }
+
+    grade_update('/mod/jupyter', $moduleinstance->course, 'mod', 'jupyter', $moduleinstance->id, 0, null, $item);
+}
+
+/**
+ * Delete grade item for given mod_jupyter instance.
+ *
+ * @param stdClass $moduleinstance Instance object.
+ * @return grade_item.
+ */
+function jupyter_grade_item_delete($moduleinstance) {
+    global $CFG;
+    require_once($CFG->libdir.'/gradelib.php');
+
+    return grade_update('/mod/jupyter', $moduleinstance->course, 'mod', 'mod_jupyter',
+                        $moduleinstance->id, 0, null, array('deleted' => 1));
+}
+
+/**
+ * Update mod_jupyter grades in the gradebook.
+ *
+ * Needed by {@see grade_update_mod_grades()}.
+ *
+ * @param stdClass $moduleinstance Instance object with extra cmidnumber and modname property.
+ * @param int $userid Update grade of specific user only, 0 means all participants.
+ */
+function jupyter_update_grades($moduleinstance, $userid = 0) {
+    global $CFG, $DB;
+    require_once($CFG->libdir.'/gradelib.php');
+
+    // Populate array of grade objects indexed by userid.
+    $grades = array();
+    grade_update('/mod/jupyter', $moduleinstance->course, 'mod', 'jupyter', $moduleinstance->id, 0, $grades);
 }

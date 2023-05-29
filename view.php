@@ -75,9 +75,9 @@ if ($assignment == null) {
     try {
         $handler = new gradeservice_handler();
         $assignment = $handler->create_assignment(
+            $moduleinstance,
             $modulecontext->id,
             $course->id,
-            $moduleinstance->id,
             $jwt
         );
     } catch (RequestException $e) {
@@ -104,7 +104,14 @@ if ($assignment != null) {
             $assignment
         );
 
-        $PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init', [['user' => $user, 'contextid' => $modulecontext->id]]);
+        $PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init', [[
+            'user' => $user,
+            'courseid' => $course->id,
+            'instanceid' => $moduleinstance->id,
+            'filename' => $assignment,
+            'token' => $jwt
+            ]]
+        );
         $PAGE->requires->js_call_amd('mod_jupyter/reset_notebook', 'init', [[
             'user' => $user,
             'contextid' => $modulecontext->id,
@@ -124,6 +131,8 @@ if ($assignment != null) {
         error_handler::jupyter_resp_err($msg, $modulecontext);
     } catch (ConnectException $e) {
         error_handler::jupyter_connect_err("{$e->getCode()}: {$e->getMessage()}", $modulecontext);
+    } finally{
+        $PAGE->requires->js_call_amd('mod_jupyter/startup', 'cancelStartup', [['isLoading' => false]]);
     }
 }
 

@@ -148,6 +148,8 @@ class jupyterhub_handler {
      * Reset notebook server by reuploading default notebookfile.
      * @param string $user current user's username
      * @param int $contextid activity context id
+     * @param int $courseid id of the moodle course
+     * @param int $instanceid activity instance id
      * @throws RequestException
      * @throws ConnectException
      */
@@ -179,5 +181,29 @@ class jupyterhub_handler {
                 throw $e;
             }
         }
+    }
+
+    /**
+     * Return the notebook file associated to the given parameters.
+     * @param string $user user name of the owner of the notebook
+     * @param int $courseid activity course id
+     * @param int $instanceid activity instance id
+     * @param string $filename notebook file name
+     * @return string returns the decoded notebook file contents
+     * @throws RequestException
+     * @throws ConnectException
+     */
+    public function get_notebook(string $user, int $courseid, int $instanceid, string $filename) {
+        $route = "/user/{$user}/api/contents/{$courseid}/{$instanceid}/{$filename}";
+
+        $res = $this->client->get($route,
+        ['query' => [
+            'content' => '1',
+            'format' => 'base64',
+            'type' => 'file'
+            ]
+        ]);
+        $res = json_decode($res->getBody(), true);
+        return base64_decode($res['content']);
     }
 }
