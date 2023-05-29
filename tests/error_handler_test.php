@@ -37,7 +37,7 @@ class error_handler_test extends \advanced_testcase {
      */
     public function test_jupyter_connect_err() {
         global $modulecontext;
-        $this->setup_test();
+        $this->setup_test(true);
         // Create error notification.
         error_handler::jupyter_connect_err('errortext', $modulecontext);
 
@@ -68,7 +68,7 @@ class error_handler_test extends \advanced_testcase {
      */
     public function test_jupyter_connect_err_no_admin() {
         global $modulecontext;
-        $this->setup_test();
+        $this->setup_test(false);
         // Create error notification.
         error_handler::jupyter_connect_err('errortext', $modulecontext);
 
@@ -97,7 +97,7 @@ class error_handler_test extends \advanced_testcase {
      */
     public function test_jupyter_resp_err() {
         global $modulecontext;
-        $this->setup_test();
+        $this->setup_test(true);
         // Create error notification.
         error_handler::jupyter_resp_err('errortext', $modulecontext);
 
@@ -128,7 +128,7 @@ class error_handler_test extends \advanced_testcase {
      */
     public function test_jupyter_resp_err_no_admin() {
         global $modulecontext;
-        $this->setup_test();
+        $this->setup_test(false);
         // Create error notification.
         error_handler::jupyter_resp_err('errortext', $modulecontext);
 
@@ -158,7 +158,7 @@ class error_handler_test extends \advanced_testcase {
      */
     public function test_gradeservice_connect_err() {
         global $modulecontext;
-        $this->setup_test();
+        $this->setup_test(true);
         // Create error notification.
         error_handler::gradeservice_connect_err('errortext', $modulecontext);
 
@@ -189,7 +189,7 @@ class error_handler_test extends \advanced_testcase {
      */
     public function test_gradeservice_connect_err_no_admin() {
         global $modulecontext;
-        $this->setup_test();
+        $this->setup_test(false);
         // Create error notification.
         error_handler::gradeservice_connect_err('errortext', $modulecontext);
 
@@ -218,7 +218,7 @@ class error_handler_test extends \advanced_testcase {
      */
     public function test_gradeservice_resp_err() {
         global $modulecontext;
-        $this->setup_test();
+        $this->setup_test(true);
         // Create error notification.
         error_handler::gradeservice_resp_err('errortext', $modulecontext);
 
@@ -249,7 +249,7 @@ class error_handler_test extends \advanced_testcase {
      */
     public function test_gradeservice_resp_err_no_admin() {
         global $modulecontext;
-        $this->setup_test();
+        $this->setup_test(false);
         // Create error notification.
         error_handler::gradeservice_resp_err('errortext', $modulecontext);
 
@@ -271,10 +271,13 @@ class error_handler_test extends \advanced_testcase {
         $this->assertEquals($propertymessagetype->getValue($notficationstack[0]), 'error');
     }
 
-    private function setup_test() {
+    private function setup_test(bool $admin) {
         global $DB, $SITE, $moduleinstance, $modulecontext;
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
+        if ($admin) {
+            $this->setAdminUser();
+        }
         $this->setUser($user);
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
         $jupyter = $generator->create_instance(array('course' => $SITE->id));
