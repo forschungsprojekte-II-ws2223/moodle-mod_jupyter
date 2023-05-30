@@ -50,8 +50,8 @@
         <KEY NAME="fk_jupyter" TYPE="foreign" FIELDS="jupyter" REFTABLE="jupyter" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
-      <INDEXES>
+        <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
+      </INDEXES>
     </TABLE>
   </TABLES>
 </XMLDB>
