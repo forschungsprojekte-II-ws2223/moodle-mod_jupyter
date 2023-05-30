@@ -77,7 +77,6 @@ if ($assignment == null) {
         $assignment = $handler->create_assignment(
             $moduleinstance,
             $modulecontext->id,
-            $course->id,
             $jwt
         );
     } catch (RequestException $e) {
@@ -106,7 +105,7 @@ if ($assignment != null) {
 
         $PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init', [[
             'user' => $user,
-            'courseid' => $course->id,
+            'courseid' > $course->id,
             'instanceid' => $moduleinstance->id,
             'filename' => $assignment,
             'token' => $jwt
