@@ -16,6 +16,11 @@
 
 namespace mod_jupyter\external;
 
+defined('MOODLE_INTERNAL') || die();
+
+global $CFG;
+require_once("$CFG->dirroot/mod/jupyter/lib.php");
+
 use mod_jupyter\gradeservice_handler;
 use external_function_parameters;
 use external_value;
