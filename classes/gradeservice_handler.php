@@ -129,9 +129,10 @@ class gradeservice_handler {
      * @param string $filename name of the submitted notebook file
      * @param string $token Gradeservice authorization JWT
      */
-    public function submit_assignment(string $user, int $courseid, int $instanceid, string $filename, string $token) {
-        global $DB, $USER;
+    public function submit_assignment(string $user, int $courseid, int $instanceid, string $filename, string $token) : string {
+        global $CFG, $DB, $USER;
         $userid = $USER->id;
+        require_once($CFG->libdir.'/gradelib.php');
 
         $handler = new jupyterhub_handler();
         $file = $handler->get_notebook($user, $courseid, $instanceid, $filename);
@@ -152,6 +153,7 @@ class gradeservice_handler {
         $res = json_decode($res->getBody(), true);
 
         if ($grade = $DB->get_record('jupyter_grades', array('jupyter' => $instanceid, 'userid' => $userid))) {
+
             $grade->grade = $res['total'];
             $grade->timemodified = time();
 
@@ -165,14 +167,13 @@ class gradeservice_handler {
 
             $DB->insert_record('jupyter_grades', $grade);
         }
+        grade_update('/mod/jupyter', $courseid, 'mod', 'jupyter', $instanceid, 0, [$grade]);
 
         if ($questions = $DB->get_records('jupyter_questions_points', array('jupyter' => $instanceid, 'userid' => $userid))) {
-            foreach ($questions as &$question) {
+            foreach ($questions as $question) {
                 $question->points = $res['points'][$question->questionnr];
+                $DB->update_record('jupyter_questions_points', $question);
             }
-            unset($question);
-
-            $DB->update_records('jupyter_questions_points', $questions);
         } else {
             $questions = array();
 
@@ -187,5 +188,7 @@ class gradeservice_handler {
 
             $DB->insert_records('jupyter_questions_points', $questions);
         }
+
+        return "assignment submitted";
     }
 }

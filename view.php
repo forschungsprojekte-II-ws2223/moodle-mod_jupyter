@@ -105,7 +105,7 @@ if ($assignment != null) {
 
         $PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init', [[
             'user' => $user,
-            'courseid' > $course->id,
+            'courseid' => $course->id,
             'instanceid' => $moduleinstance->id,
             'filename' => $assignment,
             'token' => $jwt
@@ -130,8 +130,6 @@ if ($assignment != null) {
         error_handler::jupyter_resp_err($msg, $modulecontext);
     } catch (ConnectException $e) {
         error_handler::jupyter_connect_err("{$e->getCode()}: {$e->getMessage()}", $modulecontext);
-    } finally{
-        $PAGE->requires->js_call_amd('mod_jupyter/startup', 'cancelStartup', [['isLoading' => false]]);
     }
 }
 

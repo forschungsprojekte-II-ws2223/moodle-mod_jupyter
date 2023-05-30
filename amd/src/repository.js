@@ -9,7 +9,7 @@ export const submitNotebook = (user, courseid, instanceid, filename, token) =>
         courseid,
         instanceid,
         filename,
-        token
+        token,
       },
     },
   ])[0];

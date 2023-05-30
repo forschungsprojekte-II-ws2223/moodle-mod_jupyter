@@ -52,9 +52,9 @@ class submit_notebook extends \external_api {
      * @param string $filename name of the submitted notebook file
      * @param string $token Gradeservice authorization JWT
      */
-    public static function execute(string $user, int $courseid, int $instanceid, string $filename, string $token) {
+    public static function execute(string $user, int $courseid, int $instanceid, string $filename, string $token) : string {
         $handler = new gradeservice_handler();
-        $handler->submit_assignment($user, $courseid, $instanceid, $filename, $token);
+        return $handler->submit_assignment($user, $courseid, $instanceid, $filename, $token);
     }
 
     /**

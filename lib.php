@@ -187,7 +187,7 @@ function jupyter_update_grades($moduleinstance, $userid = 0, $nullifnone = true)
     require_once($CFG->libdir.'/gradelib.php');
 
     // Populate array of grade objects indexed by userid.
-    // TODO:.
-    $grades = array();
+    $grades = $DB->get_records('jupyter_grades', ['userid' => $userid]);
+
     grade_update('/mod/jupyter', $moduleinstance->course, 'mod', 'jupyter', $moduleinstance->id, 0, $grades);
 }
