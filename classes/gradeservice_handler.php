@@ -167,7 +167,7 @@ class gradeservice_handler {
 
             $DB->insert_record('jupyter_grades', $grade);
         }
-        $u = $this->update_grade($courseid, $instanceid, $grade);
+        $this->update_grade($courseid, $instanceid, $grade);
 
         if ($questions = $DB->get_records('jupyter_questions_points', array('jupyter' => $instanceid, 'userid' => $userid))) {
             foreach ($questions as $question) {
@@ -191,10 +191,17 @@ class gradeservice_handler {
             $DB->insert_records('jupyter_questions_points', $questions);
         }
 
-        return "assignment submitted $u";
+        return "assignment submitted";
     }
 
-    private function update_grade(int $courseid, int $instanceid, stdClass $grade) : int {
+    /**
+     * Update grade in gradebook.
+     *
+     * @param $courseid activity course id
+     * @param $instanceid activity instance id
+     * @param $grade the grade from jupyter_grades table
+     */
+    private function update_grade(int $courseid, int $instanceid, stdClass $grade) {
         global $CFG;
         require_once($CFG->libdir.'/gradelib.php');
 
@@ -204,6 +211,6 @@ class gradeservice_handler {
         $gradeobject->rawgrade = $grade->grade;
         $gradeobject->dategraded = $grade->timemodified;
         $grades[$grade->userid] = $gradeobject;
-        return grade_update('/mod/jupyter', $courseid, 'mod', 'jupyter', $instanceid, 0, $grades);
+        grade_update('/mod/jupyter', $courseid, 'mod', 'jupyter', $instanceid, 0, $grades);
     }
 }
