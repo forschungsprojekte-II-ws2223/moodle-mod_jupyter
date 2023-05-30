@@ -197,9 +197,9 @@ class gradeservice_handler {
     /**
      * Update grade in gradebook.
      *
-     * @param $courseid activity course id
-     * @param $instanceid activity instance id
-     * @param $grade the grade from jupyter_grades table
+     * @param int $courseid activity course id
+     * @param int $instanceid activity instance id
+     * @param stdClass $grade the grade from jupyter_grades table
      */
     private function update_grade(int $courseid, int $instanceid, stdClass $grade) {
         global $CFG;
