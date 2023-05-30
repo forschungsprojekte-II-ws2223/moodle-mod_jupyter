@@ -54,12 +54,7 @@ class submit_notebook extends \external_api {
      */
     public static function execute(string $user, int $courseid, int $instanceid, string $filename, string $token) {
         $handler = new gradeservice_handler();
-        $points = $handler->submit_assignment($user, $courseid, $instanceid, $filename, $token);
-
-        // Log points to console (delete later or alternatively log just confirmation).
-        return implode(", ", $points);
-
-        // TODO: Put points into Moodle DB.
+        $handler->submit_assignment($user, $courseid, $instanceid, $filename, $token);
     }
 
     /**

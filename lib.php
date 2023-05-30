@@ -181,7 +181,7 @@ function jupyter_grade_item_delete($moduleinstance) {
  * @param stdClass $moduleinstance Instance object with extra cmidnumber and modname property.
  * @param int $userid Update grade of specific user only, 0 means all participants.
  */
-function jupyter_update_grades($moduleinstance, $userid = 0) {
+function jupyter_update_grades($moduleinstance, $userid = 0, $nullifnone = true) {
     global $CFG, $DB;
     require_once($CFG->libdir.'/gradelib.php');
 

@@ -27,9 +27,7 @@ namespace mod_jupyter;
 defined('MOODLE_INTERNAL') || die();
 require($CFG->dirroot . '/mod/jupyter/vendor/autoload.php');
 
-use coding_exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use mod_jupyter\jupyterhub_handler;
 use stdClass;
 
@@ -54,7 +52,7 @@ class gradeservice_handler {
         }
 
         $this->client = new Client([
-            'base_uri' => $baseuri,
+        'base_uri' => $baseuri,
         ]);
     }
 
@@ -77,29 +75,28 @@ class gradeservice_handler {
         $route = "/{$moduleinstance->course}/{$moduleinstance->id}";
 
         $res = $this->client->request("POST", $route, [
-            'headers' => [
-                'Authorization' => $token,
-            ],
-            'multipart' => [
-                [
-                    'name' => 'file',
-                    'contents' => $file->get_content(),
-                    'filename' => $filename,
-                ]
+        'headers' => [
+            'Authorization' => $token,
+        ],
+        'multipart' => [
+            [
+                'name' => 'file',
+                'contents' => $file->get_content(),
+                'filename' => $filename,
             ]
+        ]
         ]);
-
         $res = json_decode($res->getBody(), true);
-        $file = base64_decode($res[$filename]);
 
+        $file = base64_decode($res[$filename]);
         $fs->delete_area_files($contextid, 'mod_jupyter', 'assignment');
         $fileinfo = array(
-            'contextid' => $contextid,
-            'component' => 'mod_jupyter',
-            'filearea' => 'assignment',
-            'itemid' => 0,
-            'filepath' => '/',
-            'filename' => $filename
+        'contextid' => $contextid,
+        'component' => 'mod_jupyter',
+        'filearea' => 'assignment',
+        'itemid' => 0,
+        'filepath' => '/',
+        'filename' => $filename
         );
         $fs->create_file_from_string($fileinfo, $file);
         $moduleinstance->assignment = $filename;
@@ -108,9 +105,9 @@ class gradeservice_handler {
         $len  = count($res['points']);
         for ($i = 0; $i < $len; $i++) {
             $points[] = array(
-                "jupyterid" => $moduleinstance->id,
-                "point" => $i + 1,
-                "maxpoints" => $res['points'][$i]
+            "jupyterid" => $moduleinstance->id,
+            "point" => $i + 1,
+            "maxpoints" => $res['points'][$i]
             );
         }
         $DB->insert_records('jupyter_questions', $points);
@@ -125,6 +122,7 @@ class gradeservice_handler {
 
     /**
      * Submit an assignment.
+     *
      * @param string $user user name of the student that submitted the file
      * @param int $courseid ID of the Moodle course
      * @param int $instanceid ID of the activity instance
@@ -132,11 +130,13 @@ class gradeservice_handler {
      * @param string $token Gradeservice authorization JWT
      */
     public function submit_assignment(string $user, int $courseid, int $instanceid, string $filename, string $token) {
-        $route = "/{$courseid}/{$instanceid}/{$user}";
+        global $DB, $USER;
+        $userid = $USER->id;
 
         $handler = new jupyterhub_handler();
         $file = $handler->get_notebook($user, $courseid, $instanceid, $filename);
 
+        $route = "/{$courseid}/{$instanceid}/{$user}";
         $res = $this->client->request("POST", $route, [
             'headers' => [
                 'Authorization' => $token,
@@ -150,7 +150,42 @@ class gradeservice_handler {
             ]
         ]);
         $res = json_decode($res->getBody(), true);
-        return $res;
-    }
 
+        if ($grade = $DB->get_record('jupyter_grades', array('jupyter' => $instanceid, 'userid' => $userid))) {
+            $grade->grade = $res['total'];
+            $grade->timemodified = time();
+
+            $DB->update_record('jupyter_grades', $grade);
+        } else {
+            $grade = new stdClass();
+            $grade->jupyter = $instanceid;
+            $grade->userid = $userid;
+            $grade->grade = $res['total'];
+            $grade->timemodified = time();
+
+            $DB->insert_record('jupyter_grades', $grade);
+        }
+
+        if ($questions = $DB->get_records('jupyter_questions', array('jupyter' => $instanceid, 'userid' => $userid))) {
+            foreach ($questions as &$question) {
+                $question->points = $res['points'][$question->questionnr];
+            }
+            unset($question);
+
+            $DB->update_records('jupyter_questions', $questions);
+        } else {
+            $questions = array();
+
+            foreach ($res['points'] as $questionnr => $point) {
+                $question = new stdClass();
+                $question->jupyter = $instanceid;
+                $question->userid = $userid;
+                $question->questionnr = $questionnr;
+                $question->points = $point;
+                $questions[] = $question;
+            }
+
+            $DB->insert_records('jupyter_questions', $questions);
+        }
+    }
 }
