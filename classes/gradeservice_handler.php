@@ -172,6 +172,7 @@ class gradeservice_handler {
         if ($questions = $DB->get_records('jupyter_questions_points', array('jupyter' => $instanceid, 'userid' => $userid))) {
             foreach ($questions as $question) {
                 $question->points = $res['points'][$question->questionnr];
+                $question->output = $res['output'][$question->questionnr];
                 $DB->update_record('jupyter_questions_points', $question);
             }
         } else {
@@ -183,6 +184,7 @@ class gradeservice_handler {
                 $question->userid = $userid;
                 $question->questionnr = $questionnr;
                 $question->points = $points;
+                $question->output = $res['output'][$question->questionnr];
                 $questions[] = $question;
             }
 
