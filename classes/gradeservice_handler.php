@@ -75,42 +75,42 @@ class gradeservice_handler {
         $route = "/{$moduleinstance->course}/{$moduleinstance->id}";
 
         $res = $this->client->request("POST", $route, [
-        'headers' => [
-            'Authorization' => $token,
-        ],
-        'multipart' => [
-            [
-                'name' => 'file',
-                'contents' => $file->get_content(),
-                'filename' => $filename,
+            'headers' => [
+                'Authorization' => $token,
+            ],
+            'multipart' => [
+                [
+                    'name' => 'file',
+                    'contents' => $file->get_content(),
+                    'filename' => $filename,
+                ]
             ]
-        ]
         ]);
         $res = json_decode($res->getBody(), true);
 
         $file = base64_decode($res[$filename]);
         $fs->delete_area_files($contextid, 'mod_jupyter', 'assignment');
         $fileinfo = array(
-        'contextid' => $contextid,
-        'component' => 'mod_jupyter',
-        'filearea' => 'assignment',
-        'itemid' => 0,
-        'filepath' => '/',
-        'filename' => $filename
+            'contextid' => $contextid,
+            'component' => 'mod_jupyter',
+            'filearea' => 'assignment',
+            'itemid' => 0,
+            'filepath' => '/',
+            'filename' => $filename
         );
         $fs->create_file_from_string($fileinfo, $file);
         $moduleinstance->assignment = $filename;
 
-        $points = array();
-        $len  = count($res['points']);
-        for ($i = 0; $i < $len; $i++) {
-            $points[] = array(
-            "jupyterid" => $moduleinstance->id,
-            "point" => $i + 1,
-            "maxpoints" => $res['points'][$i]
-            );
+        $questions = array();
+        foreach ($res['points'] as $questionnr => $maxpoints) {
+            $question = new stdClass();
+            $question->jupyter = $moduleinstance->id;
+            $question->questionnr = $questionnr;
+            $question->maxpoints = $maxpoints;
+            $questions[] = $question;
         }
-        $DB->insert_records('jupyter_questions', $points);
+
+        $DB->insert_records('jupyter_questions', $questions);
         $moduleinstance->grade = $res['total'];
 
         $DB->update_record('jupyter', $moduleinstance);
@@ -166,26 +166,26 @@ class gradeservice_handler {
             $DB->insert_record('jupyter_grades', $grade);
         }
 
-        if ($questions = $DB->get_records('jupyter_questions', array('jupyter' => $instanceid, 'userid' => $userid))) {
+        if ($questions = $DB->get_records('jupyter_questions_points', array('jupyter' => $instanceid, 'userid' => $userid))) {
             foreach ($questions as &$question) {
                 $question->points = $res['points'][$question->questionnr];
             }
             unset($question);
 
-            $DB->update_records('jupyter_questions', $questions);
+            $DB->update_records('jupyter_questions_points', $questions);
         } else {
             $questions = array();
 
-            foreach ($res['points'] as $questionnr => $point) {
+            foreach ($res['points'] as $questionnr => $points) {
                 $question = new stdClass();
                 $question->jupyter = $instanceid;
                 $question->userid = $userid;
                 $question->questionnr = $questionnr;
-                $question->points = $point;
+                $question->points = $points;
                 $questions[] = $question;
             }
 
-            $DB->insert_records('jupyter_questions', $questions);
+            $DB->insert_records('jupyter_questions_points', $questions);
         }
     }
 }

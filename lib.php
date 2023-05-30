@@ -180,12 +180,14 @@ function jupyter_grade_item_delete($moduleinstance) {
  *
  * @param stdClass $moduleinstance Instance object with extra cmidnumber and modname property.
  * @param int $userid Update grade of specific user only, 0 means all participants.
+ * @param bool $nullifnone If a single user is specified and $nullifnone is true a grade item with a null rawgrade will be inserted
  */
 function jupyter_update_grades($moduleinstance, $userid = 0, $nullifnone = true) {
     global $CFG, $DB;
     require_once($CFG->libdir.'/gradelib.php');
 
     // Populate array of grade objects indexed by userid.
+    // TODO:
     $grades = array();
     grade_update('/mod/jupyter', $moduleinstance->course, 'mod', 'jupyter', $moduleinstance->id, 0, $grades);
 }

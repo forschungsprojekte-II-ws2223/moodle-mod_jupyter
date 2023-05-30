@@ -37,12 +37,24 @@
         <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="jupyter_questions" COMMENT="Stores the points that a students got in the individual questions of the jupyter notebook.">
+    <TABLE NAME="jupyter_questions" COMMENT="Stores the maximum possible points for individual questions of the jupyter notebooks.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="jupyter" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Foreign key references jupyter.id."/>
+        <FIELD NAME="questionnr" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Question identifier."/>
+        <FIELD NAME="maxpoints" TYPE="number" LENGTH="10" NOTNULL="true" SEQUENCE="false" DECIMALS="5" COMMENT="Maximum possible points for question."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_jupyter" TYPE="foreign" FIELDS="jupyter" REFTABLE="jupyter" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="jupyter_questions_points" COMMENT="Stores the points that students got in the individual questions of the jupyter notebooks.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="jupyter" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Foreign key references jupyter.id."/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Foreign key references user.id."/>
-        <FIELD NAME="questionnr" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Question identifier"/>
+        <FIELD NAME="questionnr" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Question identifier."/>
         <FIELD NAME="points" TYPE="number" LENGTH="10" NOTNULL="true" SEQUENCE="false" DECIMALS="5"/>
       </FIELDS>
       <KEYS>
