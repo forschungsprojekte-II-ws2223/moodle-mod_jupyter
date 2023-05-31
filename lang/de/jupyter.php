@@ -46,10 +46,16 @@ $string['resetbuttontext'] = 'Zurücksetzen';
 $string['resetmodalresetbuttontext'] = 'Zurücksetzen';
 $string['resetmodalcancelbuttontext'] = 'Abbrechen';
 $string['resetmodaltitle'] = 'Wollen sie Zurücksetzen?';
-$string['resetmodalbody'] = 'Keine Änderungen gehen verloren. Sie finden ihr altes Notebook und seinen Inhalt in der Datei mit dem entpsrechenden Zeitstempel Präfix.';
+$string['resetmodalbody'] = 'Keine Änderungen gehen verloren. Sie finden ihr altes Notebook und seinen Inhalt in der Datei mit dem entpsrechenden Zeitstempel Präfix.<br>Bsp. 2023-05-5-21-13-01_notebook.ipynb';
 $string['resetbuttoninfo'] = 'Setzt das Notebook auf seinen ursprünglichen Zustand zurück.<br>Ihr derzeitiger Fortschritt wird in einer separaten Datei gespeichert und Sie können Änderungen anschließen übertragen.';
 
 // Assignment submission.
+$string['submitmodaltitle'] = 'Bewertung';
+$string['submitmodaltablequestionnr'] = 'Frage #';
+$string['submitmodaltablereached'] = 'Ihre Punkte';
+$string['submitmodaltablemax'] = 'Max Punkte';
+$string['submitmodalbodytext'] = 'Diese Bewertung finden Sie ebenfalls im Gradebook.';
+$string['submitmodalbuttontext'] = 'OK';
 $string['submitbuttontext'] = 'Notebook abgeben';
 $string['submitbuttoninfo'] = 'Geben Sie das Notebook ab um eine Korrektur zu erhalten. Es wird immer der aktuell gespeicherte Stand des Notebooks abgegeben. Die Abgabe kann jederzeit vor Ablauf der Zeit über den selben Button geändert werden, wodurch die alte Abgabe ersetzt wird.';
 $string['submitsuccessnotification'] = 'Ihr Notebook wurde abgegeben.';

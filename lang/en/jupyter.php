@@ -46,7 +46,7 @@ $string['resetbuttontext'] = 'Reset';
 $string['resetmodalresetbuttontext'] = 'Reset';
 $string['resetmodalcancelbuttontext'] = 'Cancel';
 $string['resetmodaltitle'] = 'Do you want to reset?';
-$string['resetmodalbody'] = 'No changes will be lost. You can find your old notebook and it\'s contents in the file with the current timestamp prefix.';
+$string['resetmodalbody'] = 'No changes will be lost. You can find your old notebook and it\'s contents in the file with the current timestamp prefix.<br>E.g. 2023-05-5-21-13-01_notebook.ipynb';
 $string['resetbuttoninfo'] = 'Reset the notebook to its initial state.<br>Your current progress will be saved in a different file and you can copy the parts that you want to keep over.';
 
 // Assignment submission.
@@ -54,6 +54,7 @@ $string['submitmodaltitle'] = 'Submission results';
 $string['submitmodaltablequestionnr'] = 'Question #';
 $string['submitmodaltablereached'] = 'Your points';
 $string['submitmodaltablemax'] = 'Max points';
+$string['submitmodalbodytext'] = 'This result can always be found in your gradebook.';
 $string['submitmodalbuttontext'] = 'OK';
 $string['submitbuttontext'] = 'Submit notebook';
 $string['submitbuttoninfo'] = 'Submit the notebook for grading. The currently saved state will be submitted.<br>The submission can always be changed, prior to the deadline, replacing your old submission.';

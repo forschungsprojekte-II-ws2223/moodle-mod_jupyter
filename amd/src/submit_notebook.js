@@ -27,6 +27,7 @@ const Selectors = {
 export const init = async ({ user, courseid, instanceid, filename, token }) => {
   document.addEventListener("click", (e) => {
     if (e.target.closest(Selectors.actions.submitButton)) {
+      resetModalTable();
       callSubmitNotebook(user, courseid, instanceid, filename, token);
     }
   });
@@ -89,7 +90,7 @@ const renderModalTable = (
 /**
  * Replace table with loading template for reset.
  */
-const resetModalTable = (
+const resetModalTable = async (
 ) => {
   Templates.renderForPromise("mod_jupyter/loading", context)
     // It returns a promise that needs to be resoved.
