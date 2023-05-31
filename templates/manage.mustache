@@ -29,7 +29,8 @@ along with Moodle. If not, see
                             <p>
                                 {{#str}}submitbuttoninfo, mod_jupyter{{/str}}
                             </p>
-                            <button data-action="mod_jupyter/submit-notebook_button" class="btn btn-primary">
+                            <button data-action="mod_jupyter/submit-notebook_button" data-target="#submitModal"
+                                class="btn btn-primary" data-toggle="modal">
                                 {{#str}}submitbuttontext, mod_jupyter{{/str}}
                             </button>
                         </div>
@@ -50,7 +51,7 @@ along with Moodle. If not, see
                 </div>
             </div>
         </div>
-
+        {{! Reset modal }}
         <div class="modal fade" id="resetModal" tabindex="-1" role="dialog" aria-labelledby="resetModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -76,7 +77,36 @@ along with Moodle. If not, see
                 </div>
             </div>
         </div>
-        <hr data-element="mod_jupyter/submit-response">
+    </div>
+    {{! Submit response modal }}
+    <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="submitModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="submitModalLabel">{{#str}}submitmodaltitle,
+                        mod_jupyter{{/str}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{! Submit response modal body}}
+                <div class="modal-body">
+                    <div class="d-flex justify-content-center">
+                        <div data-element="mod_jupyter/body-placeholder">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-action="mod_jupyter/reset-modal_button"
+                        data-dismiss="modal">{{#str}}submitmodalbuttontext,
+                        mod_jupyter{{/str}}</button>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 

@@ -50,9 +50,15 @@ $string['resetmodalbody'] = 'You will loose all progress in the current notebook
 $string['resetbuttoninfo'] = 'Reset the notebook to its initial state.<br>Your current progress will be saved in a different file and you can copy the parts that you want to keep over.';
 
 // Assignment submission.
+$string['submitmodaltitle'] = 'Submission results';
+$string['submitmodaltablequestionnr'] = 'Question #';
+$string['submitmodaltablereached'] = 'Your points';
+$string['submitmodaltablemax'] = 'Max points';
+$string['submitmodalbuttontext'] = 'OK';
 $string['submitbuttontext'] = 'Submit notebook';
 $string['submitbuttoninfo'] = 'Submit the notebook for grading. The currently saved state will be submitted.<br>The submission can always be changed, prior to the deadline, replacing your old submission.';
 $string['submitsuccessnotification'] = 'Your notebook has been submitted';
+
 
 // Plugin admin settings.
 // General.

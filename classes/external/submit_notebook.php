@@ -18,13 +18,14 @@ namespace mod_jupyter\external;
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
 require_once("$CFG->dirroot/mod/jupyter/lib.php");
 
 use mod_jupyter\gradeservice_handler;
 use external_function_parameters;
 use external_value;
-
+use external_multiple_structure;
+use external_single_structure;
+use stdClass;
 
 /**
  * Jupyter web service class for submitting a notebook for autograding.
@@ -56,17 +57,39 @@ class submit_notebook extends \external_api {
      * @param int $instanceid ID of the activity instance
      * @param string $filename name of the submitted notebook file
      * @param string $token Gradeservice authorization JWT
+     * @return array $points Response array of graded question results
      */
-    public static function execute(string $user, int $courseid, int $instanceid, string $filename, string $token) : string {
+    public static function execute(string $user, int $courseid, int $instanceid, string $filename, string $token) : array {
+        global $CFG, $DB, $USER;
         $handler = new gradeservice_handler();
-        return $handler->submit_assignment($user, $courseid, $instanceid, $filename, $token);
+
+        $points = array();
+        $handler->submit_assignment($user, $courseid, $instanceid, $filename, $token);
+        $questions = $DB->get_records('jupyter_questions_points', array('jupyter' => $instanceid, 'userid' => $USER->id), '');
+
+        foreach ($questions as $key => $entry) {
+            $point = new stdClass;
+            $point->question = $entry->questionnr;
+            $point->reached = $entry->points;
+            $point->max = $DB->get_record(
+                'jupyter_questions',
+                array('jupyter' => $instanceid, 'questionnr' => $entry->questionnr),
+                'maxpoints', MUST_EXIST)->maxpoints;
+            array_push($points, $point);
+        }
+        return $points;
     }
 
     /**
      * Returns description of return values.
-     * @return external_value
+     * @return external_multiple_structure
      */
     public static function execute_returns() {
-        return new external_value(PARAM_TEXT, VALUE_REQUIRED, 'test value');
+        return new external_multiple_structure(
+            new external_single_structure([
+            'question' => new external_value(PARAM_RAW, 'question number in notebook'),
+            'reached' => new external_value(PARAM_RAW, 'reached points in question after grading'),
+            'max' => new external_value(PARAM_RAW, 'maximum reachable points in question'),
+            ]));
     }
 }

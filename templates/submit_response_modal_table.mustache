@@ -47,13 +47,13 @@ Example context (json):
 }}
 
 <body>
-    <div>
+    <div data-element="mod_jupyter/placeholder">
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">question #</th>
-                    <th scope="col">Your points</th>
-                    <th scope="col">Max points</th>
+                    <th scope="col">{{#str}}submitmodaltablequestionnr,mod_jupyter{{/str}}</th>
+                    <th scope="col">{{#str}}submitmodaltablereached,mod_jupyter{{/str}}</th>
+                    <th scope="col">{{#str}}submitmodaltablemax,mod_jupyter{{/str}}</th>
                 </tr>
             </thead>
             <tbody>
