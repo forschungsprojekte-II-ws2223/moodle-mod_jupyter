@@ -46,8 +46,12 @@ $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', 
 require_login($course, true, $cm);
 
 if (($loggedinuserid == $gradeduserid) || has_capability('mod/jupyter:viewerrordetails', CONTEXT_MODULE::instance($cm->id))) {
-    // Show overview over all submitted tasks if a techer tries to look at student's grade or a student tries to look at their own grade.
-    $grades = $DB->get_records('jupyter_questions_points', array('userid' => $loggedinuserid, 'jupyter' => $moduleinstance->id), '');
+    // Show overview over all submitted tasks if a techer tries to look at a specific student's grade
+    // or if a student tries to look at their own grade.
+    $grades = $DB->get_records(
+        'jupyter_questions_points',
+        array('userid' => $loggedinuserid, 'jupyter' => $moduleinstance->id), ''
+    );
 
     $gradeoverview = new stdClass;
     $gradeoverview->grade_overview = [];
@@ -56,7 +60,9 @@ if (($loggedinuserid == $gradeduserid) || has_capability('mod/jupyter:viewerrord
         $item = new stdClass;
         $item->questionnr = $grade->questionnr;
         $item->points = $grade->points;
-        $item->maxpoints = $DB->get_record('jupyter_questions', array('jupyter' => $moduleinstance->id, 'questionnr' => $grade->questionnr), 'maxpoints', MUST_EXIST)->maxpoints;
+        $item->maxpoints = $DB->get_record(
+            'jupyter_questions',
+            array('jupyter' => $moduleinstance->id, 'questionnr' => $grade->questionnr), 'maxpoints', MUST_EXIST)->maxpoints;
         $item->output = $grade->output;
         array_push($gradeoverview->grade_overview, $item);
     }
