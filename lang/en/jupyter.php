@@ -46,7 +46,7 @@ $string['resetbuttontext'] = 'Reset';
 $string['resetmodalresetbuttontext'] = 'Reset';
 $string['resetmodalcancelbuttontext'] = 'Cancel';
 $string['resetmodaltitle'] = 'Do you want to reset?';
-$string['resetmodalbody'] = 'You will loose all progress in the current notebook! This option is best suited if you made changes, that broke the functionality of the notebook and you need to start over.';
+$string['resetmodalbody'] = 'No changes will be lost. You can find your old notebook and it\'s contents in the file with the current timestamp prefix.';
 $string['resetbuttoninfo'] = 'Reset the notebook to its initial state.<br>Your current progress will be saved in a different file and you can copy the parts that you want to keep over.';
 
 // Assignment submission.

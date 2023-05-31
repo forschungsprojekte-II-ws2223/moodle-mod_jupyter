@@ -46,8 +46,8 @@ $string['resetbuttontext'] = 'Zurücksetzen';
 $string['resetmodalresetbuttontext'] = 'Zurücksetzen';
 $string['resetmodalcancelbuttontext'] = 'Abbrechen';
 $string['resetmodaltitle'] = 'Wollen sie Zurücksetzen?';
-$string['resetmodalbody'] = 'Sämtlicher Fortschritt geht verloren! Diese Option ist dafür gedacht das Notebook wieder herzustellen, nachdem es durch Änderungen nicht mehr Funktionsfähig ist.';
-$string['resetbuttoninfo'] = 'Um das Notebook in den ursprünglichen Zustand zurückzusetzen, ohne den Fortschritt zu verlieren, können Sie Ihre Änderungen in einer anderen Datei speichern, indem Sie auf <b>"File"</b> in der oberen linken Ecke klicken und <b>"Notebook speichern als..."</b> auswählen. Danach muss das bisherige Notebook gelöscht werden und dann der <b>"Zurücksetzen"</b> Button geklickt werden';
+$string['resetmodalbody'] = 'Keine Änderungen gehen verloren. Sie finden ihr altes Notebook und seinen Inhalt in der Datei mit dem entpsrechenden Zeitstempel Präfix.';
+$string['resetbuttoninfo'] = 'Setzt das Notebook auf seinen ursprünglichen Zustand zurück.<br>Ihr derzeitiger Fortschritt wird in einer separaten Datei gespeichert und Sie können Änderungen anschließen übertragen.';
 
 // Assignment submission.
 $string['submitbuttontext'] = 'Notebook abgeben';
