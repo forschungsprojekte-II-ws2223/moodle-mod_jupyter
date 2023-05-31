@@ -1,14 +1,12 @@
 import { submitNotebook } from "./repository";
 import { exception as displayException } from "core/notification";
 import Templates from "core/templates";
-//import { get_string as getString } from "core/str";
 
 const context = {
   message: "",
   closebutton: 1,
   announce: 1,
   points: []
-  //[{ question: 1, reached: 5, max: 10 }]
 };
 
 const Selectors = {
@@ -21,6 +19,11 @@ const Selectors = {
   },
 };
 
+
+/**
+ * Add event listeners to Selectors.
+ * @param {*} param0
+ */
 export const init = async ({ user, courseid, instanceid, filename, token }) => {
   document.addEventListener("click", (e) => {
     if (e.target.closest(Selectors.actions.submitButton)) {
@@ -37,7 +40,7 @@ export const init = async ({ user, courseid, instanceid, filename, token }) => {
 
 
 /**
- * Call external service from repository to submit notebook to grading service and display response.
+ * Call external service from repository to submit notebook to grading service and display graded response.
  *
  * @param {string} user
  * @param {int} courseid
@@ -81,11 +84,10 @@ const renderModalTable = (
     })
     // Deal with this exception (Using core/notify exception function is recommended).
     .catch((error) => displayException(error));
-  window.console.log('render table');
 };
 
 /**
- * Render table inside the submit modal to show submit response.
+ * Replace table with loading template for reset.
  */
 const resetModalTable = (
 ) => {
@@ -102,5 +104,4 @@ const resetModalTable = (
     })
     // Deal with this exception (Using core/notify exception function is recommended).
     .catch((error) => displayException(error));
-  window.console.log('reset table');
 };

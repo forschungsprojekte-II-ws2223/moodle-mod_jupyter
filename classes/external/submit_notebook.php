@@ -57,14 +57,13 @@ class submit_notebook extends \external_api {
      * @param int $instanceid ID of the activity instance
      * @param string $filename name of the submitted notebook file
      * @param string $token Gradeservice authorization JWT
+     * @return array $points Response array of graded question results
      */
     public static function execute(string $user, int $courseid, int $instanceid, string $filename, string $token) : array {
         global $CFG, $DB, $USER;
         $handler = new gradeservice_handler();
 
         $points = array();
-        // Get max points per question from DB.
-        // $maxquestions = $DB->get_records('jupyter_questions', array('jupyter' => $instanceid), '');
         $handler->submit_assignment($user, $courseid, $instanceid, $filename, $token);
         $questions = $DB->get_records('jupyter_questions_points', array('jupyter' => $instanceid, 'userid' => $USER->id), '');
 
@@ -72,7 +71,10 @@ class submit_notebook extends \external_api {
             $point = new stdClass;
             $point->question = $entry->questionnr;
             $point->reached = $entry->points;
-            $point->max = $DB->get_record('jupyter_questions', array('jupyter' => $instanceid, 'questionnr' => $entry->questionnr), 'maxpoints', MUST_EXIST)->maxpoints;
+            $point->max = $DB->get_record(
+                'jupyter_questions',
+                array('jupyter' => $instanceid, 'questionnr' => $entry->questionnr),
+                'maxpoints', MUST_EXIST)->maxpoints;
             array_push($points, $point);
         }
         return $points;
