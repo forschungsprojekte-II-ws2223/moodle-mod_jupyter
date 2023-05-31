@@ -35,6 +35,7 @@ $string['jupytersettings'] = 'Standard Einstellungen';
 $string['jupyterfieldset'] = '';
 $string['package'] = 'Notebook-Datei';
 $string['package_help'] = 'Laden sie hier die Notebook-Datei für die Aktivität hoch.';
+$string['autograding'] = 'Die Aufgabe soll automatisiert benotet werden.';
 
 $string['jupyter:addinstance'] = 'Eine neue Jupyter Notbook Aktivität hinzufügen';
 $string['jupyter:view'] = 'Eine Jupyter Notebook Aktivität anzeigen';

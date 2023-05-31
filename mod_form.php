@@ -59,6 +59,9 @@ class mod_jupyter_mod_form extends moodleform_mod {
         $mform->addHelpButton('packagefile', 'package', 'mod_jupyter');
         $mform->addRule('packagefile', null, 'required');
 
+        // Adding checkbox for whether the assignment should be auto-graded.
+        $mform->addElement('advcheckbox', 'autograded', 'Auto-Grading', get_string('autograding', 'mod_jupyter'), '', array(0, 1));
+
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
