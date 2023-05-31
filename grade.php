@@ -28,8 +28,16 @@
 
 require(__DIR__.'/../../config.php');
 
-// Course module ID.
+global $DB, $PAGE, $USER, $OUTPUT;
+
 $id = required_param('id', PARAM_INT);
+$itemid = optional_param('itemid', 0, PARAM_INT);
+$itemnumber = optional_param('itemnumber', 0, PARAM_INT);
+$gradeid = optional_param('gradeid', 0, PARAM_INT);
+$gradeduserid = required_param('userid', PARAM_INT);
+
+// ID of the logged in user.
+$loggedinuserid = $USER->id;
 
 $cm = get_coursemodule_from_id('jupyter', $id, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
@@ -37,11 +45,30 @@ $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', 
 
 require_login($course, true, $cm);
 
-// Item number may be != 0 for activities that allow more than one grade per user.
-$itemnumber = optional_param('itemnumber', 0, PARAM_INT);
+if (($loggedinuserid == $gradeduserid) || has_capability('mod/jupyter:viewerrordetails', CONTEXT_MODULE::instance($cm->id))) {
+    // Show overview over all submitted tasks if a techer tries to look at student's grade or a student tries to look at their own grade.
+    $grades = $DB->get_records('jupyter_questions_points', array('userid' => $loggedinuserid, 'jupyter' => $moduleinstance->id), '');
 
-// Graded user ID (optional).
-$userid = optional_param('userid', 0, PARAM_INT);
+    $gradeoverview = new stdClass;
+    $gradeoverview->grade_overview = [];
 
-// In the simplest case just redirect to the view page.
-redirect('view.php?id='.$id);
+    foreach ($grades as $id => $grade) {
+        $item = new stdClass;
+        $item->questionnr = $grade->questionnr;
+        $item->points = $grade->points;
+        $item->maxpoints = $DB->get_record('jupyter_questions', array('jupyter' => $moduleinstance->id, 'questionnr' => $grade->questionnr), 'maxpoints', MUST_EXIST)->maxpoints;
+        $item->output = $grade->output;
+        array_push($gradeoverview->grade_overview, $item);
+    }
+
+    $PAGE->set_url('/mod/jupyter/grade.php', array('id' => $cm->id));
+    $PAGE->set_title(format_string($moduleinstance->name));
+    $PAGE->set_heading(format_string($course->fullname));
+
+    echo $OUTPUT->header();
+    echo $OUTPUT->render_from_template('mod_jupyter/grades', $gradeoverview);
+    echo $OUTPUT->footer();
+} else {
+    // Redirect to a student's own overview if they try to look at someone else's grade.
+    redirect('grade.php?id='.$id.'&itemid='.$itemid.'&itemnumber='.$itemnumber.'&gradeid='.$gradeid.'&userid='.$loggedinuserid);
+}
