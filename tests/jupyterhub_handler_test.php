@@ -97,7 +97,7 @@ class jupyterhub_handler_test extends \advanced_testcase {
         $handler->set_client($client);
 
         // Check if $notebookpath is correct.
-        $notebookpath = $handler->get_notebook_path($user, $modulecontext->id, $SITE->id, $moduleinstance->id, 1);
+        $notebookpath = $handler->get_notebook_path($user, $modulecontext->id, $SITE->id, $moduleinstance->id, 0);
         $this->assertEquals('/hub/user-redirect/lab/tree/' . $SITE->id . '/' .
         $moduleinstance->id . '/testfile1.ipynb', $notebookpath);
     }
