@@ -17,4 +17,5 @@ export const init = async ({ user, contextid, courseid, instanceid }) => {
 
 const callResetNotebook = async (user, contextid, courseid, instanceid) => {
   const response = await resetNotebook(user, contextid, courseid, instanceid);
+  window.console.log(response);
 };

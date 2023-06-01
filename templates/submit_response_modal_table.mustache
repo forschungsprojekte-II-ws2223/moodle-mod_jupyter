@@ -48,6 +48,7 @@ Example context (json):
 
 <body>
     <div data-element="mod_jupyter/placeholder">
+        {{^error}}
         <table class="table">
             <thead>
                 <tr>
@@ -66,8 +67,14 @@ Example context (json):
                 {{/points}}
             </tbody>
         </table>
+        {{/error}}
         <div>
+            {{^error}}
             {{#str}}submitmodalbodytext,mod_jupyter{{/str}}
+            {{/error}}
+            {{#error}}
+            {{#str}}gradeservice_grade_err,mod_jupyter{{/str}}
+            {{/error}}
         </div>
     </div>
 </body>
