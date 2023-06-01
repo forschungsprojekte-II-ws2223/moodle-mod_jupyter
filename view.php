@@ -63,15 +63,17 @@ $PAGE->set_context($modulecontext);
 
 // User interface.
 echo $OUTPUT->header();
+
 // Starting point.
 echo $OUTPUT->render_from_template('mod_jupyter/loading', []);
 
 $user = mb_strtolower($USER->username, "UTF-8");
 $jwt = JWT::encode(["name" => $user], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
 
+$autograded = $moduleinstance->autograded;
 $assignment = $moduleinstance->assignment;
 
-if ($assignment == null) {
+if ($assignment == null && $autograded) {
     try {
         $handler = new gradeservice_handler();
         $assignment = $handler->create_assignment(
@@ -91,7 +93,7 @@ if ($assignment == null) {
     }
 }
 
-if ($assignment != null) {
+if ($assignment != null || !$autograded) {
     try {
         $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
         $handler = new jupyterhub_handler();
@@ -100,26 +102,32 @@ if ($assignment != null) {
             $modulecontext->id,
             $course->id,
             $moduleinstance->id,
-            $assignment
+            $autograded
         );
 
-        $PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init', [[
-            'user' => $user,
-            'courseid' => $course->id,
-            'instanceid' => $moduleinstance->id,
-            'filename' => $assignment,
-            'token' => $jwt
-            ]]
-        );
+        if ($autograded) {
+            $PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init', [[
+                'user' => $user,
+                'courseid' => $course->id,
+                'instanceid' => $moduleinstance->id,
+                'filename' => $assignment,
+                'token' => $jwt
+                ]]
+            );
+        }
+
         $PAGE->requires->js_call_amd('mod_jupyter/reset_notebook', 'init', [[
             'user' => $user,
             'contextid' => $modulecontext->id,
             'courseid' => $course->id,
-            'instanceid' => $moduleinstance->id
+            'instanceid' => $moduleinstance->id,
+            'autograded' => $autograded
             ]]
         );
-        $PAGE->requires->js_call_amd('mod_jupyter/startup', 'init',
-        [['login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt]]);
+        $PAGE->requires->js_call_amd('mod_jupyter/startup', 'init', [[
+            'login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt,
+            'autograded' => $autograded
+            ]]);
 
     } catch (RequestException $e) {
         if ($e->hasResponse()) {

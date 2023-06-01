@@ -3,6 +3,7 @@ import Templates from "core/templates";
 
 const context = {
   login: "",
+  autograded: true
 };
 
 const Selectors = {
@@ -11,9 +12,10 @@ const Selectors = {
   },
 };
 
-export const init = ({ login }) => {
+export const init = ({ login, autograded }) => {
   // This will call the function to load and render our template.
   context.login = login;
+  context.autograded = autograded == 1;
   Templates.renderForPromise("mod_jupyter/manage", context)
     // It returns a promise that needs to be resoved.
     .then(({ html, js }) => {
