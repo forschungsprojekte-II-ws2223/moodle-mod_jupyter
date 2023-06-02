@@ -86,18 +86,23 @@ class jupyterhub_handler {
      * @throws ConnectException
      * @throws RequestException
      */
-    public function get_notebook_path(string $user, int $contextid, int $courseid, int $instanceid, string $filename) : string {
+    public function get_notebook_path(string $user, int $contextid, int $courseid, int $instanceid, int $autograded) : string {
         $this->check_user_status($user);
 
         $route = "/user/{$user}/api/contents";
+
+        $fs = get_file_storage();
+        $filearea = $autograded ? 'assignment' : 'package';
+        $files = $fs->get_area_files($contextid, 'mod_jupyter', $filearea, 0, 'id', false);
+        $file = reset($files);
+        $filename = $file->get_filename();
 
         try {
             // Check if file is already there.
             $this->client->get("{$route}/{$courseid}/{$instanceid}/{$filename}", ['query' => ['content' => '0']]);
         } catch (RequestException $e) {
             if ($e->hasResponse() && $e->getCode() == 404) {
-                $fs = get_file_storage();
-                $files = $fs->get_area_files($contextid, 'mod_jupyter', 'assignment', 0, 'id', false);
+                $files = $fs->get_area_files($contextid, 'mod_jupyter', $filearea, 0, 'id', false);
                 $file = reset($files);
 
                 // Jupyter api doesnt support creating directorys recursively so we have to it like this.
@@ -153,9 +158,10 @@ class jupyterhub_handler {
      * @throws RequestException
      * @throws ConnectException
      */
-    public function reset_notebook(string $user, int $contextid, int $courseid, int $instanceid) {
+    public function reset_notebook(string $user, int $contextid, int $courseid, int $instanceid, int $autograded) {
         $fs = get_file_storage();
-        $files = $fs->get_area_files($contextid, 'mod_jupyter', 'assignment', 0, 'id', false);
+        $filearea = $autograded ? 'assignment' : 'package';
+        $files = $fs->get_area_files($contextid, 'mod_jupyter', $filearea, 0, 'id', false);
         $file = reset($files);
         $filename = $file->get_filename();
 

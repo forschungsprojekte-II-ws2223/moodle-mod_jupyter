@@ -64,8 +64,20 @@ class submit_notebook extends \external_api {
         $handler = new gradeservice_handler();
 
         $points = array();
-        $handler->submit_assignment($user, $courseid, $instanceid, $filename, $token);
-        $questions = $DB->get_records('jupyter_questions_points', array('jupyter' => $instanceid, 'userid' => $USER->id), '');
+
+        try {
+            $handler->submit_assignment($user, $courseid, $instanceid, $filename, $token);
+            $questions = $DB->get_records('jupyter_questions_points', array('jupyter' => $instanceid, 'userid' => $USER->id), '');
+        } catch (\Throwable $th) {
+            $error = new stdClass;
+            $error->question = 0;
+            $error->reached = 0;
+            $error->max = 0;
+            $error->error = true;
+            $error->errortype = 'test';
+            array_push($points, $error);
+            return $points;
+        }
 
         foreach ($questions as $key => $entry) {
             $point = new stdClass;
@@ -90,6 +102,8 @@ class submit_notebook extends \external_api {
             'question' => new external_value(PARAM_RAW, 'question number in notebook'),
             'reached' => new external_value(PARAM_RAW, 'reached points in question after grading'),
             'max' => new external_value(PARAM_RAW, 'maximum reachable points in question'),
+            'error' => new external_value(PARAM_BOOL, VALUE_OPTIONAL, 'if an error occured'),
+            'errortype' => new external_value(PARAM_RAW, VALUE_OPTIONAL, 'what error occured'),
             ]));
     }
 }

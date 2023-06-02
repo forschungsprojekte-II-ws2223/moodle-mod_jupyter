@@ -6,7 +6,8 @@ const context = {
   message: "",
   closebutton: 1,
   announce: 1,
-  points: []
+  points: [],
+  error: false,
 };
 
 const Selectors = {
@@ -63,7 +64,13 @@ const callSubmitNotebook = async (
     filename,
     token
   );
-  context.points = response;
+  if ("error" in response[0]) {
+    context.error = response[0].error;
+    context.errortype = response[0].errortype;
+  } else {
+    context.error = false;
+    context.points = response;
+  }
   renderModalTable();
 };
 

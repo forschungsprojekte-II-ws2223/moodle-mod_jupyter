@@ -40,7 +40,8 @@ class reset_notebook extends \external_api {
             'user' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'unique user id'),
             'contextid' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'module context id'),
             'courseid' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'module course id'),
-            'instanceid' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'module instance id')
+            'instanceid' => new external_value(PARAM_RAW, VALUE_REQUIRED, 'module instance id'),
+            'autograded' => new external_value(PARAM_RAW, VALUE_REQUIRED, '1 if assignment is auto-graded, 0 otherwise'),
         ]);
     }
 
@@ -53,9 +54,9 @@ class reset_notebook extends \external_api {
      * @param int $instanceid :)
      * @return string
      */
-    public static function execute(string $user, int $contextid, int $courseid, int $instanceid) {
+    public static function execute(string $user, int $contextid, int $courseid, int $instanceid, int $autograded) {
         $handler = new jupyterhub_handler();
-        $handler->reset_notebook($user, $contextid, $courseid, $instanceid);
+        $handler->reset_notebook($user, $contextid, $courseid, $instanceid, $autograded);
         return 'notebook reset';
     }
 
