@@ -3,7 +3,7 @@ import Templates from "core/templates";
 
 const context = {
   login: "",
-  autograded: true
+  autograded: true,
 };
 
 const Selectors = {
