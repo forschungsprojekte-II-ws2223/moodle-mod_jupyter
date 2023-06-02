@@ -59,10 +59,13 @@ if (($loggedinuserid == $gradeduserid) || has_capability('mod/jupyter:viewerrord
     foreach ($grades as $id => $grade) {
         $item = new stdClass;
         $item->questionnr = $grade->questionnr;
-        $item->points = $grade->points;
-        $item->maxpoints = $DB->get_record(
-            'jupyter_questions',
-            array('jupyter' => $moduleinstance->id, 'questionnr' => $grade->questionnr), 'maxpoints', MUST_EXIST)->maxpoints;
+        $item->points = floatval($grade->points);
+        $item->maxpoints = floatval(
+            $DB->get_record(
+                'jupyter_questions',
+                array('jupyter' => $moduleinstance->id, 'questionnr' => $grade->questionnr), 'maxpoints', MUST_EXIST)
+                ->maxpoints
+            );
         $item->output = $grade->output;
         array_push($gradeoverview->grade_overview, $item);
     }

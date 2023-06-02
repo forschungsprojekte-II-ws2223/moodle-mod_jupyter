@@ -82,11 +82,13 @@ class submit_notebook extends \external_api {
         foreach ($questions as $key => $entry) {
             $point = new stdClass;
             $point->question = $entry->questionnr;
-            $point->reached = round($entry->points, 2);
-            $point->max = round($DB->get_record(
-                'jupyter_questions',
-                array('jupyter' => $instanceid, 'questionnr' => $entry->questionnr),
-                'maxpoints', MUST_EXIST)->maxpoints, 2);
+            $point->reached = floatval($entry->points);
+            $point->max = floatval(
+                $DB->get_record(
+                    'jupyter_questions',
+                    array('jupyter' => $instanceid, 'questionnr' => $entry->questionnr),
+                    'maxpoints', MUST_EXIST)->maxpoints
+            );
             array_push($points, $point);
         }
         return $points;
