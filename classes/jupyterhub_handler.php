@@ -93,7 +93,7 @@ class jupyterhub_handler {
 
         $fs = get_file_storage();
         $filearea = $autograded ? 'assignment' : 'package';
-        $files = $fs->get_area_files($contextid, 'mod_jupyter',  'package', 0, 'id', false);
+        $files = $fs->get_area_files($contextid, 'mod_jupyter', $filearea, 0, 'id', false);
         $file = reset($files);
         $filename = $file->get_filename();
 
