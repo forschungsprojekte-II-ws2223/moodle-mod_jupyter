@@ -102,17 +102,10 @@ function jupyter_delete_instance(int $id) {
         return false;
     }
 
-    $context = context_module::instance($moduleinstance->coursemodule);
-    $fs = get_file_storage();
-    $fs->delete_area_files($context->id, 'mod_jupyter', 'package');
-    $fs->delete_area_files($context->id, 'mod_jupyter', 'assignment');
-
     $DB->delete_records('jupyter', array('id' => $id));
     $DB->delete_records('jupyter_grades', array('jupyter' => $id));
     $DB->delete_records('jupyter_questions', array('jupyter' => $id));
     $DB->delete_records('jupyter_questions_points', array('jupyter' => $id));
-
-    jupyter_grade_item_delete($moduleinstance);
 
     return true;
 }
