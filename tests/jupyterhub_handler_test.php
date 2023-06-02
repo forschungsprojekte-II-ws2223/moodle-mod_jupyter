@@ -61,7 +61,7 @@ class jupyterhub_handler_test extends \advanced_testcase {
      * @return void
      */
     public function test_get_notebook_path() {
-        global $USER, $OUTPUT, $CFG, $DB, $SITE, $moduleinstance, $modulecontext;
+        global $USER, $DB, $SITE, $moduleinstance, $modulecontext;
         $this->resetAfterTest();
         $this->setAdminUser();
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
@@ -95,7 +95,7 @@ class jupyterhub_handler_test extends \advanced_testcase {
         $handler->set_client($client);
 
         // Check if $notebookpath is correct.
-        $notebookpath = $handler->get_notebook_path($user, $modulecontext->id, $SITE->id, $moduleinstance->id, 0);
+        $notebookpath = $handler->get_notebook_path($user, $SITE->id, $moduleinstance->course, $moduleinstance->id, 0);
         $this->assertEquals('/hub/user-redirect/lab/tree/' . $SITE->id . '/' .
         $moduleinstance->id . '/testfile1.ipynb', $notebookpath);
     }
