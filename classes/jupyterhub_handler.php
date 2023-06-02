@@ -81,7 +81,7 @@ class jupyterhub_handler {
      * @param int $contextid activity context id
      * @param int $courseid id of the moodle course
      * @param int $instanceid activity instance id
-     * @param string $filename notebook filename
+     * @param int $autograded
      * @return string path to file on jupyterhub server
      * @throws ConnectException
      * @throws RequestException
@@ -155,6 +155,7 @@ class jupyterhub_handler {
      * @param int $contextid activity context id
      * @param int $courseid id of the moodle course
      * @param int $instanceid activity instance id
+     * @param int $autograded
      * @throws RequestException
      * @throws ConnectException
      */

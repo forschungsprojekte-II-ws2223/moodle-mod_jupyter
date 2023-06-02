@@ -51,7 +51,8 @@ class reset_notebook extends \external_api {
      * @param string $user current user's username
      * @param int $contextid contextid of activity instance
      * @param int $courseid course id
-     * @param int $instanceid :)
+     * @param int $instanceid activity instance id
+     * @param int $autograded
      * @return string
      */
     public static function execute(string $user, int $contextid, int $courseid, int $instanceid, int $autograded) {
