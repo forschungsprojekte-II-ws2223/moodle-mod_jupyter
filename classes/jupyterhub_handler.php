@@ -102,8 +102,6 @@ class jupyterhub_handler {
             $this->client->get("{$route}/{$courseid}/{$instanceid}/{$filename}", ['query' => ['content' => '0']]);
         } catch (RequestException $e) {
             if ($e->hasResponse() && $e->getCode() == 404) {
-                $files = $fs->get_area_files($contextid, 'mod_jupyter', $filearea, 0, 'id', false);
-                $file = reset($files);
 
                 // Jupyter api doesnt support creating directorys recursively so we have to it like this.
                 $this->client->put("{$route}/{$courseid}", ['json' => ['type' => 'directory']]);

@@ -75,12 +75,9 @@ class jupyterhub_handler_test extends \advanced_testcase {
         $this->assertEquals('http://127.0.0.1:8000', $jupyterhuburl);
 
         $user = mb_strtolower($USER->username, "UTF-8");
-        $handler = new jupyterhub_handler($user, $SITE->id);
+        $handler = new jupyterhub_handler();
         $fs = get_file_storage();
         $files = $fs->get_area_files($SITE->id, 'mod_jupyter', 'package', 0, 'id', false);
-        $fs = get_file_storage();
-        $file = reset($files);
-        $filename = $file->get_filename();
 
         // One file was created.
         $this->assertCount(1, $files);
