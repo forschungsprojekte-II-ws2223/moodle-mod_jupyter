@@ -78,6 +78,7 @@ class jupyterhub_handler_test extends \advanced_testcase {
         $handler = new jupyterhub_handler();
         $fs = get_file_storage();
         $files = $fs->get_area_files($SITE->id, 'mod_jupyter', 'package', 0, 'id', false);
+        reset($files);
 
         // One file was created.
         $this->assertCount(1, $files);

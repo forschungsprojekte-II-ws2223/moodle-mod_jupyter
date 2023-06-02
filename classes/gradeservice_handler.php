@@ -125,6 +125,7 @@ class gradeservice_handler {
 
     /**
      * Delete assignment.
+     *
      * @param stdClass $moduleinstance
      * @return void
      * @throws dml_exception
