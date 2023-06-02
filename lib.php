@@ -97,12 +97,22 @@ function jupyter_update_instance(stdClass $data) {
 function jupyter_delete_instance(int $id) {
     global $DB;
 
-    $exists = $DB->get_record('jupyter', array('id' => $id));
-    if (!$exists) {
+    $moduleinstance = $DB->get_record('jupyter', array('id' => $id));
+    if (!$moduleinstance) {
         return false;
     }
 
+    $context = context_module::instance($moduleinstance->coursemodule);
+    $fs = get_file_storage();
+    $fs->delete_area_files($context->id, 'mod_jupyter', 'package');
+    $fs->delete_area_files($context->id, 'mod_jupyter', 'assignment');
+
     $DB->delete_records('jupyter', array('id' => $id));
+    $DB->delete_records('jupyter_grades', array('jupyter' => $id));
+    $DB->delete_records('jupyter_questions', array('jupyter' => $id));
+    $DB->delete_records('jupyter_questions_points', array('jupyter' => $id));
+
+    jupyter_grade_item_delete($moduleinstance);
 
     return true;
 }
@@ -113,7 +123,6 @@ function jupyter_delete_instance(int $id) {
  * @param stdClass $data an object from the form
  */
 function jupyter_set_mainfile(stdClass $data): void {
-    $fs = get_file_storage();
     $cmid = $data->coursemodule;
     $context = context_module::instance($cmid);
 
