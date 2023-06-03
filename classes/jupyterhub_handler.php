@@ -81,24 +81,27 @@ class jupyterhub_handler {
      * @param int $contextid activity context id
      * @param int $courseid id of the moodle course
      * @param int $instanceid activity instance id
-     * @param string $filename notebook filename
+     * @param int $autograded
      * @return string path to file on jupyterhub server
      * @throws ConnectException
      * @throws RequestException
      */
-    public function get_notebook_path(string $user, int $contextid, int $courseid, int $instanceid, string $filename) : string {
+    public function get_notebook_path(string $user, int $contextid, int $courseid, int $instanceid, int $autograded) : string {
         $this->check_user_status($user);
 
         $route = "/user/{$user}/api/contents";
+
+        $fs = get_file_storage();
+        $filearea = $autograded ? 'assignment' : 'package';
+        $files = $fs->get_area_files($contextid, 'mod_jupyter', $filearea, 0, 'id', false);
+        $file = reset($files);
+        $filename = $file->get_filename();
 
         try {
             // Check if file is already there.
             $this->client->get("{$route}/{$courseid}/{$instanceid}/{$filename}", ['query' => ['content' => '0']]);
         } catch (RequestException $e) {
             if ($e->hasResponse() && $e->getCode() == 404) {
-                $fs = get_file_storage();
-                $files = $fs->get_area_files($contextid, 'mod_jupyter', 'assignment', 0, 'id', false);
-                $file = reset($files);
 
                 // Jupyter api doesnt support creating directorys recursively so we have to it like this.
                 $this->client->put("{$route}/{$courseid}", ['json' => ['type' => 'directory']]);
@@ -150,12 +153,14 @@ class jupyterhub_handler {
      * @param int $contextid activity context id
      * @param int $courseid id of the moodle course
      * @param int $instanceid activity instance id
+     * @param int $autograded
      * @throws RequestException
      * @throws ConnectException
      */
-    public function reset_notebook(string $user, int $contextid, int $courseid, int $instanceid) {
+    public function reset_notebook(string $user, int $contextid, int $courseid, int $instanceid, int $autograded) {
         $fs = get_file_storage();
-        $files = $fs->get_area_files($contextid, 'mod_jupyter', 'assignment', 0, 'id', false);
+        $filearea = $autograded ? 'assignment' : 'package';
+        $files = $fs->get_area_files($contextid, 'mod_jupyter', $filearea, 0, 'id', false);
         $file = reset($files);
         $filename = $file->get_filename();
 

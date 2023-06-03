@@ -30,7 +30,7 @@ class mod_jupyter_generator extends testing_module_generator {
      * @return stdClass mod_jupyter_structure
      */
     public function create_instance($record = null, array $options = null) {
-        global $USER, $CFG, $SITE;
+        global $CFG, $SITE;
         require_once($CFG->dirroot . '/lib/resourcelib.php');
         $record = (object)(array)$record;
 
@@ -48,8 +48,18 @@ class mod_jupyter_generator extends testing_module_generator {
             'filename'  => 'testfile' . ($this->instancecount + 1) .'.ipynb',
         );
 
+        $filerecord2 = array(
+            'contextid' => $SITE->id,
+            'component' => 'mod_jupyter',
+            'filearea'  => 'assignment',
+            'itemid'    => $this->instancecount,
+            'filepath'  => '/',
+            'filename'  => 'testfile' . ($this->instancecount + 1) .'.ipynb',
+        );
+
         $fs = get_file_storage();
-        $file = $fs->create_file_from_string($filerecord, $content);
+        $fs->create_file_from_string($filerecord, $content);
+        $fs->create_file_from_string($filerecord2, $content);
 
         return parent::create_instance($record, (array)$options);
     }

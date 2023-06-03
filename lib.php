@@ -22,6 +22,7 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_jupyter\gradeservice_handler;
 /**
  * Return if the plugin supports $feature.
  *
@@ -97,12 +98,20 @@ function jupyter_update_instance(stdClass $data) {
 function jupyter_delete_instance(int $id) {
     global $DB;
 
-    $exists = $DB->get_record('jupyter', array('id' => $id));
-    if (!$exists) {
+    $moduleinstance = $DB->get_record('jupyter', array('id' => $id));
+    if (!$moduleinstance) {
         return false;
     }
 
+    if ($moduleinstance->autograded) {
+        $handler = new gradeservice_handler();
+        $handler->delete_assignment($moduleinstance);
+    }
+
     $DB->delete_records('jupyter', array('id' => $id));
+    $DB->delete_records('jupyter_grades', array('jupyter' => $id));
+    $DB->delete_records('jupyter_questions', array('jupyter' => $id));
+    $DB->delete_records('jupyter_questions_points', array('jupyter' => $id));
 
     return true;
 }
@@ -113,7 +122,6 @@ function jupyter_delete_instance(int $id) {
  * @param stdClass $data an object from the form
  */
 function jupyter_set_mainfile(stdClass $data): void {
-    $fs = get_file_storage();
     $cmid = $data->coursemodule;
     $context = context_module::instance($cmid);
 
@@ -180,12 +188,14 @@ function jupyter_grade_item_delete($moduleinstance) {
  *
  * @param stdClass $moduleinstance Instance object with extra cmidnumber and modname property.
  * @param int $userid Update grade of specific user only, 0 means all participants.
+ * @param bool $nullifnone If a single user is specified and $nullifnone is true a grade item with a null rawgrade will be inserted
  */
-function jupyter_update_grades($moduleinstance, $userid = 0) {
+function jupyter_update_grades($moduleinstance, $userid = 0, $nullifnone = true) {
     global $CFG, $DB;
     require_once($CFG->libdir.'/gradelib.php');
 
     // Populate array of grade objects indexed by userid.
-    $grades = array();
+    $grades = $DB->get_records('jupyter_grades', ['userid' => $userid]);
+
     grade_update('/mod/jupyter', $moduleinstance->course, 'mod', 'jupyter', $moduleinstance->id, 0, $grades);
 }
