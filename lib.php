@@ -22,6 +22,7 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_jupyter\gradeservice_handler;
 /**
  * Return if the plugin supports $feature.
  *
@@ -101,6 +102,9 @@ function jupyter_delete_instance(int $id) {
     if (!$moduleinstance) {
         return false;
     }
+
+    $handler = new gradeservice_handler();
+    $handler->delete_assignment($moduleinstance);
 
     $DB->delete_records('jupyter', array('id' => $id));
     $DB->delete_records('jupyter_grades', array('jupyter' => $id));

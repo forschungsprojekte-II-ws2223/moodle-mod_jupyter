@@ -27,7 +27,11 @@ namespace mod_jupyter;
 defined('MOODLE_INTERNAL') || die();
 require($CFG->dirroot . '/mod/jupyter/vendor/autoload.php');
 
+use dml_exception;
+use DomainException;
+use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use mod_jupyter\jupyterhub_handler;
 use stdClass;
 
@@ -119,6 +123,25 @@ class gradeservice_handler {
         return $filename;
     }
 
+    /**
+     * Delete assignment.
+     *
+     * @param stdClass $moduleinstance
+     * @return void
+     * @throws dml_exception
+     * @throws DomainException
+     * @throws GuzzleException
+     */
+    public function delete_assignment(stdClass $moduleinstance) {
+        global $USER;
+        $jwt = JWT::encode(["name" => $USER->username], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
+
+        $this->client->request("DELETE", "/{$moduleinstance->course}/{$moduleinstance->id}", [
+            'headers' => [
+                'Authorization' => $jwt
+            ]
+        ]);
+    }
 
     /**
      * Submit an assignment.

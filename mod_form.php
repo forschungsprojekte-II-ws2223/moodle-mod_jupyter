@@ -49,19 +49,6 @@ class mod_jupyter_mod_form extends moodleform_mod {
         // Adding the standard "name" field.
         $mform->addElement('text', 'name', get_string('jupytername', 'mod_jupyter'), array('size' => '64'));
 
-        // Adding file manager for jupyter notebook file.
-        $mform->addElement('filemanager', 'packagefile', get_string('package', 'mod_jupyter'), null, [
-            'accepted_types' => '.ipynb',
-            'maxbytes' => 0,
-            'maxfiles' => 1,
-            'subdirs' => 0,
-        ]);
-        $mform->addHelpButton('packagefile', 'package', 'mod_jupyter');
-        $mform->addRule('packagefile', null, 'required');
-
-        // Adding checkbox for whether the assignment should be auto-graded.
-        $mform->addElement('advcheckbox', 'autograded', 'Auto-Grading', get_string('autograding', 'mod_jupyter'), '', array(0, 1));
-
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
@@ -73,6 +60,22 @@ class mod_jupyter_mod_form extends moodleform_mod {
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('name', 'jupytername', 'mod_jupyter');
 
+        if ($this->_instance == '' || !$this->current->assignment) {
+            // Adding file manager for jupyter notebook file.
+            $mform->addElement('filemanager', 'packagefile', get_string('package', 'mod_jupyter'), null, [
+            'accepted_types' => '.ipynb',
+            'maxbytes' => 0,
+            'maxfiles' => 1,
+            'subdirs' => 0,
+            ]);
+            $mform->addHelpButton('packagefile', 'package', 'mod_jupyter');
+            $mform->addRule('packagefile', null, 'required');
+
+            // Adding checkbox for whether the assignment should be auto-graded.
+            $mform->addElement('advcheckbox', 'autograded', 'Auto-Grading', get_string('autograding', 'mod_jupyter'), '',
+                array(1, 0));
+        }
+
         // Adding the standard "intro" and "introformat" fields.
         $this->standard_intro_elements();
 
@@ -80,7 +83,7 @@ class mod_jupyter_mod_form extends moodleform_mod {
         $this->standard_coursemodule_elements();
 
         // Add standard buttons.
-        $this->add_action_buttons();
+        $this->add_action_buttons(true, null, false);
     }
 
     /**
