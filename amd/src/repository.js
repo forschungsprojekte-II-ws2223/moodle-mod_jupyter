@@ -9,12 +9,12 @@ export const submitNotebook = (user, courseid, instanceid, filename, token) =>
         courseid,
         instanceid,
         filename,
-        token
+        token,
       },
     },
   ])[0];
 
-export const resetNotebook = (user, contextid, courseid, instanceid) =>
+export const resetNotebook = (user, contextid, courseid, instanceid, autograded) =>
   fetchMany([
     {
       methodname: "mod_jupyter_reset_notebook",
@@ -23,6 +23,7 @@ export const resetNotebook = (user, contextid, courseid, instanceid) =>
         contextid,
         courseid,
         instanceid,
+        autograded
       },
     },
   ])[0];

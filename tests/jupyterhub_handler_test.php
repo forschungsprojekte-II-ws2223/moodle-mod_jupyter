@@ -61,7 +61,7 @@ class jupyterhub_handler_test extends \advanced_testcase {
      * @return void
      */
     public function test_get_notebook_path() {
-        global $USER, $OUTPUT, $CFG, $DB, $SITE, $moduleinstance, $modulecontext;
+        global $USER, $DB, $SITE, $moduleinstance, $modulecontext;
         $this->resetAfterTest();
         $this->setAdminUser();
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_jupyter');
@@ -75,12 +75,9 @@ class jupyterhub_handler_test extends \advanced_testcase {
         $this->assertEquals('http://127.0.0.1:8000', $jupyterhuburl);
 
         $user = mb_strtolower($USER->username, "UTF-8");
-        $handler = new jupyterhub_handler($user, $SITE->id);
+        $handler = new jupyterhub_handler();
         $fs = get_file_storage();
         $files = $fs->get_area_files($SITE->id, 'mod_jupyter', 'package', 0, 'id', false);
-        $fs = get_file_storage();
-        $file = reset($files);
-        $filename = $file->get_filename();
 
         // One file was created.
         $this->assertCount(1, $files);
@@ -97,8 +94,8 @@ class jupyterhub_handler_test extends \advanced_testcase {
         $handler->set_client($client);
 
         // Check if $notebookpath is correct.
-        $notebookpath = $handler->get_notebook_path($user, $modulecontext->id, $SITE->id, $moduleinstance->id, $filename);
-        $this->assertEquals('/hub/user-redirect/lab/tree/' . $SITE->id . '/' .
+        $notebookpath = $handler->get_notebook_path($user, $SITE->id, $moduleinstance->course, $moduleinstance->id, 0);
+        $this->assertEquals('/hub/user-redirect/lab/tree/' . $moduleinstance->course . '/' .
         $moduleinstance->id . '/testfile1.ipynb', $notebookpath);
     }
 

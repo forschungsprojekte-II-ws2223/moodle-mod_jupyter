@@ -16,10 +16,19 @@
 
 namespace mod_jupyter\external;
 
+defined('MOODLE_INTERNAL') || die();
+
+require_once("$CFG->dirroot/mod/jupyter/lib.php");
+
+
 use mod_jupyter\gradeservice_handler;
 use external_function_parameters;
 use external_value;
-
+use external_multiple_structure;
+use external_single_structure;
+use stdClass;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Jupyter web service class for submitting a notebook for autograding.
@@ -51,22 +60,71 @@ class submit_notebook extends \external_api {
      * @param int $instanceid ID of the activity instance
      * @param string $filename name of the submitted notebook file
      * @param string $token Gradeservice authorization JWT
+     * @return array $points Response array of graded question results
      */
-    public static function execute(string $user, int $courseid, int $instanceid, string $filename, string $token) {
+    public static function execute(string $user, int $courseid, int $instanceid, string $filename, string $token) : array {
+        global $DB, $USER;
         $handler = new gradeservice_handler();
-        $points = $handler->submit_assignment($user, $courseid, $instanceid, $filename, $token);
 
-        // Log points to console (delete later or alternatively log just confirmation).
-        return implode(", ", $points);
+        $points = array();
 
-        // TODO: Put points into Moodle DB.
+        try {
+            $handler->submit_assignment($user, $courseid, $instanceid, $filename, $token);
+            $questions = $DB->get_records('jupyter_questions_points', array('jupyter' => $instanceid, 'userid' => $USER->id), '');
+        } catch (ConnectException $e) {
+            $error = new stdClass;
+            $error->errormessage = get_string('gradeservice_submit_connect_err', 'jupyter');
+
+            $error->question = 0;
+            $error->reached = 0;
+            $error->max = 0;
+            $error->error = true;
+            array_push($points, $error);
+
+        } catch (RequestException $e) {
+            $error = new stdClass;
+
+            if ($e->getCode() == 408) {
+                $error->errormessage = get_string('gradeservice_submit_timeout', 'jupyter');
+            } else {
+                $error->errormessage = get_string('gradeservice_submit_resp_err', 'jupyter');
+            }
+
+            $error->question = 0;
+            $error->reached = 0;
+            $error->max = 0;
+            $error->error = true;
+            array_push($points, $error);
+        }
+
+        foreach ($questions as $question) {
+            $point = new stdClass;
+            $point->question = $question->questionnr;
+            $point->reached = floatval($question->points);
+            $point->max = floatval(
+                $DB->get_record(
+                    'jupyter_questions',
+                    array('jupyter' => $instanceid, 'questionnr' => $question->questionnr),
+                    'maxpoints', MUST_EXIST)->maxpoints
+            );
+            array_push($points, $point);
+        }
+
+        return $points;
     }
 
     /**
      * Returns description of return values.
-     * @return external_value
+     * @return external_multiple_structure
      */
     public static function execute_returns() {
-        return new external_value(PARAM_TEXT, VALUE_REQUIRED, 'test value');
+        return new external_multiple_structure(
+            new external_single_structure([
+            'question' => new external_value(PARAM_RAW, 'question number in notebook'),
+            'reached' => new external_value(PARAM_RAW, 'reached points in question after grading'),
+            'max' => new external_value(PARAM_RAW, 'maximum reachable points in question'),
+            'error' => new external_value(PARAM_BOOL, VALUE_OPTIONAL, 'if an error occured'),
+            'errormessage' => new external_value(PARAM_RAW, VALUE_OPTIONAL, 'what error occured'),
+            ]));
     }
 }
