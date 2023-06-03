@@ -32,6 +32,7 @@ use GuzzleHttp\Exception\RequestException;
 use mod_jupyter\error_handler;
 use mod_jupyter\jupyterhub_handler;
 use mod_jupyter\gradeservice_handler;
+use moodle_url;
 
 // Moodle specific config.
 global $DB, $PAGE, $USER, $OUTPUT;
@@ -69,6 +70,11 @@ echo $OUTPUT->render_from_template('mod_jupyter/loading', []);
 
 $user = mb_strtolower($USER->username, "UTF-8");
 $jwt = JWT::encode(["name" => $user], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
+
+// Create link to user's gradebook.
+$coursemoduleid = $DB->get_record('course_modules', array('instance' => $moduleinstance->id))->id;
+$gradelink = new moodle_url('grade.php', array('id' => $coursemoduleid, 'userid' => $USER->id));
+$gradelink = $gradelink->__toString();
 
 $autograded = $moduleinstance->autograded;
 $assignment = $moduleinstance->assignment;
@@ -111,7 +117,8 @@ if ($assignment != null || !$autograded) {
                 'courseid' => $course->id,
                 'instanceid' => $moduleinstance->id,
                 'filename' => $assignment,
-                'token' => $jwt
+                'token' => $jwt,
+                'gradelink' => $gradelink
                 ]]
             );
         }

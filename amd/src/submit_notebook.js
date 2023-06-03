@@ -9,6 +9,7 @@ const context = {
   points: [],
   error: false,
   errortype: "",
+  gradelink: ""
 };
 
 const Selectors = {
@@ -26,11 +27,11 @@ const Selectors = {
  * Add event listeners to Selectors.
  * @param {*} param0
  */
-export const init = async ({ user, courseid, instanceid, filename, token }) => {
+export const init = async ({ user, courseid, instanceid, filename, token, gradelink }) => {
   document.addEventListener("click", (e) => {
     if (e.target.closest(Selectors.actions.submitButton)) {
       resetModalBody();
-      callSubmitNotebook(user, courseid, instanceid, filename, token);
+      callSubmitNotebook(user, courseid, instanceid, filename, token, gradelink);
     }
   });
 
@@ -50,13 +51,15 @@ export const init = async ({ user, courseid, instanceid, filename, token }) => {
  * @param {int} instanceid
  * @param {string} filename
  * @param {string} token
+ * @param {string} gradelink
  */
 const callSubmitNotebook = async (
   user,
   courseid,
   instanceid,
   filename,
-  token
+  token,
+  gradelink
 ) => {
   const response = await submitNotebook(
     user,
@@ -74,6 +77,7 @@ const callSubmitNotebook = async (
   } else {
     context.error = false;
     context.points = response;
+    context.gradelink = gradelink;
     renderModalTable();
   }
 

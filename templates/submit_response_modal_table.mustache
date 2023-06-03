@@ -70,7 +70,7 @@ Example context (json):
         {{/error}}
         <div>
             {{^error}}
-            {{#str}}submitmodalbodytext,mod_jupyter{{/str}}
+            {{#str}}submitmodalbodytext,mod_jupyter,{{{gradelink}}}{{/str}}
             {{/error}}
             {{#error}}
             {{errormessage}}

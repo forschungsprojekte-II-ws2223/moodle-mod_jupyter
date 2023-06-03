@@ -54,7 +54,7 @@ $string['submitmodaltitle'] = 'Submission results';
 $string['submitmodaltablequestionnr'] = 'Question #';
 $string['submitmodaltablereached'] = 'Your points';
 $string['submitmodaltablemax'] = 'Max points';
-$string['submitmodalbodytext'] = 'This result can always be found in your gradebook.';
+$string['submitmodalbodytext'] = 'This result can always be found in your <a href="{$a}">gradebook</a>.';
 $string['submitmodalbuttontext'] = 'OK';
 $string['submitbuttontext'] = 'Submit notebook';
 $string['submitbuttoninfo'] = 'Submit the notebook for grading. The currently saved state will be submitted.<br>The submission can always be changed, prior to the deadline, replacing your old submission.';
