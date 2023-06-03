@@ -63,7 +63,7 @@ class submit_notebook extends \external_api {
      * @return array $points Response array of graded question results
      */
     public static function execute(string $user, int $courseid, int $instanceid, string $filename, string $token) : array {
-        global $CFG, $DB, $USER;
+        global $DB, $USER;
         $handler = new gradeservice_handler();
 
         $points = array();
@@ -73,51 +73,44 @@ class submit_notebook extends \external_api {
             $questions = $DB->get_records('jupyter_questions_points', array('jupyter' => $instanceid, 'userid' => $USER->id), '');
         } catch (ConnectException $e) {
             $error = new stdClass;
-            $cm = $DB->get_record('course_modules', array('course' => $courseid, 'instance' => $instanceid));
-            $modulecontext = \context_module::instance($cm->id);
+            $error->errormessage = get_string('gradeservice_submit_connect_err', 'jupyter');
 
-            if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
-                $error->errormessage = get_string('gradeservice_connect_err_admin', 'jupyter', [
-                'url' => get_config('mod_jupyter', 'gradeservice_url'),
-                'msg' => "{$e->getCode()}: {$e->getMessage()}"
-                ]);
-            } else {
-                $error->errormessage = get_string('gradeservice_connect_err', 'jupyter');
-            }
-        } catch (RequestException $e) {
-            $error = new stdClass;
-            $cm = $DB->get_record('course_modules', array('course' => $courseid, 'instance' => $instanceid));
-            $modulecontext = \context_module::instance($cm->id);
-            if (has_capability('mod/jupyter:viewerrordetails', $cmid)) {
-                $error->errormessage = get_string('gradeservice_resp_err_admin', 'jupyter', [
-                'url' => get_config('mod_jupyter', 'gradeservice_url'),
-                'msg' => "{$e->getCode()}: {$e->getMessage()}"
-                ]);
-            } else {
-                $error->errormessage = get_string('gradeservice_resp_err', 'jupyter');
-            }
-        } finally {
             $error->question = 0;
             $error->reached = 0;
             $error->max = 0;
             $error->error = true;
             array_push($points, $error);
-            return $points;
+
+        } catch (RequestException $e) {
+            $error = new stdClass;
+
+            if ($e->getCode() == 408) {
+                $error->errormessage = get_string('gradeservice_submit_timeout', 'jupyter');
+            } else {
+                $error->errormessage = get_string('gradeservice_submit_resp_err', 'jupyter');
+            }
+
+            $error->question = 0;
+            $error->reached = 0;
+            $error->max = 0;
+            $error->error = true;
+            array_push($points, $error);
         }
 
-        foreach ($questions as $key => $entry) {
+        foreach ($questions as $question) {
             $point = new stdClass;
-            $point->question = $entry->questionnr;
-            $point->reached = floatval($entry->points);
+            $point->question = $question->questionnr;
+            $point->reached = floatval($question->points);
             $point->max = floatval(
                 $DB->get_record(
                     'jupyter_questions',
-                    array('jupyter' => $instanceid, 'questionnr' => $entry->questionnr),
+                    array('jupyter' => $instanceid, 'questionnr' => $question->questionnr),
                     'maxpoints', MUST_EXIST)->maxpoints
             );
             array_push($points, $point);
         }
-            return $points;
+
+        return $points;
     }
 
     /**

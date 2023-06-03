@@ -56,7 +56,7 @@ if (($loggedinuserid == $gradeduserid) || has_capability('mod/jupyter:viewerrord
     $gradeoverview = new stdClass;
     $gradeoverview->grade_overview = [];
 
-    foreach ($grades as $id => $grade) {
+    foreach ($grades as $grade) {
         $item = new stdClass;
         $item->questionnr = $grade->questionnr;
         $item->points = floatval($grade->points);
