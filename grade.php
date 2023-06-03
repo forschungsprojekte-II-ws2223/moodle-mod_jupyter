@@ -50,7 +50,7 @@ if (($loggedinuserid == $gradeduserid) || has_capability('mod/jupyter:viewerrord
     // or if a student tries to look at their own grade.
     $grades = $DB->get_records(
         'jupyter_questions_points',
-        array('userid' => $loggedinuserid, 'jupyter' => $moduleinstance->id), ''
+        array('userid' => $gradeduserid, 'jupyter' => $moduleinstance->id), ''
     );
 
     $gradeoverview = new stdClass;
