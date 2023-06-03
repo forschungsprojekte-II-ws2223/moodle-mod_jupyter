@@ -103,8 +103,10 @@ function jupyter_delete_instance(int $id) {
         return false;
     }
 
-    $handler = new gradeservice_handler();
-    $handler->delete_assignment($moduleinstance);
+    if ($moduleinstance->autograded) {
+        $handler = new gradeservice_handler();
+        $handler->delete_assignment($moduleinstance);
+    }
 
     $DB->delete_records('jupyter', array('id' => $id));
     $DB->delete_records('jupyter_grades', array('jupyter' => $id));

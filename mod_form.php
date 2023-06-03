@@ -73,7 +73,8 @@ class mod_jupyter_mod_form extends moodleform_mod {
 
             // Adding checkbox for whether the assignment should be auto-graded.
             $mform->addElement('advcheckbox', 'autograded', 'Auto-Grading', get_string('autograding', 'mod_jupyter'), '',
-                array(1, 0));
+                array(0, 1));
+            $mform->setDefault('autograded', 1);
         }
 
         // Adding the standard "intro" and "introformat" fields.
