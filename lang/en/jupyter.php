@@ -53,7 +53,7 @@ $string['resetbuttoninfo'] = 'Reset the notebook to its initial state.<br>Your c
 $string['submitmodaltitle'] = 'Submission results';
 $string['submitmodaltablequestionnr'] = 'Question #';
 $string['submitmodaltablereached'] = 'Your points';
-$string['submitmodaltablemax'] = 'Max points';
+$string['submitmodaltablemax'] = 'Reachable points';
 $string['submitmodalbodytext'] = 'This result can always be found in your <a href="{$a}">gradebook</a>.';
 $string['submitmodalbuttontext'] = 'OK';
 $string['submitbuttontext'] = 'Submit notebook';
@@ -75,7 +75,7 @@ $string['jupyterhub_api_token'] = 'Jupyterhub API Token';
 $string['jupyterhub_api_token_desc'] = 'Add the API token of your JupyterHub here. <br><strong>Make sure your JupyterHub is using a secure 256-bit token!!!</strong>';
 
 // Jupyterhub Errors.
-$string['jupyter_resp_err'] = '<strong>Error: Jupyter Notebook failed to load.</strong><br>Sorry, we were unable to load your Jupyter Notebook. Please try reloading the page to resolve the problem. If the error persists, please contact your teacher or administrator for further assistance/';
+$string['jupyter_resp_err'] = '<strong>Error: Jupyter Notebook failed to load.</strong><br>Sorry, we were unable to load your Jupyter Notebook. Please try reloading the page to resolve the problem. If the error persists, please contact your teacher or administrator for further assistance.';
 $string['jupyter_resp_err_admin'] = '<strong>Error: Jupyter Notebook failed to load.</strong><br>Message: "{$a->msg}"';
 $string['jupyter_connect_err'] = '<strong>Error: Jupyter Notebook failed to load.</strong><br>Sorry, the Jupyter Notebook could not be loaded due to a connection issue. Please try reloading the page to resolve the problem. If the error persists, please contact your teacher or administrator for further assistance.';
 $string['jupyter_connect_err_admin'] = '<strong>Error: Could not connect to JupyterHub at (<i>"{$a->url}"</i>).</strong><br>Make sure your JupyterHub is running and available under the provided url.<br>You an change the JupyterHub URL in the plugin\'s admin settings page.<br>Message: "{$a->msg}"';
