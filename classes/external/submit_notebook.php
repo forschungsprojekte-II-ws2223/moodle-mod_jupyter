@@ -20,12 +20,15 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once("$CFG->dirroot/mod/jupyter/lib.php");
 
+
 use mod_jupyter\gradeservice_handler;
 use external_function_parameters;
 use external_value;
 use external_multiple_structure;
 use external_single_structure;
 use stdClass;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Jupyter web service class for submitting a notebook for autograding.
@@ -68,13 +71,36 @@ class submit_notebook extends \external_api {
         try {
             $handler->submit_assignment($user, $courseid, $instanceid, $filename, $token);
             $questions = $DB->get_records('jupyter_questions_points', array('jupyter' => $instanceid, 'userid' => $USER->id), '');
-        } catch (\Throwable $th) {
+        } catch (ConnectException $e) {
             $error = new stdClass;
+            $cm = $DB->get_record('course_modules', array('course' => $courseid, 'instance' => $instanceid));
+            $modulecontext = \context_module::instance($cm->id);
+
+            if (has_capability('mod/jupyter:viewerrordetails', $modulecontext)) {
+                $error->errormessage = get_string('gradeservice_connect_err_admin', 'jupyter', [
+                'url' => get_config('mod_jupyter', 'gradeservice_url'),
+                'msg' => "{$e->getCode()}: {$e->getMessage()}"
+                ]);
+            } else {
+                $error->errormessage = get_string('gradeservice_connect_err', 'jupyter');
+            }
+        } catch (RequestException $e) {
+            $error = new stdClass;
+            $cm = $DB->get_record('course_modules', array('course' => $courseid, 'instance' => $instanceid));
+            $modulecontext = \context_module::instance($cm->id);
+            if (has_capability('mod/jupyter:viewerrordetails', $cmid)) {
+                $error->errormessage = get_string('gradeservice_resp_err_admin', 'jupyter', [
+                'url' => get_config('mod_jupyter', 'gradeservice_url'),
+                'msg' => "{$e->getCode()}: {$e->getMessage()}"
+                ]);
+            } else {
+                $error->errormessage = get_string('gradeservice_resp_err', 'jupyter');
+            }
+        } finally {
             $error->question = 0;
             $error->reached = 0;
             $error->max = 0;
             $error->error = true;
-            $error->errortype = 'test';
             array_push($points, $error);
             return $points;
         }
@@ -84,12 +110,12 @@ class submit_notebook extends \external_api {
             $point->question = $entry->questionnr;
             $point->reached = round($entry->points, 2);
             $point->max = round($DB->get_record(
-                'jupyter_questions',
-                array('jupyter' => $instanceid, 'questionnr' => $entry->questionnr),
-                'maxpoints', MUST_EXIST)->maxpoints, 2);
+            'jupyter_questions',
+            array('jupyter' => $instanceid, 'questionnr' => $entry->questionnr),
+            'maxpoints', MUST_EXIST)->maxpoints, 2);
             array_push($points, $point);
         }
-        return $points;
+            return $points;
     }
 
     /**
@@ -103,7 +129,7 @@ class submit_notebook extends \external_api {
             'reached' => new external_value(PARAM_RAW, 'reached points in question after grading'),
             'max' => new external_value(PARAM_RAW, 'maximum reachable points in question'),
             'error' => new external_value(PARAM_BOOL, VALUE_OPTIONAL, 'if an error occured'),
-            'errortype' => new external_value(PARAM_RAW, VALUE_OPTIONAL, 'what error occured'),
+            'errormessage' => new external_value(PARAM_RAW, VALUE_OPTIONAL, 'what error occured'),
             ]));
     }
 }

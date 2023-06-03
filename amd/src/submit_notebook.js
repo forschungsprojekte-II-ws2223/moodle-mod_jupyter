@@ -3,11 +3,12 @@ import { exception as displayException } from "core/notification";
 import Templates from "core/templates";
 
 const context = {
-  message: "",
-  closebutton: 1,
+  message: "error message jajadajajajajajajajaaj",
+  closebutton: 0,
   announce: 1,
   points: [],
   error: false,
+  errortype: "",
 };
 
 const Selectors = {
@@ -28,14 +29,14 @@ const Selectors = {
 export const init = async ({ user, courseid, instanceid, filename, token }) => {
   document.addEventListener("click", (e) => {
     if (e.target.closest(Selectors.actions.submitButton)) {
-      resetModalTable();
+      resetModalBody();
       callSubmitNotebook(user, courseid, instanceid, filename, token);
     }
   });
 
   document.addEventListener("click", (e) => {
     if (e.target.closest(Selectors.actions.resetModal)) {
-      resetModalTable();
+      resetModalBody();
     }
   });
 };
@@ -64,14 +65,39 @@ const callSubmitNotebook = async (
     filename,
     token
   );
-  if ("error" in response[0]) {
+
+  window.console.log(response);
+  if (response[0].error) {
     context.error = response[0].error;
-    context.errortype = response[0].errortype;
+    context.message = response[0].errormessage;
+    renderErrorNotification();
   } else {
     context.error = false;
     context.points = response;
+    renderModalTable();
   }
-  renderModalTable();
+
+
+};
+
+/**
+ * Render table inside the submit modal to show submit response.
+ */
+const renderErrorNotification = (
+) => {
+  Templates.renderForPromise('core/notification_error', context)
+    // It returns a promise that needs to be resoved.
+    .then(({ html, js }) => {
+      // Here eventually I have my compiled template, and any javascript that it generated.
+      // The templates object has append, prepend and replace functions.
+      Templates.replaceNodeContents(
+        Selectors.elements.submitResponseBody,
+        html,
+        js
+      );
+    })
+    // Deal with this exception (Using core/notify exception function is recommended).
+    .catch((error) => displayException(error));
 };
 
 /**
@@ -97,7 +123,7 @@ const renderModalTable = (
 /**
  * Replace table with loading template for reset.
  */
-const resetModalTable = async (
+const resetModalBody = async (
 ) => {
   Templates.renderForPromise("mod_jupyter/loading", context)
     // It returns a promise that needs to be resoved.
