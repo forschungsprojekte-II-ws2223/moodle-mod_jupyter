@@ -3,13 +3,21 @@
 This Moodle plugin integrates Jupyter Notebooks to offer a virtual programming environment.
 
 The plugin connects to a JupyterHub server and authenticates the Moodle users on the JupyterHub Server. That way they
-can access a Jupyter notebook from within Moodle. Further development includes the options to submit solved
-notebooks and to distribute notebooks by the teacher to the students.
+can access a Jupyter notebook from within Moodle.
+
+Automated grading of Jupyter Notebooks is provided through [Otter-Grader](https://otter-grader.readthedocs.io/en/latest/).  
+A quick introduction for writing assignments in the Otter-Grader format and a demo Notebook can be fond here:  
+[AutograderNotebook.md](documentation/AutograderNotebook.md)  
+[demo.ipynb](documentation/demo.ipynb)
 
 ## Plugin Installation
 
-**Make sure you have a compatible JupyterHub running and reachable.  
-Details on how to set this up can be found here: https://github.com/forschungsprojekte-II-ws2223/setup/blob/main/README.md**
+**Make sure you have a compatible JupyterHub and Grading API running and reachable.  
+Details on how to set this up can be found here: https://github.com/forschungsprojekte-II-ws2223/jupyterhub-gradeservice**
+
+Download the latest version of this plugin [here]() and add it to your Moodle installation.
+
+### Manual installation
 
 1. Clone this repository:
 
@@ -25,30 +33,7 @@ Details on how to set this up can be found here: https://github.com/forschungspr
    cd jupyter && composer install
    ```
 
-1. Installing the plugin
-
-   ### Installing via uploaded ZIP file
-
-   1. Log in to your Moodle site as an admin and go to _Site administration >
-      Plugins > Install plugins_.
-   1. Remove the `.git` folder from the directory (else file upload as zip won't work).
-   1. Upload the ZIP file (jupyter.zip) with the plugin code.
-   1. Check the plugin validation report and finish the installation.
-
-   ### Installing manually
-
-   The plugin can also be installed by putting the contents of this directory to
-
-   `{your/moodle/dirroot}/mod/jupyter`
-
-   Afterwards, log in to your Moodle site as an admin and go to _Site administration >
-   Notifications_ to complete the installation.
-
-   Alternatively, you can run
-
-   `$ php admin/cli/upgrade.php`
-
-   to complete the installation from the command line.
+1. Add the folder to your moodle installation.
 
 ## Development Environment Setup
 
