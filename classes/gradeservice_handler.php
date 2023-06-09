@@ -55,6 +55,10 @@ class gradeservice_handler {
             $baseuri = str_replace(['127.0.0.1', 'localhost'], 'host.docker.internal', $baseuri);
         }
 
+        if (substr($baseuri, -1) != "/") {
+            $baseuri = $baseuri . "/";
+        }
+
         $this->client = new Client([
         'base_uri' => $baseuri,
         ]);
