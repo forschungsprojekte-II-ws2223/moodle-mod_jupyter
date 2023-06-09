@@ -93,7 +93,7 @@ class jupyterhub_handler {
     public function get_notebook_path(string $user, int $contextid, int $courseid, int $instanceid, int $autograded) : string {
         $this->check_user_status($user);
 
-        $route = "/user/{$user}/api/contents";
+        $route = "user/{$user}/api/contents";
 
         $fs = get_file_storage();
         $filearea = $autograded ? 'assignment' : 'package';
@@ -131,7 +131,7 @@ class jupyterhub_handler {
      * @throws RequestException
      */
     private function check_user_status(string $user) {
-        $route = "/hub/api/users/{$user}";
+        $route = "hub/api/users/{$user}";
         // Check if user exists.
         try {
             $res = $this->client->get($route);
@@ -168,7 +168,7 @@ class jupyterhub_handler {
         $file = reset($files);
         $filename = $file->get_filename();
 
-        $route = "/user/{$user}/api/contents/{$courseid}/{$instanceid}/{$filename}";
+        $route = "user/{$user}/api/contents/{$courseid}/{$instanceid}/{$filename}";
 
         try {
                 $this->client->patch($route, ['json' => [
@@ -203,7 +203,7 @@ class jupyterhub_handler {
      * @throws ConnectException
      */
     public function get_notebook(string $user, int $courseid, int $instanceid, string $filename) {
-        $route = "/user/{$user}/api/contents/{$courseid}/{$instanceid}/{$filename}";
+        $route = "user/{$user}/api/contents/{$courseid}/{$instanceid}/{$filename}";
 
         $res = $this->client->get($route,
         ['query' => [

@@ -80,7 +80,7 @@ class gradeservice_handler {
         $file = reset($files);
         $filename = $file->get_filename();
 
-        $route = "/{$moduleinstance->course}/{$moduleinstance->id}";
+        $route = "{$moduleinstance->course}/{$moduleinstance->id}";
 
         $res = $this->client->request("POST", $route, [
             'headers' => [
@@ -140,7 +140,7 @@ class gradeservice_handler {
         global $USER;
         $jwt = JWT::encode(["name" => $USER->username], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
 
-        $this->client->request("DELETE", "/{$moduleinstance->course}/{$moduleinstance->id}", [
+        $this->client->request("DELETE", "{$moduleinstance->course}/{$moduleinstance->id}", [
             'headers' => [
                 'Authorization' => $jwt
             ]
@@ -164,7 +164,7 @@ class gradeservice_handler {
         $handler = new jupyterhub_handler();
         $file = $handler->get_notebook($user, $courseid, $instanceid, $filename);
 
-        $route = "/{$courseid}/{$instanceid}/{$user}";
+        $route = "{$courseid}/{$instanceid}/{$user}";
         $res = $this->client->request("POST", $route, [
             'headers' => [
                 'Authorization' => $token,
