@@ -137,8 +137,8 @@ function jupyter_set_mainfile(stdClass $data): void {
 
         $files = $fs->get_area_files($context->id, 'mod_jupyter', 'package', 0, 'id', false);
         $file = reset($files);
-        $data->filename = $file->get_filename();
-        $DB->update_record('jupyter');
+        $data->notebook_filename = $file->get_filename();
+        $DB->update_record('jupyter', $data);
     }
 }
 

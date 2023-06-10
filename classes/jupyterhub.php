@@ -42,7 +42,7 @@ use GuzzleHttp\Exception\RequestException;
  */
 class jupyterhub {
     /**
-     * Returns the url to users notebook and notebook file.
+     * Uploads notebook file to users jupyter instance.
      *
      * @param string $user current user's username
      * @param int $contextid activity context id
@@ -53,7 +53,7 @@ class jupyterhub {
      * @throws ConnectException
      * @throws RequestException
      */
-    public static function get_notebook_path(string $user, int $contextid, int $courseid, int $instanceid, int $autograded)
+    public static function load_notebook(string $user, int $contextid, int $courseid, int $instanceid, int $autograded)
     : string {
         self::check_user_status($user);
 

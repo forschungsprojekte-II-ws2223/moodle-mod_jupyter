@@ -93,7 +93,7 @@ if ($jupyter->notebook_ready) {
             $jupyterhuburl = substr($jupyterhuburl, 0, -1);
         }
 
-        $notebookpath = jupyterhub::get_notebook_path(
+        $notebookpath = jupyterhub::load_notebook(
             $user,
             $modulecontext->id,
             $course->id,
