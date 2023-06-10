@@ -39,12 +39,6 @@ use stdClass;
  */
 class gradeservice {
     /**
-     * gradeservice url
-     * @var string $baseurl
-     */
-    private static $baseurl = self::gradeservice_url();
-
-    /**
      * Create an assignment.
      *
      * @param stdClass $moduleinstance
@@ -60,7 +54,7 @@ class gradeservice {
         $file = reset($files);
         $filename = $file->get_filename();
 
-        $baseurl = self::$baseurl;
+        $baseurl = self::gradeservice_url();
         $route = "{$baseurl}/{$moduleinstance->course}/{$moduleinstance->id}";
 
         $client = new GuzzleHttp\Client();
@@ -123,7 +117,7 @@ class gradeservice {
         $jwt = JWT::encode(["name" => $USER->username], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
 
         $client = new GuzzleHttp\Client();
-        $baseurl = self::$baseurl;
+        $baseurl = self::gradeservice_url();
         $route = "{$baseurl}/{$moduleinstance->course}/{$moduleinstance->id}";
         $client->request("DELETE", $route, [
             'headers' => [
@@ -149,7 +143,7 @@ class gradeservice {
 
         $file = jupyterhub::get_notebook($user, $courseid, $instanceid, $filename);
 
-        $baseurl = self::$baseurl;
+        $baseurl = self::gradeservice_url();
         $route = "{$baseurl}/{$courseid}/{$instanceid}/{$user}";
         $client = new GuzzleHttp\Client();
         $res = $client->request("POST", $route, [

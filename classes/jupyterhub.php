@@ -43,12 +43,6 @@ use GuzzleHttp\Exception\RequestException;
  */
 class jupyterhub {
     /**
-     * jupyterhub url
-     * @var string $baseurl
-     */
-    private static $baseurl = self::jupyterhub_url();
-
-    /**
      * Returns the url to users notebook and notebook file.
      *
      * @param string $user current user's username
@@ -76,7 +70,7 @@ class jupyterhub {
               ]
         ]);
 
-        $baseurl = self::$baseurl;
+        $baseurl = self::jupyterhub_url();
         $route = "{$baseurl}/user/{$user}/api/contents";
 
         try {
@@ -115,7 +109,7 @@ class jupyterhub {
               ]
         ]);
 
-        $baseurl = self::$baseurl;
+        $baseurl = self::jupyterhub_url();
         $route = "{$baseurl}/hub/api/users/{$user}";
         // Check if user exists.
         try {
@@ -159,7 +153,7 @@ class jupyterhub {
               ]
         ]);
 
-        $baseurl = self::$baseurl;
+        $baseurl = self::jupyterhub_url();
         $route = "{$baseurl}/user/{$user}/api/contents/{$courseid}/{$instanceid}/{$filename}";
 
         try {
@@ -201,7 +195,7 @@ class jupyterhub {
               ]
         ]);
 
-        $baseurl = self::$baseurl;
+        $baseurl = self::jupyterhub_url();
         $route = "{$baseurl}/user/{$user}/api/contents/{$courseid}/{$instanceid}/{$filename}";
 
         $res = $client->get($route,
