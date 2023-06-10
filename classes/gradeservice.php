@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 require($CFG->dirroot . '/mod/jupyter/vendor/autoload.php');
 
 use Firebase\JWT\JWT;
-use GuzzleHttp;
+use GuzzleHttp\Client;
 use mod_jupyter\jupyterhub;
 use stdClass;
 
@@ -57,7 +57,7 @@ class gradeservice {
         $baseurl = self::get_url();
         $route = "{$baseurl}/{$moduleinstance->course}/{$moduleinstance->id}";
 
-        $client = new GuzzleHttp\Client();
+        $client = new Client();
         $res = $client->request("POST", $route, [
             'headers' => [
                 'Authorization' => $token,
@@ -114,14 +114,14 @@ class gradeservice {
      */
     public static function delete_assignment(stdClass $moduleinstance) {
         global $USER;
-        $jwt = JWT::encode(["name" => $USER->username], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
+        $token = JWT::encode(["name" => $USER->username], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
 
-        $client = new GuzzleHttp\Client();
+        $client = new Client();
         $baseurl = self::get_url();
         $route = "{$baseurl}/{$moduleinstance->course}/{$moduleinstance->id}";
         $client->request("DELETE", $route, [
             'headers' => [
-                'Authorization' => $jwt
+                'Authorization' => $token
             ]
         ]);
     }
@@ -145,7 +145,7 @@ class gradeservice {
 
         $baseurl = self::get_url();
         $route = "{$baseurl}/{$courseid}/{$instanceid}/{$user}";
-        $client = new GuzzleHttp\Client();
+        $client = new Client();
         $res = $client->request("POST", $route, [
             'headers' => [
                 'Authorization' => $token,
@@ -161,7 +161,6 @@ class gradeservice {
         $res = json_decode($res->getBody(), true);
 
         if ($grade = $DB->get_record('jupyter_grades', array('jupyter' => $instanceid, 'userid' => $userid))) {
-
             $grade->grade = $res['total'];
             $grade->timemodified = time();
 
@@ -219,6 +218,7 @@ class gradeservice {
         $gradeobject->rawgrade = $grade->grade;
         $gradeobject->dategraded = $grade->timemodified;
         $grades[$grade->userid] = $gradeobject;
+
         grade_update('/mod/jupyter', $courseid, 'mod', 'jupyter', $instanceid, 0, $grades);
     }
 

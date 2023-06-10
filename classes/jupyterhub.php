@@ -63,12 +63,7 @@ class jupyterhub {
         $file = reset($files);
         $filename = $file->get_filename();
 
-        $client = new Client([
-            'headers' => [
-                'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
-              ]
-        ]);
-
+        $client = new Client(['headers' => ['Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')]]);
         $baseurl = self::get_url();
         $route = "{$baseurl}/user/{$user}/api/contents";
 
@@ -78,15 +73,17 @@ class jupyterhub {
         } catch (RequestException $e) {
             if ($e->hasResponse() && $e->getCode() == 404) {
 
-                // Jupyter api doesnt support creating directorys recursively so we have to it like this.
+                // Jupyter api doesnt support creating directories recursively so we have to it like this.
                 $client->put("{$route}/{$courseid}", ['json' => ['type' => 'directory']]);
                 $client->put("{$route}/{$courseid}/{$instanceid}", ['json' => ['type' => 'directory']]);
 
-                $client->put("{$route}/{$courseid}/{$instanceid}/{$filename}", ['json' => [
-                    'type' => 'file',
-                    'format' => 'base64',
-                    'content' => base64_encode($file->get_content()),
-                ]]);
+                $client->put("{$route}/{$courseid}/{$instanceid}/{$filename}", [
+                    'json' => [
+                        'type' => 'file',
+                        'format' => 'base64',
+                        'content' => base64_encode($file->get_content()),
+                    ]
+                ]);
             } else {
                 throw $e;
             }
@@ -102,14 +99,10 @@ class jupyterhub {
      * @throws RequestException
      */
     private static function check_user_status(string $user) {
-        $client = new Client([
-            'headers' => [
-                'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
-              ]
-        ]);
-
+        $client = new Client(['headers' => ['Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')]]);
         $baseurl = self::get_url();
         $route = "{$baseurl}/hub/api/users/{$user}";
+
         // Check if user exists.
         try {
             $res = $client->get($route);
@@ -146,31 +139,32 @@ class jupyterhub {
         $file = reset($files);
         $filename = $file->get_filename();
 
-        $client = new Client([
-            'headers' => [
-                'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
-              ]
-        ]);
-
+        $client = new Client([ 'headers' => ['Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')]]);
         $baseurl = self::get_url();
         $route = "{$baseurl}/user/{$user}/api/contents/{$courseid}/{$instanceid}/{$filename}";
 
         try {
-                $client->patch($route, ['json' => [
+            $client->patch($route, [
+                'json' => [
                     'path' => "{$courseid}/{$instanceid}/" . date('Y-m-d-H:i:s', time()) . "_{$filename}"
-                ]]);
-                $client->put($route, ['json' => [
+                ]
+            ]);
+            $client->put($route, [
+                'json' => [
                     'type' => 'file',
                     'format' => 'base64',
                     'content' => base64_encode($file->get_content()),
-                ]]);
+                ]
+            ]);
         } catch (RequestException $e) {
             if ($e->hasResponse() && $e->getCode() == 404) {
-                $client->put($route, ['json' => [
-                    'type' => 'file',
-                    'format' => 'base64',
-                    'content' => base64_encode($file->get_content()),
-                ]]);
+                $client->put($route, [
+                    'json' => [
+                        'type' => 'file',
+                        'format' => 'base64',
+                        'content' => base64_encode($file->get_content()),
+                    ]
+                ]);
             } else {
                 throw $e;
             }
@@ -188,20 +182,15 @@ class jupyterhub {
      * @throws ConnectException
      */
     public static function get_notebook(string $user, int $courseid, int $instanceid, string $filename) {
-        $client = new Client([
-            'headers' => [
-                'Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')
-              ]
-        ]);
-
+        $client = new Client(['headers' => ['Authorization' => 'token ' . get_config('mod_jupyter', 'jupyterhub_api_token')]]);
         $baseurl = self::get_url();
         $route = "{$baseurl}/user/{$user}/api/contents/{$courseid}/{$instanceid}/{$filename}";
 
-        $res = $client->get($route,
-        ['query' => [
-            'content' => '1',
-            'format' => 'base64',
-            'type' => 'file'
+        $res = $client->get($route, [
+            'query' => [
+                'content' => '1',
+                'format' => 'base64',
+                'type' => 'file'
             ]
         ]);
         $res = json_decode($res->getBody(), true);
@@ -215,13 +204,10 @@ class jupyterhub {
     private static function get_url(): string {
         $baseurl = get_config('mod_jupyter', 'jupyterhub_url');
 
-        // If moodle is running in a docker container we have to replace '127.0.0.1' and 'localhost' with 'host.docker.internal'.
-        // This is only relevant for local testing.
         if (getenv('IS_CONTAINER') == 'yes') {
             $baseurl = str_replace(['127.0.0.1', 'localhost'], 'host.docker.internal', $baseurl);
         }
 
-        // Delete trailing slash.
         if (substr($baseurl, -1) == "/") {
             $baseurl = substr($baseurl, 0, -1);
         }
