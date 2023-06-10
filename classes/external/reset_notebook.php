@@ -16,7 +16,7 @@
 
 namespace mod_jupyter\external;
 
-use mod_jupyter\jupyterhub_handler;
+use mod_jupyter\jupyterhub;
 use external_function_parameters;
 use external_multiple_structure;
 use external_single_structure;
@@ -56,8 +56,7 @@ class reset_notebook extends \external_api {
      * @return string
      */
     public static function execute(string $user, int $contextid, int $courseid, int $instanceid, int $autograded) {
-        $handler = new jupyterhub_handler();
-        $handler->reset_notebook($user, $contextid, $courseid, $instanceid, $autograded);
+        jupyterhub::reset_notebook($user, $contextid, $courseid, $instanceid, $autograded);
         return 'notebook reset';
     }
 

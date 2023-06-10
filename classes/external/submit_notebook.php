@@ -21,7 +21,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->dirroot/mod/jupyter/lib.php");
 
 
-use mod_jupyter\gradeservice_handler;
+use mod_jupyter\gradeservice;
 use external_function_parameters;
 use external_value;
 use external_multiple_structure;
@@ -64,12 +64,11 @@ class submit_notebook extends \external_api {
      */
     public static function execute(string $user, int $courseid, int $instanceid, string $filename, string $token) : array {
         global $DB, $USER;
-        $handler = new gradeservice_handler();
 
         $points = array();
 
         try {
-            $handler->submit_assignment($user, $courseid, $instanceid, $filename, $token);
+            gradeservice::submit_assignment($user, $courseid, $instanceid, $filename, $token);
             $questions = $DB->get_records('jupyter_questions_points', array('jupyter' => $instanceid, 'userid' => $USER->id), '');
         } catch (ConnectException $e) {
             $error = new stdClass;

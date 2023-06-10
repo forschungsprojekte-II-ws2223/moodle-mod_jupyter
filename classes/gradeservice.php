@@ -27,12 +27,9 @@ namespace mod_jupyter;
 defined('MOODLE_INTERNAL') || die();
 require($CFG->dirroot . '/mod/jupyter/vendor/autoload.php');
 
-use dml_exception;
-use DomainException;
 use Firebase\JWT\JWT;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use mod_jupyter\jupyterhub_handler;
+use GuzzleHttp;
+use mod_jupyter\jupyterhub;
 use stdClass;
 
 /**
@@ -40,29 +37,8 @@ use stdClass;
  *
  * @package mod_jupyter
  */
-class gradeservice_handler {
-
-    /** @var Client guzzle http client */
-    private $client;
-
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $baseuri = get_config('mod_jupyter', 'gradeservice_url');
-
-        if (getenv('IS_CONTAINER') == 'yes') {
-            $baseuri = str_replace(['127.0.0.1', 'localhost'], 'host.docker.internal', $baseuri);
-        }
-
-        if (substr($baseuri, -1) != "/") {
-            $baseuri = $baseuri . "/";
-        }
-
-        $this->client = new Client([
-        'base_uri' => $baseuri,
-        ]);
-    }
+class gradeservice {
+    private static $baseurl = self::gradeservice_url();
 
     /**
      * Create an assignment.
@@ -72,7 +48,7 @@ class gradeservice_handler {
      * @param string $token authorization token
      * @return string filename of the created assignment
      */
-    public function create_assignment(stdClass $moduleinstance, int $contextid, string $token) : string {
+    public static function create_assignment(stdClass $moduleinstance, int $contextid, string $token) : string {
         global $DB;
 
         $fs = get_file_storage();
@@ -80,9 +56,11 @@ class gradeservice_handler {
         $file = reset($files);
         $filename = $file->get_filename();
 
-        $route = "{$moduleinstance->course}/{$moduleinstance->id}";
+        $baseurl = self::$baseurl;
+        $route = "{$baseurl}/{$moduleinstance->course}/{$moduleinstance->id}";
 
-        $res = $this->client->request("POST", $route, [
+        $client = new GuzzleHttp\Client();
+        $res = $client->request("POST", $route, [
             'headers' => [
                 'Authorization' => $token,
             ],
@@ -136,11 +114,14 @@ class gradeservice_handler {
      * @throws DomainException
      * @throws GuzzleException
      */
-    public function delete_assignment(stdClass $moduleinstance) {
+    public static function delete_assignment(stdClass $moduleinstance) {
         global $USER;
         $jwt = JWT::encode(["name" => $USER->username], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
 
-        $this->client->request("DELETE", "{$moduleinstance->course}/{$moduleinstance->id}", [
+        $client = new GuzzleHttp\Client();
+        $baseurl = self::$baseurl;
+        $route = "{$baseurl}/{$moduleinstance->course}/{$moduleinstance->id}";
+        $client->request("DELETE", $route, [
             'headers' => [
                 'Authorization' => $jwt
             ]
@@ -156,16 +137,18 @@ class gradeservice_handler {
      * @param string $filename name of the submitted notebook file
      * @param string $token Gradeservice authorization JWT
      */
-    public function submit_assignment(string $user, int $courseid, int $instanceid, string $filename, string $token) : string {
+    public static function submit_assignment(string $user, int $courseid, int $instanceid, string $filename, string $token)
+    : string {
         global $CFG, $DB, $USER;
         $userid = $USER->id;
         require_once($CFG->libdir.'/gradelib.php');
 
-        $handler = new jupyterhub_handler();
-        $file = $handler->get_notebook($user, $courseid, $instanceid, $filename);
+        $file = jupyterhub::get_notebook($user, $courseid, $instanceid, $filename);
 
-        $route = "{$courseid}/{$instanceid}/{$user}";
-        $res = $this->client->request("POST", $route, [
+        $baseurl = self::$baseurl;
+        $route = "{$baseurl}/{$courseid}/{$instanceid}/{$user}";
+        $client = new GuzzleHttp\Client();
+        $res = $client->request("POST", $route, [
             'headers' => [
                 'Authorization' => $token,
             ],
@@ -194,7 +177,7 @@ class gradeservice_handler {
 
             $DB->insert_record('jupyter_grades', $grade);
         }
-        $this->update_grade($courseid, $instanceid, $grade);
+        self::update_grade($courseid, $instanceid, $grade);
 
         if ($questions = $DB->get_records('jupyter_questions_points', array('jupyter' => $instanceid, 'userid' => $userid))) {
             foreach ($questions as $question) {
@@ -228,7 +211,7 @@ class gradeservice_handler {
      * @param int $instanceid activity instance id
      * @param stdClass $grade the grade from jupyter_grades table
      */
-    private function update_grade(int $courseid, int $instanceid, stdClass $grade) {
+    private static function update_grade(int $courseid, int $instanceid, stdClass $grade) {
         global $CFG;
         require_once($CFG->libdir.'/gradelib.php');
 
@@ -239,5 +222,24 @@ class gradeservice_handler {
         $gradeobject->dategraded = $grade->timemodified;
         $grades[$grade->userid] = $gradeobject;
         grade_update('/mod/jupyter', $courseid, 'mod', 'jupyter', $instanceid, 0, $grades);
+    }
+
+    /**
+     * Get gradeservice url from config.
+     *
+     * @return string
+     */
+    private static function gradeservice_url(): string {
+        $baseurl = get_config('mod_jupyter', 'gradeservice_url');
+
+        if (getenv('IS_CONTAINER') == 'yes') {
+            $baseurl = str_replace(['127.0.0.1', 'localhost'], 'host.docker.internal', $baseurl);
+        }
+
+        if (substr($baseurl, -1) == "/") {
+            $baseurl = substr($baseurl, 0, -1);
+        }
+
+        return $baseurl;
     }
 }

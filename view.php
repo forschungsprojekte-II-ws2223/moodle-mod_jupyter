@@ -30,8 +30,8 @@ use Firebase\JWT\JWT;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use mod_jupyter\error_handler;
-use mod_jupyter\jupyterhub_handler;
-use mod_jupyter\gradeservice_handler;
+use mod_jupyter\jupyterhub;
+use mod_jupyter\gradeservice;
 use moodle_url;
 
 // Moodle specific config.
@@ -81,8 +81,7 @@ $assignment = $moduleinstance->assignment;
 
 if ($assignment == null && $autograded) {
     try {
-        $handler = new gradeservice_handler();
-        $assignment = $handler->create_assignment(
+        $assignment = gradeservice::create_assignment(
             $moduleinstance,
             $modulecontext->id,
             $jwt
@@ -102,8 +101,8 @@ if ($assignment == null && $autograded) {
 if ($assignment != null || !$autograded) {
     try {
         $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
-        $handler = new jupyterhub_handler();
-        $notebookpath = $handler->get_notebook_path(
+
+        $notebookpath = jupyterhub::get_notebook_path(
             $user,
             $modulecontext->id,
             $course->id,
