@@ -38,6 +38,10 @@ use stdClass;
  * @package mod_jupyter
  */
 class gradeservice {
+    /**
+     * gradeservice url
+     * @var string $baseurl
+     */
     private static $baseurl = self::gradeservice_url();
 
     /**
@@ -227,7 +231,7 @@ class gradeservice {
     /**
      * Get gradeservice url from config.
      *
-     * @return string
+     * @return string $baseurl
      */
     private static function gradeservice_url(): string {
         $baseurl = get_config('mod_jupyter', 'gradeservice_url');

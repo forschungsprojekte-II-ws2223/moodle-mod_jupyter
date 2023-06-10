@@ -31,6 +31,7 @@ namespace mod_jupyter;
 defined('MOODLE_INTERNAL') || die();
 require($CFG->dirroot . '/mod/jupyter/vendor/autoload.php');
 
+use dml_exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
@@ -41,21 +42,11 @@ use GuzzleHttp\Exception\RequestException;
  * @package mod_jupyter
  */
 class jupyterhub {
+    /**
+     * jupyterhub url
+     * @var string $baseurl
+     */
     private static $baseurl = self::jupyterhub_url();
-
-    private static function jupyterhub_url() {
-        $baseuri = get_config('mod_jupyter', 'jupyterhub_url');
-
-        // If moodle is running in a docker container we have to replace '127.0.0.1' and 'localhost' with 'host.docker.internal'.
-        // This is only relevant for local testing.
-        if (getenv('IS_CONTAINER') == 'yes') {
-            $baseuri = str_replace(['127.0.0.1', 'localhost'], 'host.docker.internal', $baseuri);
-        }
-
-        if (substr($baseuri, -1) != "/") {
-            $baseuri = $baseuri . "/";
-        }
-    }
 
     /**
      * Returns the url to users notebook and notebook file.
@@ -222,5 +213,25 @@ class jupyterhub {
         ]);
         $res = json_decode($res->getBody(), true);
         return base64_decode($res['content']);
+    }
+
+    /**
+     * Get jupyterhub url from config.
+     * @return string $baseurl
+     */
+    private static function jupyterhub_url(): string {
+        $baseurl = get_config('mod_jupyter', 'jupyterhub_url');
+
+        // If moodle is running in a docker container we have to replace '127.0.0.1' and 'localhost' with 'host.docker.internal'.
+        // This is only relevant for local testing.
+        if (getenv('IS_CONTAINER') == 'yes') {
+            $baseurl = str_replace(['127.0.0.1', 'localhost'], 'host.docker.internal', $baseurl);
+        }
+
+        if (substr($baseurl, -1) != "/") {
+            $baseurl = $baseurl . "/";
+        }
+
+        return $baseurl;
     }
 }
