@@ -41,12 +41,12 @@ class gradeservice {
     /**
      * Create an assignment.
      *
-     * @param stdClass $moduleinstance
+     * @param stdClass $jupyter
      * @param int $contextid activity context id
      * @param string $token authorization token
      * @return string filename of the created assignment
      */
-    public static function create_assignment(stdClass $moduleinstance, int $contextid, string $token) : string {
+    public static function create_assignment(stdClass $jupyter, int $contextid, string $token) : string {
         global $DB;
 
         $fs = get_file_storage();
@@ -55,7 +55,7 @@ class gradeservice {
         $filename = $file->get_filename();
 
         $baseurl = self::get_url();
-        $route = "{$baseurl}/{$moduleinstance->course}/{$moduleinstance->id}";
+        $route = "{$baseurl}/{$jupyter->course}/{$jupyter->id}";
 
         $client = new Client();
         $res = $client->request("POST", $route, [
@@ -83,22 +83,23 @@ class gradeservice {
             'filename' => $filename
         );
         $fs->create_file_from_string($fileinfo, $file);
-        $moduleinstance->assignment = $filename;
 
         $questions = array();
         foreach ($res['points'] as $questionnr => $maxpoints) {
             $question = new stdClass();
-            $question->jupyter = $moduleinstance->id;
+            $question->jupyter = $jupyter->id;
             $question->questionnr = $questionnr;
             $question->maxpoints = $maxpoints;
             $questions[] = $question;
         }
 
         $DB->insert_records('jupyter_questions', $questions);
-        $moduleinstance->grade = $res['total'];
 
-        $DB->update_record('jupyter', $moduleinstance);
-        jupyter_grade_item_update($moduleinstance);
+        $jupyter->grade = $res['total'];
+        $jupyter->notebook_ready = true;
+
+        $DB->update_record('jupyter', $jupyter);
+        jupyter_grade_item_update($jupyter);
 
         return $filename;
     }
@@ -106,19 +107,19 @@ class gradeservice {
     /**
      * Delete assignment.
      *
-     * @param stdClass $moduleinstance
+     * @param stdClass $jupyter
      * @return void
      * @throws dml_exception
      * @throws DomainException
      * @throws GuzzleException
      */
-    public static function delete_assignment(stdClass $moduleinstance) {
+    public static function delete_assignment(stdClass $jupyter) {
         global $USER;
         $token = JWT::encode(["name" => $USER->username], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
 
         $client = new Client();
         $baseurl = self::get_url();
-        $route = "{$baseurl}/{$moduleinstance->course}/{$moduleinstance->id}";
+        $route = "{$baseurl}/{$jupyter->course}/{$jupyter->id}";
         $client->request("DELETE", $route, [
             'headers' => [
                 'Authorization' => $token
@@ -180,6 +181,7 @@ class gradeservice {
             foreach ($questions as $question) {
                 $question->points = $res['points'][$question->questionnr];
                 $question->output = $res['output'][$question->questionnr];
+
                 $DB->update_record('jupyter_questions_points', $question);
             }
         } else {

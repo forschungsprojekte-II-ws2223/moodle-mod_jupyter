@@ -61,9 +61,13 @@ function jupyter_add_instance(stdClass $data): int {
     $data->timemodified = $data->timecreated;
     $cmid = $data->coursemodule;
 
-    $data->id = $DB->insert_record('jupyter', $data);
+    if (!$data->autograded) {
+        $data->notebook_ready = true;
+    }
 
+    $data->id = $DB->insert_record('jupyter', $data);
     $DB->set_field('course_modules', 'instance', $data->id, ['id' => $cmid]);
+
     jupyter_set_mainfile($data);
 
     return $data->id;
@@ -98,13 +102,13 @@ function jupyter_update_instance(stdClass $data) {
 function jupyter_delete_instance(int $id) {
     global $DB;
 
-    $moduleinstance = $DB->get_record('jupyter', array('id' => $id));
-    if (!$moduleinstance) {
+    $jupyter = $DB->get_record('jupyter', array('id' => $id));
+    if (!$jupyter) {
         return false;
     }
 
-    if ($moduleinstance->autograded) {
-        gradeservice::delete_assignment($moduleinstance);
+    if ($jupyter->autograded) {
+        gradeservice::delete_assignment($jupyter);
     }
 
     $DB->delete_records('jupyter', array('id' => $id));
@@ -121,6 +125,7 @@ function jupyter_delete_instance(int $id) {
  * @param stdClass $data an object from the form
  */
 function jupyter_set_mainfile(stdClass $data): void {
+    global $DB;
     $cmid = $data->coursemodule;
     $context = context_module::instance($cmid);
 
@@ -129,6 +134,11 @@ function jupyter_set_mainfile(stdClass $data): void {
         $fs->delete_area_files($context->id, 'mod_jupyter', 'package');
         file_save_draft_area_files($data->packagefile, $context->id, 'mod_jupyter', 'package',
             0, ['subdirs' => 0, 'maxfiles' => 1]);
+
+        $files = $fs->get_area_files($context->id, 'mod_jupyter', 'package', 0, 'id', false);
+        $file = reset($files);
+        $data->filename = $file->get_filename();
+        $DB->update_record('jupyter');
     }
 }
 
@@ -137,25 +147,25 @@ function jupyter_set_mainfile(stdClass $data): void {
  *
  * Needed by {@see grade_update_mod_grades()}.
  *
- * @param stdClass $moduleinstance Instance object with extra cmidnumber and modname property.
+ * @param stdClass $jupyter Instance object with extra cmidnumber and modname property.
  * @param bool $reset Reset grades in the gradebook.
  * @return void.
  */
-function jupyter_grade_item_update($moduleinstance, $reset=false) {
+function jupyter_grade_item_update($jupyter, $reset=false) {
     global $CFG;
     require_once($CFG->libdir.'/gradelib.php');
 
     $item = array();
-    $item['itemname'] = clean_param($moduleinstance->name, PARAM_NOTAGS);
+    $item['itemname'] = clean_param($jupyter->name, PARAM_NOTAGS);
     $item['gradetype'] = GRADE_TYPE_VALUE;
 
-    if ($moduleinstance->grade > 0) {
+    if ($jupyter->grade > 0) {
         $item['gradetype'] = GRADE_TYPE_VALUE;
-        $item['grademax']  = $moduleinstance->grade;
+        $item['grademax']  = $jupyter->grade;
         $item['grademin']  = 0;
-    } else if ($moduleinstance->grade < 0) {
+    } else if ($jupyter->grade < 0) {
         $item['gradetype'] = GRADE_TYPE_SCALE;
-        $item['scaleid']   = -$moduleinstance->grade;
+        $item['scaleid']   = -$jupyter->grade;
     } else {
         $item['gradetype'] = GRADE_TYPE_NONE;
     }
@@ -163,21 +173,21 @@ function jupyter_grade_item_update($moduleinstance, $reset=false) {
         $item['reset'] = true;
     }
 
-    grade_update('/mod/jupyter', $moduleinstance->course, 'mod', 'jupyter', $moduleinstance->id, 0, null, $item);
+    grade_update('/mod/jupyter', $jupyter->course, 'mod', 'jupyter', $jupyter->id, 0, null, $item);
 }
 
 /**
  * Delete grade item for given mod_jupyter instance.
  *
- * @param stdClass $moduleinstance Instance object.
+ * @param stdClass $jupyter Instance object.
  * @return grade_item.
  */
-function jupyter_grade_item_delete($moduleinstance) {
+function jupyter_grade_item_delete($jupyter) {
     global $CFG;
     require_once($CFG->libdir.'/gradelib.php');
 
-    return grade_update('/mod/jupyter', $moduleinstance->course, 'mod', 'mod_jupyter',
-                        $moduleinstance->id, 0, null, array('deleted' => 1));
+    return grade_update('/mod/jupyter', $jupyter->course, 'mod', 'mod_jupyter',
+                        $jupyter->id, 0, null, array('deleted' => 1));
 }
 
 /**
@@ -185,16 +195,16 @@ function jupyter_grade_item_delete($moduleinstance) {
  *
  * Needed by {@see grade_update_mod_grades()}.
  *
- * @param stdClass $moduleinstance Instance object with extra cmidnumber and modname property.
+ * @param stdClass $jupyter Instance object with extra cmidnumber and modname property.
  * @param int $userid Update grade of specific user only, 0 means all participants.
  * @param bool $nullifnone If a single user is specified and $nullifnone is true a grade item with a null rawgrade will be inserted
  */
-function jupyter_update_grades($moduleinstance, $userid = 0, $nullifnone = true) {
+function jupyter_update_grades($jupyter, $userid = 0, $nullifnone = true) {
     global $CFG, $DB;
     require_once($CFG->libdir.'/gradelib.php');
 
     // Populate array of grade objects indexed by userid.
     $grades = $DB->get_records('jupyter_grades', ['userid' => $userid]);
 
-    grade_update('/mod/jupyter', $moduleinstance->course, 'mod', 'jupyter', $moduleinstance->id, 0, $grades);
+    grade_update('/mod/jupyter', $jupyter->course, 'mod', 'jupyter', $jupyter->id, 0, $grades);
 }

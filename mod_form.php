@@ -60,7 +60,7 @@ class mod_jupyter_mod_form extends moodleform_mod {
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('name', 'jupytername', 'mod_jupyter');
 
-        if ($this->_instance == '' || !$this->current->assignment) {
+        if ($this->_instance == '' || !$this->current->notebook_ready) {
             // Adding file manager for jupyter notebook file.
             $mform->addElement('filemanager', 'packagefile', get_string('package', 'mod_jupyter'), null, [
             'accepted_types' => '.ipynb',

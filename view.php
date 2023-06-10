@@ -46,11 +46,11 @@ $j = optional_param('j', 0, PARAM_INT);
 if ($id) {
     $cm = get_coursemodule_from_id('jupyter', $id, 0, false, MUST_EXIST);
     $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
+    $jupyter = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
 } else {
-    $moduleinstance = $DB->get_record('jupyter', array('id' => $j), '*', MUST_EXIST);
-    $course = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
-    $cm = get_coursemodule_from_instance('jupyter', $moduleinstance->id, $course->id, false, MUST_EXIST);
+    $jupyter = $DB->get_record('jupyter', array('id' => $j), '*', MUST_EXIST);
+    $course = $DB->get_record('course', array('id' => $jupyter->course), '*', MUST_EXIST);
+    $cm = get_coursemodule_from_instance('jupyter', $jupyter->id, $course->id, false, MUST_EXIST);
 }
 
 require_login($course, true, $cm);
@@ -58,7 +58,7 @@ require_login($course, true, $cm);
 $modulecontext = context_module::instance($cm->id);
 
 $PAGE->set_url('/mod/jupyter/view.php', array('id' => $cm->id));
-$PAGE->set_title(format_string($moduleinstance->name));
+$PAGE->set_title(format_string($jupyter->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
@@ -71,34 +71,22 @@ echo $OUTPUT->render_from_template('mod_jupyter/loading', []);
 $user = mb_strtolower($USER->username, "UTF-8");
 $jwt = JWT::encode(["name" => $user], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
 
-// Create link to user's gradebook.
-$coursemoduleid = $DB->get_record('course_modules', array('instance' => $moduleinstance->id))->id;
-$gradelink = new moodle_url('grade.php', array('id' => $coursemoduleid, 'userid' => $USER->id));
-$gradelink = $gradelink->__toString();
-
-$autograded = $moduleinstance->autograded;
-$assignment = $moduleinstance->assignment;
-
-if ($assignment == null && $autograded) {
+if (!$jupyter->notebook_ready && $jupyter->autograded) {
     try {
-        $assignment = gradeservice::create_assignment(
-            $moduleinstance,
+        $jupyter->notebook_ready = gradeservice::create_assignment(
+            $jupyter,
             $modulecontext->id,
             $jwt
         );
     } catch (RequestException $e) {
-        if ($e->hasResponse()) {
-            $msg = "{$e->getResponse()->getBody()->getContents()}";
-        } else {
-            $msg = "{$e->getCode()}: {$e->getMessage()}";
-        }
+        $msg = $e->hasResponse() ? "{$e->getResponse()->getBody()->getContents()}" : "{$e->getCode()}: {$e->getMessage()}";
         error_handler::gradeservice_resp_err($msg, $modulecontext);
     } catch (ConnectException $e) {
         error_handler::gradeservice_connect_err("{$e->getCode()}: {$e->getMessage()}", $modulecontext);
     }
 }
 
-if ($assignment != null || !$autograded) {
+if ($jupyter->notebook_ready) {
     try {
         $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
         if (substr($jupyterhuburl, -1) == "/") {
@@ -109,16 +97,20 @@ if ($assignment != null || !$autograded) {
             $user,
             $modulecontext->id,
             $course->id,
-            $moduleinstance->id,
-            $autograded
+            $jupyter->id,
+            $jupyter->autograded
         );
 
-        if ($autograded) {
+        if ($jupyter->autograded) {
+            // Create link to user's gradebook.
+            $gradelink = new moodle_url('grade.php', array('id' => $cm->id, 'userid' => $USER->id));
+            $gradelink = $gradelink->__toString();
+
             $PAGE->requires->js_call_amd('mod_jupyter/submit_notebook', 'init', [[
                 'user' => $user,
                 'courseid' => $course->id,
-                'instanceid' => $moduleinstance->id,
-                'filename' => $assignment,
+                'instanceid' => $jupyter->id,
+                'filename' => $jupyter->notebook_filename,
                 'token' => $jwt,
                 'gradelink' => $gradelink
                 ]]
@@ -129,21 +121,17 @@ if ($assignment != null || !$autograded) {
             'user' => $user,
             'contextid' => $modulecontext->id,
             'courseid' => $course->id,
-            'instanceid' => $moduleinstance->id,
-            'autograded' => $autograded
+            'instanceid' => $jupyter->id,
+            'autograded' => $jupyter->autograded
             ]]
         );
+
         $PAGE->requires->js_call_amd('mod_jupyter/startup', 'init', [[
             'login' => $jupyterhuburl. $notebookpath . "?auth_token=" . $jwt,
-            'autograded' => $autograded
+            'autograded' => $jupyter->autograded
             ]]);
-
     } catch (RequestException $e) {
-        if ($e->hasResponse()) {
-            $msg = "{$e->getResponse()->getBody()->getContents()}";
-        } else {
-            $msg = "{$e->getCode()}: {$e->getMessage()}";
-        }
+        $msg = $e->hasResponse() ? "{$e->getResponse()->getBody()->getContents()}" : "{$e->getCode()}: {$e->getMessage()}";
         error_handler::jupyter_resp_err($msg, $modulecontext);
     } catch (ConnectException $e) {
         error_handler::jupyter_connect_err("{$e->getCode()}: {$e->getMessage()}", $modulecontext);

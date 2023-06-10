@@ -41,7 +41,7 @@ $loggedinuserid = $USER->id;
 
 $cm = get_coursemodule_from_id('jupyter', $id, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-$moduleinstance = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
+$jupyter = $DB->get_record('jupyter', array('id' => $cm->instance), '*', MUST_EXIST);
 
 require_login($course, true, $cm);
 
@@ -50,7 +50,7 @@ if (($loggedinuserid == $gradeduserid) || has_capability('mod/jupyter:viewerrord
     // or if a student tries to look at their own grade.
     $grades = $DB->get_records(
         'jupyter_questions_points',
-        array('userid' => $gradeduserid, 'jupyter' => $moduleinstance->id), ''
+        array('userid' => $gradeduserid, 'jupyter' => $jupyter->id), ''
     );
 
     $gradeoverview = new stdClass;
@@ -63,7 +63,7 @@ if (($loggedinuserid == $gradeduserid) || has_capability('mod/jupyter:viewerrord
         $item->maxpoints = floatval(
             $DB->get_record(
                 'jupyter_questions',
-                array('jupyter' => $moduleinstance->id, 'questionnr' => $grade->questionnr), 'maxpoints', MUST_EXIST)
+                array('jupyter' => $jupyter->id, 'questionnr' => $grade->questionnr), 'maxpoints', MUST_EXIST)
                 ->maxpoints
             );
         $item->output = $grade->output;
@@ -71,7 +71,7 @@ if (($loggedinuserid == $gradeduserid) || has_capability('mod/jupyter:viewerrord
     }
 
     $PAGE->set_url('/mod/jupyter/grade.php', array('id' => $cm->id));
-    $PAGE->set_title(format_string($moduleinstance->name));
+    $PAGE->set_title(format_string($jupyter->name));
     $PAGE->set_heading(format_string($course->fullname));
 
     echo $OUTPUT->header();
