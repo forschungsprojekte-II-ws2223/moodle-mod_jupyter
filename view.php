@@ -100,6 +100,10 @@ if ($assignment == null && $autograded) {
 
 if ($assignment != null || !$autograded) {
     try {
+        $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
+        if (substr($jupyterhuburl, -1) == "/") {
+            $jupyterhuburl = substr($jupyterhuburl, 0, -1);
+        }
 
         $notebookpath = jupyterhub::get_notebook_path(
             $user,
@@ -130,7 +134,7 @@ if ($assignment != null || !$autograded) {
             ]]
         );
         $PAGE->requires->js_call_amd('mod_jupyter/startup', 'init', [[
-            'login' => $notebookpath . "?auth_token=" . $jwt,
+            'login' => $jupyterhuburl. $notebookpath . "?auth_token=" . $jwt,
             'autograded' => $autograded
             ]]);
 

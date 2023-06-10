@@ -35,16 +35,11 @@ if ($hassiteconfig) {
             get_string('generalconfig_desc', 'jupyter')
         ));
 
-        $urlregex = "/(^(https?:\/\/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\:?([0-9]{1,5})?$)"
-            . "|(^((https?:\/\/)|^(www\.))"
-            . "([a-zA-Z0-9\?\/\+\*\~\=\-\#\@\!\&\%\_\.]+\.[a-z]{2,4})(\/[a-zA-Z0-9\?\/\+\*\~\=\-\#\@\!\&\%\_]*)*$)/";
-
         $settings->add(new admin_setting_configtext(
             'mod_jupyter/jupyterhub_url',
             get_string('jupyterhub_url', 'jupyter'),
             get_string('jupyterhub_url_desc', 'jupyter'),
             null,
-            $urlregex
         ));
 
         $settings->add(new admin_setting_configtext(
@@ -52,7 +47,6 @@ if ($hassiteconfig) {
             get_string('gradeservice_url', 'jupyter'),
             get_string('gradeservice_url_desc', 'jupyter'),
             null,
-            $urlregex
         ));
 
         $settings->add(new admin_setting_configpasswordunmask(

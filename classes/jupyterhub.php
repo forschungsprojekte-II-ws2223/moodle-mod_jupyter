@@ -92,7 +92,7 @@ class jupyterhub {
             }
         }
 
-        return "{$baseurl}/hub/user-redirect/lab/tree/{$courseid}/{$instanceid}/{$filename}";
+        return "/hub/user-redirect/lab/tree/{$courseid}/{$instanceid}/{$filename}";
     }
 
     /**
