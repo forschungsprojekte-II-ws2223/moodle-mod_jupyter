@@ -32,7 +32,7 @@ use GuzzleHttp\Exception\RequestException;
 use mod_jupyter\error_handler;
 use mod_jupyter\jupyterhub;
 use mod_jupyter\gradeservice;
-use moodle_url;
+use \moodle_url;
 
 // Moodle specific config.
 global $DB, $PAGE, $USER, $OUTPUT;
@@ -100,7 +100,6 @@ if ($assignment == null && $autograded) {
 
 if ($assignment != null || !$autograded) {
     try {
-        $jupyterhuburl = get_config('mod_jupyter', 'jupyterhub_url');
 
         $notebookpath = jupyterhub::get_notebook_path(
             $user,
@@ -131,7 +130,7 @@ if ($assignment != null || !$autograded) {
             ]]
         );
         $PAGE->requires->js_call_amd('mod_jupyter/startup', 'init', [[
-            'login' => $jupyterhuburl . $notebookpath . "?auth_token=" . $jwt,
+            'login' => $notebookpath . "?auth_token=" . $jwt,
             'autograded' => $autograded
             ]]);
 

@@ -54,7 +54,7 @@ class gradeservice {
         $file = reset($files);
         $filename = $file->get_filename();
 
-        $baseurl = self::gradeservice_url();
+        $baseurl = self::get_url();
         $route = "{$baseurl}/{$moduleinstance->course}/{$moduleinstance->id}";
 
         $client = new GuzzleHttp\Client();
@@ -117,7 +117,7 @@ class gradeservice {
         $jwt = JWT::encode(["name" => $USER->username], get_config('mod_jupyter', 'jupyterhub_jwt_secret'), 'HS256');
 
         $client = new GuzzleHttp\Client();
-        $baseurl = self::gradeservice_url();
+        $baseurl = self::get_url();
         $route = "{$baseurl}/{$moduleinstance->course}/{$moduleinstance->id}";
         $client->request("DELETE", $route, [
             'headers' => [
@@ -143,7 +143,7 @@ class gradeservice {
 
         $file = jupyterhub::get_notebook($user, $courseid, $instanceid, $filename);
 
-        $baseurl = self::gradeservice_url();
+        $baseurl = self::get_url();
         $route = "{$baseurl}/{$courseid}/{$instanceid}/{$user}";
         $client = new GuzzleHttp\Client();
         $res = $client->request("POST", $route, [
@@ -227,7 +227,7 @@ class gradeservice {
      *
      * @return string $baseurl
      */
-    private static function gradeservice_url(): string {
+    private static function get_url(): string {
         $baseurl = get_config('mod_jupyter', 'gradeservice_url');
 
         if (getenv('IS_CONTAINER') == 'yes') {

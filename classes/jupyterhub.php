@@ -31,7 +31,6 @@ namespace mod_jupyter;
 defined('MOODLE_INTERNAL') || die();
 require($CFG->dirroot . '/mod/jupyter/vendor/autoload.php');
 
-use dml_exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
@@ -70,7 +69,7 @@ class jupyterhub {
               ]
         ]);
 
-        $baseurl = self::jupyterhub_url();
+        $baseurl = self::get_url();
         $route = "{$baseurl}/user/{$user}/api/contents";
 
         try {
@@ -93,7 +92,7 @@ class jupyterhub {
             }
         }
 
-        return "/hub/user-redirect/lab/tree/{$courseid}/{$instanceid}/{$filename}";
+        return "{$baseurl}/hub/user-redirect/lab/tree/{$courseid}/{$instanceid}/{$filename}";
     }
 
     /**
@@ -109,7 +108,7 @@ class jupyterhub {
               ]
         ]);
 
-        $baseurl = self::jupyterhub_url();
+        $baseurl = self::get_url();
         $route = "{$baseurl}/hub/api/users/{$user}";
         // Check if user exists.
         try {
@@ -153,7 +152,7 @@ class jupyterhub {
               ]
         ]);
 
-        $baseurl = self::jupyterhub_url();
+        $baseurl = self::get_url();
         $route = "{$baseurl}/user/{$user}/api/contents/{$courseid}/{$instanceid}/{$filename}";
 
         try {
@@ -195,7 +194,7 @@ class jupyterhub {
               ]
         ]);
 
-        $baseurl = self::jupyterhub_url();
+        $baseurl = self::get_url();
         $route = "{$baseurl}/user/{$user}/api/contents/{$courseid}/{$instanceid}/{$filename}";
 
         $res = $client->get($route,
@@ -213,7 +212,7 @@ class jupyterhub {
      * Get jupyterhub url from config.
      * @return string $baseurl
      */
-    private static function jupyterhub_url(): string {
+    private static function get_url(): string {
         $baseurl = get_config('mod_jupyter', 'jupyterhub_url');
 
         // If moodle is running in a docker container we have to replace '127.0.0.1' and 'localhost' with 'host.docker.internal'.
@@ -222,8 +221,9 @@ class jupyterhub {
             $baseurl = str_replace(['127.0.0.1', 'localhost'], 'host.docker.internal', $baseurl);
         }
 
-        if (substr($baseurl, -1) != "/") {
-            $baseurl = $baseurl . "/";
+        // Delete trailing slash.
+        if (substr($baseurl, -1) == "/") {
+            $baseurl = substr($baseurl, 0, -1);
         }
 
         return $baseurl;
