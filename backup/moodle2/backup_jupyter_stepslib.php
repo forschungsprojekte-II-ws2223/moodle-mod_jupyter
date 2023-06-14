@@ -37,7 +37,7 @@ class backup_jupyter_activity_structure_step extends backup_activity_structure_s
         // Replace with the attributes and final elements that the element will handle.
         $attributes = ['id'];
         $finalelements = [
-            'name', 'timecreated', 'timemodified', 'intro', 'introformat', 'autograded'
+            'name', 'timecreated', 'timemodified', 'intro', 'introformat', 'autograded', 'notebook_filename'
         ];
         $root = new backup_nested_element('jupyter', $attributes, $finalelements);
 
